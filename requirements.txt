@@ -1,0 +1,9 @@
+pygsheets
+pandas>=0.16
+psycopg2>=2.6
+SQLAlchemy>=1.0
+pymysql
+humanize
+pyyaml
+pycrypto
+pyhive
