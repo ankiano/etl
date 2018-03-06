@@ -7,3 +7,4 @@ humanize
 pyyaml
 pycrypto
 pyhive
+sqlalchemy-clickhouse
