@@ -1,8 +1,8 @@
 #!/usr/bin/env python3.5
 # coding=utf-8
 
-from pip.req import parse_requirements
-from pip.download import PipSession
+from pip._internal.req import parse_requirements
+from pip._internal.download import PipSession
 
 from setuptools import setup, find_packages
 
@@ -15,7 +15,7 @@ requirements = [str(ir.req) for ir in parsed_requirements]
 
 setup(
     name='etl',
-    version='0.0.11',
+    version='0.0.12',
     description='ETL CLI tool',
     long_description='Extract transform load CLI tool for extracting small '
                      'and middle data volume from sources (databases, '
