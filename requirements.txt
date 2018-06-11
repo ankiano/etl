@@ -11,3 +11,4 @@ clickhouse-sqlalchemy==0.0.5
 PyHive==0.5.0
 thrift==0.10.0
 thrift-sasl==0.3.0
+sasl==0.2.1
