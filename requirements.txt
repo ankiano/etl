@@ -4,7 +4,7 @@ humanize==0.5.1
 PyYAML==3.12
 pycrypto==2.6.1
 xlrd==1.1.0
-SQLAlchemy==1.2.6
+SQLAlchemy==1.2.8
 psycopg2-binary==2.7.4
 PyMySQL==0.7.11
 clickhouse-sqlalchemy==0.0.5
