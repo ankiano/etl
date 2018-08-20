@@ -517,6 +517,11 @@ def run_console():
     parser = OptionParser()
     define_options()
     (options, args) = parser.parse_args()
+
+    # Set directory to input/output
+    xls_dir = os.path.join(options.dir, 'xls') + os.path.sep
+    csv_dir = os.path.join(options.dir, 'csv') + os.path.sep
+
     check_options()
 
     # Setup logging params
@@ -529,10 +534,6 @@ def run_console():
         logging.getLogger("googleapiclient").setLevel(logging.WARNING)
         logging.getLogger("oauth2client").setLevel(logging.WARNING)
     logging.basicConfig(level=logging_level, format=format, datefmt=datefmt, )
-
-    # Set directory to input/output
-    xls_dir = os.path.join(options.dir, 'xls') + os.path.sep
-    csv_dir = os.path.join(options.dir, 'csv') + os.path.sep
 
     # Read all queries, getting sources
     query_dict = get_queries()
