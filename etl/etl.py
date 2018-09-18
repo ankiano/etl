@@ -150,7 +150,7 @@ def spreadsheet_open(workbook_name):
         logging.error('Gsheet credentials file not found. '
                       'Save ".gsheets-credentials.json" to home directory or'
                       ' set path in .etl.yml')
-        sys.exit()
+        sys.exit(1)
 
     # To prevent email printing by pygsheets
     sys.stdout = open(os.devnull, "w")
@@ -164,7 +164,7 @@ def spreadsheet_open(workbook_name):
     except pygsheets.exceptions.SpreadsheetNotFound:
         logging.error('Share spreadsheet {} with service email'.
                       format(workbook_name))
-        sys.exit()
+        sys.exit(1)
     return workbook
 
 
@@ -176,7 +176,7 @@ def gsheet_load(**kwargs):
     data = kwargs.get('data')
     if data.size >= 2000000:
         logging.error('Saving to gsheet is ommited due to limit 2M of cells')
-        sys.exit()
+        sys.exit(1)
 
     data = data.fillna('')
     data = data.astype(str)
