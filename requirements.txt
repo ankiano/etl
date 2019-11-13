@@ -1,7 +1,7 @@
 pygsheets==1.1.4
 pandas==0.25.3
 humanize==0.5.1
-PyYAML==3.12
+PyYAML==5.1
 pycrypto==2.6.1
 xlrd==1.1.0
 SQLAlchemy==1.2.8
