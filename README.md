@@ -1,6 +1,6 @@
 ### Installation:
     sudo apt install python3-dev python3-pip libsasl2-dev libbz2-dev
-    sudo pip3 install git+https://github.com/ankiano/etl.git -U
+    sudo -H pip3 install git+https://github.com/ankiano/etl.git -U
 
 ### Examples of usage:
 
