@@ -397,7 +397,7 @@ def get_config():
         config_path = home_config_file
 
     with open(config_path, 'r') as config_file:
-        cfg = yaml.load(config_file)
+        cfg = yaml.safe_load(config_file)
     return cfg
 
 
