@@ -1,7 +1,7 @@
 pygsheets==1.1.4
 pandas==0.24.2
 humanize==0.5.1
-PyYAML==3.12
+PyYAML==5.1.2
 xlrd==1.1.0
 SQLAlchemy==1.3.0
 psycopg2-binary==2.8.4
