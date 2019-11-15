@@ -1,5 +1,5 @@
 pygsheets==1.1.4
-pandas==0.25.3
+pandas==0.24.2
 humanize==0.5.1
 PyYAML==5.1
 xlrd==1.1.0
