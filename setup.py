@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.5
+#!/usr/bin/env python3.6
 # coding=utf-8
 
 from pip._internal.req import parse_requirements
