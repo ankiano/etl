@@ -368,16 +368,16 @@ def get_config():
         config_path = options.config
         logging.debug('Сonfig {} found from option'.format(config_path))
 
-    # Config file in home directory
-    elif home_config_file:
-        config_path = home_config_file
-        logging.debug('Сonfig {} found from home'.format(config_path))
-
     # Path to config file in environment
     elif os.path.exists(env_config_path):
         config_path = env_config_path
         logging.debug('Сonfig {} found from environment'.format(config_path))
-
+    
+    # Config file in home directory
+    elif home_config_file:
+        config_path = home_config_file
+        logging.debug('Сonfig {} found from home'.format(config_path))
+        
     # If no config, creating base config by default
     else:
         home_config_file = os.path.join(home_path, '.etl.yml')
