@@ -20,9 +20,9 @@
 Config `.etl.yml` searching priorities:
 
 1. by option `--config /somepath/.etl.yml`
-2. by default in home directory
-3. by enviroment variable "ETL_CONFIG"
+2. by enviroment variable "ETL_CONFIG"
     ```sudo echo "export ETL_CONFIG=~/etl.yml" > /etc/profile.d/etl.sh```
+3. by default in home directory
 4. if nothing found, then will be created default config with some examples
 
 Gspreadsheets token `.gsheet-credentials.json` searching priorities: 
