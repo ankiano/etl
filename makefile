@@ -38,7 +38,7 @@ dist: clean
 	python3 setup.py bdist_wheel
 
 upload:
-	twine upload dist/* --config-file /etc/pypirc --repository uaprom
+	twine upload dist/* --config-file /etc/pypirc --repository repository_name
 
 install: clean
 	python3 setup.py install
