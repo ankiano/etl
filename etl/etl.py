@@ -174,7 +174,7 @@ def gsheet_load(**kwargs):
 
     """
     data = kwargs.get('data')
-    if data.size >= 2000000:
+    if data.size >= 5000000:
         logging.error('Saving to gsheet is ommited due to limit 2M of cells')
         sys.exit(1)
 
