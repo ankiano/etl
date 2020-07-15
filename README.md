@@ -6,7 +6,7 @@
 ### Examples of usage:
 
     etl --help
-    
+
     etl --source dbname --extract my-query.sql --target some-gsheet-workbook!my-sheet
     etl --source db1,db2 --extract cube.sql --target xls
     etl --source some.csv --target some-new.xls
@@ -19,21 +19,23 @@
 
 Config `.etl.yml` searching priorities:
 
-1. by option `--config /somepath/.etl.yml`
-2. by enviroment variable "ETL_CONFIG"
-    ```sudo echo "export ETL_CONFIG=~/etl.yml" > /etc/profile.d/etl.sh```
+1. by command option `--config /somepath/.etl.yml`
+2. by os enviroment variable "ETL_CONFIG" ```sudo echo "export ETL_CONFIG=~/etl.yml" > /etc/profile.d/etl-config.sh```
 3. by default in home directory
 4. if nothing found, then will be created default config with some examples
 
-Gspreadsheets token `.gsheet-credentials.json` searching priorities: 
-1. by setting path in `.etl.yml`
-2. by default in home directory
+Google api token `.google-api-key.json` searching priorities:
+1. by command option `--google-api-key /somepath/.custom-key-name.json`
+2. by command option `--google-api-key key-alias`, from config file `.etl.yml` in block `google_api_keys:`
+3. by os enviroment variable "GOOGLE_API_KEY" ```sudo echo "export GOOGLE_API_KEY=~/.custom-key-name.json" > /etc/profile.d/google-api-key.sh```
+4. by config file `.etl.yml` in block `google_api_keys: key-alias: "/somepath/.custom-key-name.json"`, if more than one key is specified, then the key will be selected randomly
+5. by default in home directory with preset file name `.google_api_key.json'
 
 ### Hive dependencies:
 For conection to hive thrift server you might need install
 
     sudo apt-get install libsasl2-dev
-    
+
 For Windows it's also possible, but with some difficults:
 1. Instead `sasl` you might install `pure-sasl`
 2. Replace some code in [`pyhive/hive.py`](https://github.com/dropbox/PyHive/pull/122/commits/9662233072f8d64dfca8d4babe0ddf9bac003536)

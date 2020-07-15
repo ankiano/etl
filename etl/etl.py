@@ -10,6 +10,7 @@ import humanize
 import pygsheets
 import sqlalchemy
 import yaml
+import random
 
 
 def get_query(sql_file_path):
@@ -132,24 +133,42 @@ def spreadsheet_open(workbook_name):
     Authorize google client and open spreadsheet
 
     """
-    config_path = config.get('gsheet_key')
-    # If no eny path in config
-    config_path = '' if not config_path else os.path.expanduser(config_path)
 
-    home_key_path = os.path.expanduser('~/.gsheets-credentials.json')
-
-    # Take file from config
-    if os.path.exists(config_path):
-        key_path = config_path
-        logging.debug('Gsheet key {} found from etl config'.format(key_path))
-    # take file from home
-    elif os.path.exists(home_key_path):
-        key_path = home_key_path
-        logging.debug('Gsheet key {} found from home'.format(key_path))
+    # command option --google_api_key
+    if os.path.isfile(options.google_api_key):
+        key_path = options.google_api_key
+        logging.debug('Google api key {} found '
+                      'from command option --google_api_key'.\
+                      format(os.path.abspath(key_path)))
+    elif (config.get('google_api_keys')
+        and options.google_api_key in config.get('google_api_keys').keys()):
+        key_path = config.get('google_api_keys')[options.google_api_key]
+        logging.debug('Google api key {} found '
+                      'from etl.yml config file by alias={} '
+                      'in command option --google_api_key'.\
+                      format(os.path.abspath(key_path),options.google_api_key))
+    # os evironment variable GOOGLE_API_KEY
+    elif (os.environ.get("GOOGLE_API_KEY")
+        and os.path.isfile(os.environ.get("GOOGLE_API_KEY"))):
+        key_path = os.environ.get("GOOGLE_API_KEY")
+        logging.debug('Google api key {} found '
+                      'from os evironment variable GOOGLE_API_KEY'.\
+                      format(os.path.abspath(key_path)))
+    # randomly config (etl.yml) google_api_keys:
+    elif config.get('google_api_keys'):
+        key_path = random.choice(list(config.get('google_api_keys').values()))
+        logging.debug('Google api key {} was taken randomly '
+                      'from etl.yml config file (google_api_keys:)'.\
+                      format(os.path.abspath(key_path)))
+    # from user home dir
+    elif os.path.isfile(os.path.expanduser('~/.google-api-key.json')):
+        key_path = os.path.expanduser('~/.google-api-key.json')
+        logging.debug('Google api key {} found '
+                      'from user home dir'.format(os.path.abspath(key_path)))
     else:
-        logging.error('Gsheet credentials file not found. '
-                      'Save ".gsheets-credentials.json" to home directory or'
-                      ' set path in .etl.yml')
+        logging.error('Google api key file not found. '
+                      'Save .google-api-key.json to home directory or'
+                      ' set os environment variable (GOOGLE_API_KEY)')
         sys.exit(1)
 
     # To prevent email printing by pygsheets
@@ -372,12 +391,12 @@ def get_config():
     elif os.path.exists(env_config_path):
         config_path = env_config_path
         logging.debug('Сonfig {} found from environment'.format(config_path))
-    
+
     # Config file in home directory
     elif home_config_file:
         config_path = home_config_file
         logging.debug('Сonfig {} found from home'.format(config_path))
-        
+
     # If no config, creating base config by default
     else:
         home_config_file = os.path.join(home_path, '.etl.yml')
@@ -497,6 +516,10 @@ def define_options():
                       dest='config',
                       default='',
                       help="Custom path to etl.yml config")
+    parser.add_option('--google_api_key',
+                      dest='google_api_key',
+                      default='',
+                      help="Custom path to google-api-key.json config")
     parser.add_option('--debug',
                       action='store_true',
                       dest='debug',

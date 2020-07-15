@@ -110,5 +110,3 @@ crashlytics-build.properties
 
 /etl/VERSION
 /etl/etl.yml
-/test/csv
-/test/xls
