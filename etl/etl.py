@@ -181,7 +181,7 @@ def spreadsheet_open(workbook_name):
     try:
         workbook = gclient.open(workbook_name)
     except pygsheets.exceptions.SpreadsheetNotFound:
-        logging.error('Share spreadsheet {} with service email'.
+        logging.error('SpreadsheetNotFound error. Share spreadsheet {} with service email'.
                       format(workbook_name))
         sys.exit(1)
     return workbook
