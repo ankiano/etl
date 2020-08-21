@@ -4,7 +4,7 @@
 import sys
 import os
 import logging
-from optparse import OptionParser
+import click
 import pandas as pd
 import humanize
 import pygsheets
@@ -314,20 +314,21 @@ def get_queries():
 
 
 def check_options():
-    if not options.source:
-        parser.error('Error: Source not given')
     if options.extract and options.execute:
-        parser.error("Options --extract and --execute are mutually exclusive")
+        logging.error("Options --extract and --execute are mutually exclusive")
+        sys.exit(1)
     if options.source.endswith('!'):
-        parser.error(
-            "Error: options --source set workbook_name without sheet_name"
-        )
-    if options.source == 'csv':
+        logging.error(
+            f"--source {options.source} workbook_name without sheet_name")
+        sys.exit(1)
+    if options.source == 'csv': # ? это можно сделать в коллбеке
         if not os.path.exists(csv_dir):
-            parser.error("Error: csv folder not found")
+            logging.error("Error: csv folder not found")
+            sys.exit(1)
     if options.source == 'xls':
         if not os.path.exists(xls_dir):
-            parser.error("Error: xls folder not found")
+            logging.error("Error: xls folder not found")
+            sys.exit(1)
 
 
 def get_sources():
@@ -383,8 +384,8 @@ def get_config():
     env_config_path = os.path.expanduser(env_config_path)
 
     # Command line option if set
-    if os.path.exists(options.config):
-        config_path = options.config
+    if os.path.exists(options.config_path):
+        config_path = options.config_path
         logging.debug('Сonfig {} found from option'.format(config_path))
 
     # Path to config file in environment
@@ -482,64 +483,38 @@ def main():
             target_method(data_block_name=target_name, data=data)
 
 
-def define_options():
-    parser.add_option(
-        '--source',
-        dest="source",
-        default=False,
-        help="Source for extracting data. Database name, csv or xls filename",
-    )
-    parser.add_option('--extract',
-                      dest="extract",
-                      default=False,
-                      help="Source sql for extracting data from database")
-    parser.add_option('--execute',
-                      dest="execute",
-                      default=False,
-                      help="Sql file name for executing without "
-                           "extracting data")
-    parser.add_option('--target',
-                      dest="target",
-                      default='csv',
-                      help="Target for inserting data. Database name, "
-                           "csv or xls filename")
-    parser.add_option('--load',
-                      dest="load",
-                      default=False,
-                      help="Target for inserting data. Database _name, "
-                           "csv or xls filename")
-    parser.add_option('--dir',
-                      dest="dir",
-                      default=os.getcwd(),
-                      help="Working directory for scripts,outputs,etc")
-    parser.add_option('--config',
-                      dest='config',
-                      default='',
-                      help="Custom path to etl.yml config")
-    parser.add_option('--google_api_key',
-                      dest='google_api_key',
-                      default='',
-                      help="Custom path to google-api-key.json config")
-    parser.add_option('--debug',
-                      action='store_true',
-                      dest='debug',
-                      default=False,
-                      help="Extended level of logging with more info")
-
-
-def run_console():
-    global parser
+@click.command()
+@click.pass_context
+@click.option('--source', required=True,
+              help="Source for extracting data. Database name, csv \
+              or xls filename")
+@click.option('--extract', default=False,
+              help="Sql file name for extracting data from database")
+@click.option('--execute', default=False,
+            help="Sql file name for executing without extracting data")
+@click.option('--target', default='csv',
+              help="Target for inserting data. Database name, csv \
+              or xls filename")
+@click.option('--load', default=False,
+              help="Database schema and table name, if target is database")
+@click.option('--dir', default=os.getcwd(), show_default=True,
+              help="Working directory for scripts,outputs,etc")
+@click.option('--config-path', default='',
+              help="Custom path to etl.yml config")
+@click.option('--google_api_key', default='',
+              help="Custom path to google-api-key.json config")
+@click.option('--debug', default=False, is_flag=True,
+              help="Extended level of logging with more info")
+def cli(ctx, **kwargs):
     global options
+    global config
     global source_list
     global query_dict
     global xls_dir
     global csv_dir
-    global config
 
-    # Getting parameters from command line
-    parser = OptionParser()
-    define_options()
-    (options, args) = parser.parse_args()
+
+    options = type('OptionValuesClass', (), ctx.params)
 
     # Set directory to input/output
     xls_dir = os.path.join(options.dir, 'xls') + os.path.sep
@@ -570,4 +545,4 @@ def run_console():
 
 
 if __name__ == "__main__":
-    run_console()
+    cli()
