@@ -443,6 +443,8 @@ def main():
                 sql_path = query_dict.get(options.execute)
                 if sql_path:
                     sql = get_query(sql_path)
+                    if unknown_options:
+                        sql = str(sql).format(**unknown_options) # ok
                     logging.info('Executing: {}'.format(sql_path))
                     database_execute(sql=sql, db_name=source)
                 else:
@@ -456,6 +458,8 @@ def main():
                     sql_path = query_dict.get(query)
                     if sql_path:
                         sql = get_query(sql_path)
+                        if unknown_options:
+                            sql = str(sql).format(**unknown_options) # ok
                         logging.info('Getting data from {} database with {}'.
                                      format(source, sql_path))
                         data = database_extract(sql=sql, db_name=source)
@@ -483,7 +487,8 @@ def main():
             target_method(data_block_name=target_name, data=data)
 
 
-@click.command()
+@click.command(context_settings=dict(ignore_unknown_options=True,
+                                     allow_extra_args=True))
 @click.pass_context
 @click.option('--source', required=True,
               help="Source for extracting data. Database name, csv \
@@ -507,6 +512,7 @@ def main():
               help="Extended level of logging with more info")
 def cli(ctx, **kwargs):
     global options
+    global unknown_options
     global config
     global source_list
     global query_dict
@@ -532,6 +538,10 @@ def cli(ctx, **kwargs):
         logging.getLogger("googleapiclient").setLevel(logging.WARNING)
         logging.getLogger("oauth2client").setLevel(logging.WARNING)
     logging.basicConfig(level=logging_level, format=format, datefmt=datefmt, )
+
+    unknown_options = {ctx.args[i][2:]: ctx.args[i+1] for i in range(0, len(ctx.args), 2)}
+    if unknown_options:
+        logging.debug('Unknown user options: {}'.format(unknown_options))
 
     # Read all queries, getting sources
     query_dict = get_queries()
