@@ -21,7 +21,7 @@ requirements = [str(ir.req) for ir in parsed_requirements]
 
 setup(
     name='etl',
-    version='0.0.21',
+    version='0.0.22',
     description='ETL CLI tool',
     long_description='Extract transform load CLI tool for extracting small '
                      'and middle data volume from sources (databases, '
