@@ -11,6 +11,7 @@
     etl --source db1,db2 --extract cube.sql --target xls
     etl --source some.csv --target some-new.xls
     etl --source db1 --extract my-query.sql --target db2 --load scema.table_my_query
+    etl --source db1 --extract my-query-template.sql --target csv --user_sql_parameter 123
 
 ### Options syntax scheme:
 ![img_alt](etl-options-scheme.jpg)
