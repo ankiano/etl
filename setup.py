@@ -2,7 +2,7 @@
 # coding=utf-8
 
 from setuptools import setup, find_packages
-from pathlib imort Path
+from pathlib import Path
 from pkg_resources import parse_requirements
 
 with Path('requirements.txt').open() as requirements_txt:
