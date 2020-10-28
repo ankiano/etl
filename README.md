@@ -38,6 +38,8 @@ For conection to hive thrift server you might need install
     sudo apt-get install libsasl2-dev
 
 For Windows it's also possible, but with some difficults:
+install sasl from wheel https://www.lfd.uci.edu/~gohlke/pythonlibs/#sasl
+or
 1. Instead `sasl` you might install `pure-sasl`
 2. Replace some code in [`pyhive/hive.py`](https://github.com/dropbox/PyHive/pull/122/commits/9662233072f8d64dfca8d4babe0ddf9bac003536)
-3. Replace some code in [`thrift_sasl/___init.py___`] (https://github.com/cloudera/impyla/issues/238)
+3. Replace some code in [`thrift_sasl/___init.py___`](https://github.com/cloudera/impyla/issues/238)
