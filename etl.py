@@ -74,7 +74,9 @@ def database_load(**kwargs):
         con=engine,
         if_exists='append',
         index=False,
-        schema=schema_name
+        schema=schema_name,
+        method='multi',
+        chunksize=1000
     )
     logging.info("Saved data to '{}.{}' table".
                  format(schema_name, table_name))
