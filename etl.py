@@ -118,14 +118,19 @@ def xls_load(**kwargs):
         logging.info('xls folder created')
     data = kwargs.get('data')
     data_block_name = kwargs.get('data_block_name')
+
     if options.target == 'xls':
         result_file_path = xls_dir + data_block_name + '.xlsx'
     else:
-        result_file_path = xls_dir + options.target.split('.')[0] \
-                           + '.xlsx'
-    writer = pd.ExcelWriter(result_file_path)
-    data.to_excel(writer, sheet_name=data_block_name, index=False,
-                  engine='xlsxwriter')
+        result_file_path = xls_dir + options.target.split('.')[0] + '.xlsx'
+
+    file_mode = 'a' if os.path.exists(result_file_path) else 'w'
+    writer = pd.ExcelWriter(result_file_path, mode=file_mode)
+    if os.path.exists(result_file_path):
+        if data_block_name in writer.book.sheetnames:
+            writer.book.remove(writer.book[data_block_name])
+
+    data.to_excel(writer, sheet_name=data_block_name,index=False)
     writer.save()
     logging.info('Saved data to {}'.format(result_file_path))
 
