@@ -9,6 +9,8 @@ import pandas as pd
 import humanize
 import pygsheets
 import sqlalchemy
+from sqlalchemy import event
+from cx_Oracle import CLOB
 import yaml
 import random
 
