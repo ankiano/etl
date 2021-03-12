@@ -34,7 +34,10 @@ def dataframe_size_info_msg(df):
 def database_extract(**kwargs):
     sql = kwargs.get('sql')
     db_name = kwargs.get('db_name')
-    engine = sqlalchemy.create_engine(config.get('databases').get(db_name))
+    engine = sqlalchemy.create_engine(
+                            config.get('databases').get(db_name),
+                            max_identifier_length=128,
+                            )
     result = pd.read_sql(sql=sql, con=engine)
     logging.info(dataframe_size_info_msg(result))
     return result
@@ -43,7 +46,10 @@ def database_extract(**kwargs):
 def database_execute(**kwargs):
     sql = kwargs.get('sql')
     db_name = kwargs.get('db_name')
-    engine = sqlalchemy.create_engine(config.get('databases').get(db_name))
+    engine = sqlalchemy.create_engine(
+                            config.get('databases').get(db_name),
+                            max_identifier_length=128,
+                            )
     engine.execute(sql)
 
 
@@ -67,15 +73,26 @@ def database_load(**kwargs):
     else:
         table_name = options.load
 
-    engine = sqlalchemy.create_engine(config.get('databases').get(db_name))
+    engine = sqlalchemy.create_engine(
+                            config.get('databases').get(db_name),
+                            max_identifier_length=128,
+                            # pool_size=20, max_overflow=0
+                            # echo=True
+                            # echo='debug'
+                            )
 
+    @event.listens_for(engine, "do_setinputsizes")
+    def _remove_clob(inputsizes, cursor, statement, parameters, context):
+        for bindparam, dbapitype in list(inputsizes.items()):
+            if dbapitype is CLOB:
+                del inputsizes[bindparam]
+    
     data.to_sql(
         name=table_name,
         con=engine,
         if_exists='append',
         index=False,
         schema=schema_name,
-        method='multi',
         chunksize=1000
     )
     logging.info("Saved data to '{}.{}' table".
@@ -85,7 +102,7 @@ def database_load(**kwargs):
 def csv_extract(**kwargs):
     file_name = kwargs.get('file_name')
     source_file_path = csv_dir + file_name
-    result = pd.read_csv(source_file_path, header=0, sep=';')
+    result = pd.read_csv(source_file_path, header=0, sep=';', low_memory=False)
     logging.info(dataframe_size_info_msg(result))
     return result
 
