@@ -29,7 +29,7 @@ Google api token `.google-api-key.json` searching priorities:
 2. by command option `--google-api-key key-alias`, from config file `.etl.yml` in block `google_api_keys:`
 3. by os enviroment variable "GOOGLE_API_KEY" ```sudo echo "export GOOGLE_API_KEY=~/.custom-key-name.json" > /etc/profile.d/google-api-key.sh```
 4. by config file `.etl.yml` in block `google_api_keys: key-alias: "/somepath/.custom-key-name.json"`, if more than one key is specified, then the key will be selected randomly
-5. by default in home directory with preset file name `.google_api_key.json'
+5. by default in home directory with preset file name `.google_api_key.json`
 
 ### Hive dependencies:
 For conection to hive thrift server you might need install
