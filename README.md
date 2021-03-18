@@ -36,6 +36,7 @@ Google api token `.google-api-key.json` searching priorities:
 For conection to hive thrift server you might need install
 
     sudo apt-get install libsasl2-dev
+    sudo -H pip3 install PyHive==0.5.2 thrift==0.10.0 sasl==0.2.1 thrift-sasl==0.3.0
 
 For Windows it's also possible, but with some difficults:
 install sasl from wheel https://www.lfd.uci.edu/~gohlke/pythonlibs/#sasl
