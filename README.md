@@ -1,6 +1,5 @@
 ### Installation:
     sudo apt install python3-dev python3-pip
-    sudo -H pip3 install testresources
     sudo -H pip3 install git+https://github.com/ankiano/etl.git -U
 
 ### Examples of usage:
