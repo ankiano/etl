@@ -364,6 +364,10 @@ def msgraph_load(**kwargs):
     col_range = 'A1:%s1' % colnum_string(len(data.columns))
     response = api_call(requests.post, url, {"address": f"{col_range}","hasHeaders": True, "name": sheet}).json()
     table_id = response.get('id')
+    if response.get('error'):
+        logging.error(f"{response['error']['code']}: "\
+                      f"{response['error']['message']}")
+        sys.exit(1)
 
     # add table header
     url = workbook_url + f"/workbook/worksheets/{sheet}/range(address='{col_range}')"
