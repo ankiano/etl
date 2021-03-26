@@ -21,7 +21,7 @@
 
 Example of `.etl.yml`:
 
-databases:
+    databases:
         local: 'sqlite:///local.db'
         db_alias1: 'sqlite:////home/user/workspace/folder/some.db'
         db_alias2: 'postgres://user:pass@host:port/database'
