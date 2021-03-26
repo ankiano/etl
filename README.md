@@ -19,7 +19,7 @@
 
 ### Configurating:
 
-Example of `.etl.yml`:
+### Example of `.etl.yml`:
     databases:
         local: 'sqlite:///local.db'
         db_alias1: 'postgres://user:pass@host:port/database'
