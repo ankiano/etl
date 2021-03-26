@@ -21,9 +21,9 @@
 
 Example of `.etl.yml`:
     databases:
-	local: 'sqlite:///local.db'
+        local: 'sqlite:///local.db'
         db_alias1: 'postgres://user:pass@host:port/database'
-	db_alias2: 'mysql+pymysql://user:pass@host:port/database?charset=utf8'
+        db_alias2: 'mysql+pymysql://user:pass@host:port/database?charset=utf8'
 
 
 Config `.etl.yml` searching priorities:
