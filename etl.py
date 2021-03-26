@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3.8
 # coding=utf-8
 
 import sys
@@ -6,6 +6,7 @@ import os
 import logging
 import click
 import pandas as pd
+import numpy as np
 import humanize
 import pygsheets
 import sqlalchemy
@@ -13,6 +14,9 @@ from sqlalchemy import event
 from cx_Oracle import CLOB
 import yaml
 import random
+import msal
+import requests
+import urllib
 
 
 def get_query(sql_file_path):
@@ -88,7 +92,7 @@ def database_load(**kwargs):
         for bindparam, dbapitype in list(inputsizes.items()):
             if dbapitype is CLOB:
                 del inputsizes[bindparam]
-    
+
     data.to_sql(
         name=table_name,
         con=engine,
@@ -259,6 +263,123 @@ def gsheet_extract(**kwargs):
     logging.info(dataframe_size_info_msg(result))
     return result
 
+def msgraph_open(path):
+    """
+    Authorize ms google api client and get token
+
+    """
+
+    # command option --msgraph_api_key
+    if os.path.isfile(options.msgraph_api_key):
+        key_path = options.msgraph_api_key
+        logging.debug('MS graph api key {} found '
+                      'from command option --msgraph_api_key'.\
+                      format(os.path.abspath(key_path)))
+    # os evironment variable GOOGLE_API_KEY
+    elif (os.environ.get("MSGRAPH_API_KEY")
+        and os.path.isfile(os.environ.get("MSGRAPH_API_KEY"))):
+        key_path = os.environ.get("MSGRAPH_API_KEY")
+        logging.debug('MS graph api key {} found '
+                      'from os evironment variable MSGRAPH_API_KEY'.\
+                      format(os.path.abspath(key_path)))
+    # from user home dir
+    elif os.path.isfile(os.path.expanduser('~/.ms-graph-api-key.yml')):
+        key_path = os.path.expanduser('~/.ms-graph-api-key.yml')
+        logging.debug('MS graph api key {} found '
+                      'from user home dir'.format(os.path.abspath(key_path)))
+    else:
+        logging.error('MS graph api key file not found. '
+                      'Save .msgraph-api-key.yml to home directory or'
+                      ' set os environment variable (MSGRAPH_API_KEY)')
+        sys.exit(1)
+
+    # read config from yaml file
+    with open(key_path, 'r') as config_file:
+        cfg = yaml.safe_load(config_file)
+
+    # create the MSAL confidential client application and require token
+    app = msal.ConfidentialClientApplication(
+        client_id = cfg['client_id'],
+        authority=cfg['authority'],
+        client_credential=cfg['client_credential']
+        )
+    token_response = None
+    token_response = app.acquire_token_for_client(scopes=cfg['scopes'])
+    if token_response.get('error_description'):
+        logging.error('MS graph api error: {}'.
+                      format(token_response['error_description']))
+        sys.exit(1)
+    return token_response,cfg
+
+
+def msgraph_load(**kwargs):
+    """
+    Load data to ms graph api excel by name of workbook and by sheet name.
+
+    """
+    def api_call(method, url, body=None):
+        http_headers = {'Authorization':  token_response['access_token'],
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'}
+        endpoint = urllib.parse.urljoin(cfg['resource'],url.lstrip('/'))
+        logging.debug(f'endpoint: {endpoint}')
+        return method(endpoint, headers=http_headers, json=body)
+
+    def colnum_string(n):
+        '''
+        >>> colnum_string(28)
+        >>> AB
+        '''
+
+        string = ""
+        while n > 0:
+            n, remainder = divmod(n - 1, 26)
+            string = chr(65 + remainder) + string
+        return string
+
+    data = kwargs.get('data')
+    data = data.fillna('')
+    data = data.astype(str)
+
+    workbook_url = options.target.rsplit(':',1)[0]+":"
+    token_response, cfg = msgraph_open(workbook_url)
+    # If exact sheet name was not set
+    # then data_block_name will be selected as target sheet name
+    sheet = kwargs.get('data_block_name') \
+        if options.target.endswith(':') else options.target.rsplit(':',1)[1]
+
+    # try to add worksheet
+    url = workbook_url + f"/workbook/worksheets"
+    response = api_call(requests.post, url, {"name": f"{sheet}"})
+    if response.status_code == 201:
+        logging.info(f'New sheet {sheet} added')
+
+    # clear all worksheet range
+    url = workbook_url + f"/workbook/worksheets/{sheet}/range(address='A:XFD')/clear"
+    response = api_call(requests.post, url, {"applyTo": "All"})
+    response
+
+    # add new table
+    url = workbook_url + f"/workbook/worksheets/{sheet}/tables/add"
+    col_range = 'A1:%s1' % colnum_string(len(data.columns))
+    response = api_call(requests.post, url, {"address": f"{col_range}","hasHeaders": True, "name": sheet}).json()
+    table_id = response.get('id')
+
+    # add table header
+    url = workbook_url + f"/workbook/worksheets/{sheet}/range(address='{col_range}')"
+    body = {'values': [data.to_dict(orient='split')['columns']]}
+    response = api_call(requests.patch, url, body)
+
+    # add rows by chanks
+    chunksize = 1000
+    for g, df in data.groupby(np.arange(len(data)) // chunksize):
+        url = workbook_url + f"/workbook/tables/{table_id}/Rows"
+        body={'values': df.to_dict(orient='split')['data']}
+        response = api_call(requests.post, url, body)
+
+    if response.status_code == 201:
+        logging.info(f'Saved data to {workbook_url} on {sheet} sheet')
+
 
 def define_source_type(source):
     """
@@ -277,6 +398,8 @@ def define_source_type(source):
         return 'database'
     elif source.endswith('.csv'):
         return 'csv'
+    elif source.find('.xlsx:') > 0:
+        return 'msgraph'
     elif source.endswith('.xls') or source.endswith('.xlsx'):
         return 'xls'
     elif source == 'csv':
@@ -307,9 +430,12 @@ def define_target_name(source):
     # Exact target file names like test.csv
     elif options.target.find('.') > 0:
         name = options.target.split('.')[0]
-    # Sheet name if exist
+    # Google sheet name if exist
     elif options.target.find('!') > 0 and not options.target.endswith('!'):
         name = options.target.split('!')[1]
+    # MS graph sheet name if exist
+    elif options.target.find('.xlsx:') > 0 and not options.target.endswith('.xlsx:'):
+        name = options.target.rsplit(':')[1]
     # Sql file name if single set
     elif options.extract:
         if options.extract.endswith('.sql'):
@@ -452,6 +578,7 @@ def main():
     target_method_list = {
         'csv': csv_load,
         'gsheet': gsheet_load,
+        'msgraph': msgraph_load,
         'xls': xls_load,
         'database': database_load
     }
@@ -534,6 +661,8 @@ def main():
               help="Custom path to etl.yml config")
 @click.option('--google_api_key', default='',
               help="Custom path to google-api-key.json config")
+@click.option('--msgraph_api_key', default='',
+              help="Custom path to microsoft-graph-api-key.yml config")
 @click.option('--debug', default=False, is_flag=True,
               help="Extended level of logging with more info")
 def cli(ctx, **kwargs):

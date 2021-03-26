@@ -6,16 +6,25 @@
 
     etl --help
 
-    etl --source dbname --extract my-query.sql --target some-gsheet-workbook!my-sheet
     etl --source db1,db2 --extract cube.sql --target xls
     etl --source some.csv --target some-new.xls
     etl --source db1 --extract my-query.sql --target db2 --load scema.table_my_query
     etl --source db1 --extract my-query-template.sql --target csv --user_sql_parameter 123
+    etl --source dbname --extract my-query.sql --target some-gsheet-workbook!my-sheet
+    etl --source dbname --extract my-query.sql --target '/users/user_name@tenant/drive/root:/excel-workbook.xlsx:my-sheet'
+
 
 ### Options syntax scheme:
 ![img_alt](etl-options-scheme.jpg)
 
 ### Configurating:
+
+Example of `.etl.yml`:
+    databases:
+	local: 'sqlite:///local.db'
+        db_alias1: 'postgres://user:pass@host:port/database'
+	db_alias2: 'mysql+pymysql://user:pass@host:port/database?charset=utf8'
+
 
 Config `.etl.yml` searching priorities:
 
@@ -30,6 +39,12 @@ Google api token `.google-api-key.json` searching priorities:
 3. by os enviroment variable "GOOGLE_API_KEY" ```sudo echo "export GOOGLE_API_KEY=~/.custom-key-name.json" > /etc/profile.d/google-api-key.sh```
 4. by config file `.etl.yml` in block `google_api_keys: key-alias: "/somepath/.custom-key-name.json"`, if more than one key is specified, then the key will be selected randomly
 5. by default in home directory with preset file name `.google_api_key.json`
+
+Miscrosoft api secret `.ms-graph-api-key.yml` searching priorities:
+1. by command option `--ms-graph-api-key /somepath/.custom-key-name.yml`
+2. by os enviroment variable "MSGRAPH_API_KEY" ```sudo echo "export MSGRAPH_API_KEY=~/.custom-key-name.yml" > /etc/profile.d/msgraph-api-key.sh```
+3. by default in home directory with preset file name `.ms-graph_api_key.yml`
+
 
 ### Hive dependencies:
 For conection to hive thrift server you might need install

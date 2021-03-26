@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3.8
 # coding=utf-8
 
 from setuptools import setup, find_packages
@@ -12,7 +12,7 @@ with Path('requirements.txt').open() as requirements_txt:
 
 setup(
     name='etl',
-    version='0.0.27',
+    version='0.0.28',
     description='ETL CLI tool',
     long_description='Extract transform load CLI tool for extracting small '
                      'and middle data volume from sources (databases, '

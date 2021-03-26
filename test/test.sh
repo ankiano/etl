@@ -7,8 +7,8 @@ parent_dir=$(dirname $script_dir)
 #python3 $parent_dir/etl.py --source random-data.csv --target local --load main.product
 #python3 $parent_dir/etl.py --source local --extract color-cube.sql --target xls --debug
 
-python3 $parent_dir/etl.py --source local --extract color-cube.sql --target data.xlsx
-python3 $parent_dir/etl.py --source local --extract size-cube.sql --target data.xlsx
+#python3 $parent_dir/etl.py --source local --extract color-cube.sql --target data.xlsx
+#python3 $parent_dir/etl.py --source local --extract size-cube.sql --target data.xlsx
 #python3 $parent_dir/etl.py --source local --target xls
 #python3 $parent_dir/etl.py --source csv --target xls
 
@@ -25,6 +25,7 @@ python3 $parent_dir/etl.py --source local --extract size-cube.sql --target data.
 #python3 $parent_dir/etl.py --source local --extract color-cube.sql --target demo-datafeed! \
 #                           --debug --google_api_key key2
 
+#python3 $parent_dir/etl.py --source local --extract size-cube.sql --target '/users/user_name@tenant/drive/root:/test-datafeed.xlsx:new-sheet-3'
 
 #errors check
 #python3 $parent_dir/etl.py --target xls
