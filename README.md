@@ -22,9 +22,12 @@
 ### Example of `.etl.yml`:
     databases:
         local: 'sqlite:///local.db'
-        db_alias1: 'postgres://user:pass@host:port/database'
-        db_alias2: 'mysql+pymysql://user:pass@host:port/database?charset=utf8'
-
+        db_alias1: 'sqlite:////home/user/workspace/folder/some.db'
+        db_alias2: 'postgres://user:pass@host:port/database'
+        db_alias3: 'mysql+pymysql://user:pass@host:port/database?charset=utf8'
+        db_alias4: 'mssql+pymssql://user:pass@host:port/database'
+        db_alias5: 'oracle+cx_oracle://user:pass@host:port/database'
+        db_alias6: 'oracle+cx_oracle://sys:pass@host:port/database?mode=SYSDBA'
 
 Config `.etl.yml` searching priorities:
 
