@@ -148,7 +148,12 @@ def xls_load(**kwargs):
         result_file_path = xls_dir + options.target.split('.')[0] + '.xlsx'
 
     file_mode = 'a' if os.path.exists(result_file_path) else 'w'
-    writer = pd.ExcelWriter(result_file_path, mode=file_mode)
+    writer = pd.ExcelWriter(
+                            result_file_path,
+                            mode=file_mode,
+                            date_format='YYYY-MM-DD',
+                            datetime_format='YYYY-MM-DD HH:MM:SS'
+    )
     if os.path.exists(result_file_path):
         if data_block_name in writer.book.sheetnames:
             writer.book.remove(writer.book[data_block_name])
