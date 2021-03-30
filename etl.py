@@ -31,9 +31,8 @@ def get_query(sql_file_path):
 
 def dataframe_size_info_msg(df):
     assert isinstance(df, pd.DataFrame), type(df)
-    volume = humanize.naturalsize(df.memory_usage(index=True).sum()
-    msg = f'{volume} of data in {df.size} cells obtained'
-    return msg
+    volume = humanize.naturalsize(df.memory_usage(index=True).sum())
+    return f'{volume} of data in {df.size} cells obtained'
 
 
 def database_extract(**kwargs):
