@@ -33,20 +33,20 @@ Example of `.etl.yml`:
 Config `.etl.yml` searching priorities:
 
 1. by command option `--config /somepath/.etl.yml`
-2. by os enviroment variable "ETL_CONFIG" ```sudo echo "export ETL_CONFIG=~/etl.yml" > /etc/profile.d/etl-config.sh```
+2. by os enviroment variable ```sudo echo "export ETL_CONFIG=~/etl.yml" > /etc/profile.d/etl-config.sh```
 3. by default in home directory
 4. if nothing found, then will be created default config with some examples
 
 Google api token `.google-api-key.json` searching priorities:
 1. by command option `--google-api-key /somepath/.custom-key-name.json`
 2. by command option `--google-api-key key-alias`, from config file `.etl.yml` in block `google_api_keys:`
-3. by os enviroment variable "GOOGLE_API_KEY" ```sudo echo "export GOOGLE_API_KEY=~/.custom-key-name.json" > /etc/profile.d/google-api-key.sh```
+3. by os enviroment variable ```sudo echo "export GOOGLE_API_KEY=~/.custom-key-name.json" > /etc/profile.d/google-api-key.sh```
 4. by config file `.etl.yml` in block `google_api_keys: key-alias: "/somepath/.custom-key-name.json"`, if more than one key is specified, then the key will be selected randomly
 5. by default in home directory with preset file name `.google_api_key.json`
 
 Miscrosoft api secret `.ms-graph-api-key.yml` searching priorities:
 1. by command option `--ms-graph-api-key /somepath/.custom-key-name.yml`
-2. by os enviroment variable "MSGRAPH_API_KEY" ```sudo echo "export MSGRAPH_API_KEY=~/.custom-key-name.yml" > /etc/profile.d/msgraph-api-key.sh```
+2. by os enviroment variable ```sudo echo "export MSGRAPH_API_KEY=~/.custom-key-name.yml" > /etc/profile.d/msgraph-api-key.sh```
 3. by default in home directory with preset file name `.ms-graph_api_key.yml`
 
 
