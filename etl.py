@@ -24,6 +24,7 @@ def get_query(sql_file_path):
         sql_file_path = sql_file_path.replace("\r", "")
         sql = open(sql_file_path, 'r', encoding='utf-8')
         result = " ".join(sql.readlines())
+        loggin.debug(result)
         return sqlalchemy.text(result)
     except Exception as e:
         logging.error('Error with reading query, %s', type(e))
@@ -101,8 +102,7 @@ def database_load(**kwargs):
         schema=schema_name,
         chunksize=1000
     )
-    logging.info("Saved data to '{}.{}' table".
-                 format(schema_name, table_name))
+    logging.info(f'Saved data to {schema_name}.{table_name} table')
 
 
 def csv_extract(**kwargs):
@@ -110,6 +110,7 @@ def csv_extract(**kwargs):
     source_file_path = csv_dir + file_name
     result = pd.read_csv(source_file_path, header=0, sep=';', low_memory=False)
     logging.info(dataframe_size_info_msg(result))
+    logging.debug(result.info())
     return result
 
 
@@ -157,10 +158,11 @@ def xls_load(**kwargs):
     if os.path.exists(result_file_path):
         if data_block_name in writer.book.sheetnames:
             writer.book.remove(writer.book[data_block_name])
+    loggin.debug(data.info())
 
     data.to_excel(writer, sheet_name=data_block_name,index=False)
     writer.save()
-    logging.info('Saved data to {}'.format(result_file_path))
+    logging.info(f'Saved data to {result_file_path}')
 
 
 def spreadsheet_open(workbook_name):
@@ -280,7 +282,7 @@ def msgraph_open(path):
         logging.debug('MS graph api key {} found '
                       'from command option --msgraph_api_key'.\
                       format(os.path.abspath(key_path)))
-    # os evironment variable GOOGLE_API_KEY
+    # os evironment variable MSGRAPH_API_KEY
     elif (os.environ.get("MSGRAPH_API_KEY")
         and os.path.isfile(os.environ.get("MSGRAPH_API_KEY"))):
         key_path = os.environ.get("MSGRAPH_API_KEY")
