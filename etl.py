@@ -24,7 +24,7 @@ def get_query(sql_file_path):
         sql_file_path = sql_file_path.replace("\r", "")
         sql = open(sql_file_path, 'r', encoding='utf-8')
         result = " ".join(sql.readlines())
-        loggin.debug(result)
+        logging.debug(result)
         return sqlalchemy.text(result)
     except Exception as e:
         logging.error('Error with reading query, %s', type(e))
