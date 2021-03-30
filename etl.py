@@ -47,6 +47,7 @@ def database_extract(**kwargs):
                             )
     result = pd.read_sql(sql=sql, con=engine)
     logging.info(dataframe_size_info_msg(result))
+    logging.debug(f'Dataframe columns type:\n{result.dtypes}')
     return result
 
 
@@ -157,8 +158,8 @@ def xls_load(**kwargs):
     if os.path.exists(result_file_path):
         if data_block_name in writer.book.sheetnames:
             writer.book.remove(writer.book[data_block_name])
-    logging.debug(data.info())
 
+    logging.debug(f'Dataframe columns type:\n{result.dtypes}')
     data.to_excel(writer, sheet_name=data_block_name,index=False)
     writer.save()
     logging.info(f'Saved data to {result_file_path}')
