@@ -158,7 +158,7 @@ def xls_load(**kwargs):
     if os.path.exists(result_file_path):
         if data_block_name in writer.book.sheetnames:
             writer.book.remove(writer.book[data_block_name])
-    loggin.debug(data.info())
+    logging.debug(data.info())
 
     data.to_excel(writer, sheet_name=data_block_name,index=False)
     writer.save()
