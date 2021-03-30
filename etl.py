@@ -110,7 +110,6 @@ def csv_extract(**kwargs):
     source_file_path = csv_dir + file_name
     result = pd.read_csv(source_file_path, header=0, sep=';', low_memory=False)
     logging.info(dataframe_size_info_msg(result))
-    logging.debug(result.info())
     return result
 
 
