@@ -32,7 +32,7 @@ def get_query(sql_file_path):
 def dataframe_size_info_msg(df):
     assert isinstance(df, pd.DataFrame), type(df)
     volume = humanize.naturalsize(df.memory_usage(index=True).sum()
-    msg = f'{volume} of data in {df.size} cells obtained')
+    msg = f'{volume} of data in {df.size} cells obtained'
     return msg
 
 
@@ -175,29 +175,29 @@ def spreadsheet_open(workbook_name):
     if os.path.isfile(options.google_api_key):
         key_path = options.google_api_key
         logging.debug(f'Google api key {os.path.abspath(key_path)} found '
-                      'from command option --google_api_key')
+                      f'from command option --google_api_key')
     elif (config.get('google_api_keys')
         and options.google_api_key in config.get('google_api_keys').keys()):
         key_path = config.get('google_api_keys')[options.google_api_key]
         logging.debug(f'Google api key {os.path.abspath(key_path)} found '
                       f'from etl.yml config file by alias={options.google_api_key} '
-                      'in command option --google_api_key')
+                      f'in command option --google_api_key')
     # os evironment variable GOOGLE_API_KEY
     elif (os.environ.get("GOOGLE_API_KEY")
         and os.path.isfile(os.environ.get("GOOGLE_API_KEY"))):
         key_path = os.environ.get("GOOGLE_API_KEY")
         logging.debug(f'Google api key {os.path.abspath(key_path)} found '
-                      'from os evironment variable GOOGLE_API_KEY')
+                      f'from os evironment variable GOOGLE_API_KEY')
     # randomly config (etl.yml) google_api_keys:
     elif config.get('google_api_keys'):
         key_path = random.choice(list(config.get('google_api_keys').values()))
         logging.debug(f'Google api key {os.path.abspath(key_path)} was '
-                      'taken randomly from etl.yml config file (google_api_keys:)')
+                      f'taken randomly from etl.yml config file (google_api_keys:)')
     # from user home dir
     elif os.path.isfile(os.path.expanduser('~/.google-api-key.json')):
         key_path = os.path.expanduser('~/.google-api-key.json')
         logging.debug(f'Google api key {os.path.abspath(key_path)} found '
-                      'from user home dir')
+                      f'from user home dir')
     else:
         logging.error('Google api key file not found. '
                       'Save .google-api-key.json to home directory or'
@@ -214,7 +214,7 @@ def spreadsheet_open(workbook_name):
     try:
         workbook = gclient.open(workbook_name)
     except pygsheets.exceptions.SpreadsheetNotFound:
-        logging.error('SpreadsheetNotFound error. '
+        logging.error(f'SpreadsheetNotFound error. '
                       f'Share spreadsheet {workbook_name} with service email')
         sys.exit(1)
     return workbook
@@ -275,18 +275,18 @@ def msgraph_open(path):
     if os.path.isfile(options.msgraph_api_key):
         key_path = options.msgraph_api_key
         logging.debug(f'MS graph api key {os.path.abspath(key_path)} found '
-                      'from command option --msgraph_api_key')
+                      f'from command option --msgraph_api_key')
     # os evironment variable MSGRAPH_API_KEY
     elif (os.environ.get("MSGRAPH_API_KEY")
         and os.path.isfile(os.environ.get("MSGRAPH_API_KEY"))):
         key_path = os.environ.get("MSGRAPH_API_KEY")
         logging.debug(f'MS graph api key {os.path.abspath(key_path)} found '
-                      'from os evironment variable MSGRAPH_API_KEY')
+                      f'from os evironment variable MSGRAPH_API_KEY')
     # from user home dir
     elif os.path.isfile(os.path.expanduser('~/.ms-graph-api-key.yml')):
         key_path = os.path.expanduser('~/.ms-graph-api-key.yml')
         logging.debug(f'MS graph api key {os.path.abspath(key_path)} found '
-                      'from user home dir')
+                      f'from user home dir')
     else:
         logging.error('MS graph api key file not found. '
                       'Save .msgraph-api-key.yml to home directory or'
