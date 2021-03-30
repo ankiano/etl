@@ -159,7 +159,7 @@ def xls_load(**kwargs):
         if data_block_name in writer.book.sheetnames:
             writer.book.remove(writer.book[data_block_name])
 
-    logging.debug(f'Dataframe columns type:\n{result.dtypes}')
+    logging.debug(f'Dataframe columns type:\n{data.dtypes}')
     data.to_excel(writer, sheet_name=data_block_name,index=False)
     writer.save()
     logging.info(f'Saved data to {result_file_path}')
