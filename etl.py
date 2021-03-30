@@ -24,17 +24,15 @@ def get_query(sql_file_path):
         sql_file_path = sql_file_path.replace("\r", "")
         sql = open(sql_file_path, 'r', encoding='utf-8')
         result = " ".join(sql.readlines())
-        logging.debug(result)
         return sqlalchemy.text(result)
     except Exception as e:
-        logging.error('Error with reading query, %s', type(e))
+        logging.error(f'Error with reading query, {type(e)}')
 
 
 def dataframe_size_info_msg(df):
     assert isinstance(df, pd.DataFrame), type(df)
-    msg = '{} of data in {} cells obtained'.\
-        format(humanize.naturalsize(
-            df.memory_usage(index=True).sum()), df.size)
+    volume = humanize.naturalsize(df.memory_usage(index=True).sum()
+    msg = f'{volume} of data in {df.size} cells obtained')
     return msg
 
 
@@ -45,6 +43,7 @@ def database_extract(**kwargs):
                             config.get('databases').get(db_name),
                             max_identifier_length=128,
                             )
+    logging.debug(sql)
     result = pd.read_sql(sql=sql, con=engine)
     logging.info(dataframe_size_info_msg(result))
     logging.debug(f'Dataframe columns type:\n{result.dtypes}')
@@ -58,6 +57,7 @@ def database_execute(**kwargs):
                             config.get('databases').get(db_name),
                             max_identifier_length=128,
                             )
+    logging.debug(sql)
     engine.execute(sql)
 
 
@@ -125,7 +125,7 @@ def csv_load(**kwargs):
     else:
         result_file_path = csv_dir + options.target
     data.to_csv(result_file_path, sep=';', index=False, encoding='utf-8')
-    logging.info('Saved data to {}'.format(result_file_path))
+    logging.info(f'Saved data to {result_file_path}')
 
 
 def xls_extract(**kwargs):
@@ -174,34 +174,30 @@ def spreadsheet_open(workbook_name):
     # command option --google_api_key
     if os.path.isfile(options.google_api_key):
         key_path = options.google_api_key
-        logging.debug('Google api key {} found '
-                      'from command option --google_api_key'.\
-                      format(os.path.abspath(key_path)))
+        logging.debug(f'Google api key {os.path.abspath(key_path)} found '
+                      'from command option --google_api_key')
     elif (config.get('google_api_keys')
         and options.google_api_key in config.get('google_api_keys').keys()):
         key_path = config.get('google_api_keys')[options.google_api_key]
-        logging.debug('Google api key {} found '
-                      'from etl.yml config file by alias={} '
-                      'in command option --google_api_key'.\
-                      format(os.path.abspath(key_path),options.google_api_key))
+        logging.debug(f'Google api key {os.path.abspath(key_path)} found '
+                      f'from etl.yml config file by alias={options.google_api_key} '
+                      'in command option --google_api_key')
     # os evironment variable GOOGLE_API_KEY
     elif (os.environ.get("GOOGLE_API_KEY")
         and os.path.isfile(os.environ.get("GOOGLE_API_KEY"))):
         key_path = os.environ.get("GOOGLE_API_KEY")
-        logging.debug('Google api key {} found '
-                      'from os evironment variable GOOGLE_API_KEY'.\
-                      format(os.path.abspath(key_path)))
+        logging.debug(f'Google api key {os.path.abspath(key_path)} found '
+                      'from os evironment variable GOOGLE_API_KEY')
     # randomly config (etl.yml) google_api_keys:
     elif config.get('google_api_keys'):
         key_path = random.choice(list(config.get('google_api_keys').values()))
-        logging.debug('Google api key {} was taken randomly '
-                      'from etl.yml config file (google_api_keys:)'.\
-                      format(os.path.abspath(key_path)))
+        logging.debug(f'Google api key {os.path.abspath(key_path)} was '
+                      'taken randomly from etl.yml config file (google_api_keys:)')
     # from user home dir
     elif os.path.isfile(os.path.expanduser('~/.google-api-key.json')):
         key_path = os.path.expanduser('~/.google-api-key.json')
-        logging.debug('Google api key {} found '
-                      'from user home dir'.format(os.path.abspath(key_path)))
+        logging.debug(f'Google api key {os.path.abspath(key_path)} found '
+                      'from user home dir')
     else:
         logging.error('Google api key file not found. '
                       'Save .google-api-key.json to home directory or'
@@ -218,8 +214,8 @@ def spreadsheet_open(workbook_name):
     try:
         workbook = gclient.open(workbook_name)
     except pygsheets.exceptions.SpreadsheetNotFound:
-        logging.error('SpreadsheetNotFound error. Share spreadsheet {} with service email'.
-                      format(workbook_name))
+        logging.error('SpreadsheetNotFound error. '
+                      f'Share spreadsheet {workbook_name} with service email')
         sys.exit(1)
     return workbook
 
@@ -250,11 +246,10 @@ def gsheet_load(**kwargs):
         sheet.clear(start='A1')
     except pygsheets.exceptions.WorksheetNotFound:
         sheet = workbook.add_worksheet(sheet_name, rows=1, cols=1)
-        logging.info('New sheet %s added ' % sheet_name)
+        logging.info(f'New sheet {sheet_name} added')
 
     sheet.set_dataframe(data, start="A1", fit=True, nan='')
-    logging.info('Saved data to {}!{} spreadsheet'.
-                 format(workbook_name, sheet_name))
+    logging.info(f'Saved data to {workbook_name}!{sheet_name} spreadsheet')
 
 
 def gsheet_extract(**kwargs):
@@ -279,21 +274,19 @@ def msgraph_open(path):
     # command option --msgraph_api_key
     if os.path.isfile(options.msgraph_api_key):
         key_path = options.msgraph_api_key
-        logging.debug('MS graph api key {} found '
-                      'from command option --msgraph_api_key'.\
-                      format(os.path.abspath(key_path)))
+        logging.debug(f'MS graph api key {os.path.abspath(key_path)} found '
+                      'from command option --msgraph_api_key')
     # os evironment variable MSGRAPH_API_KEY
     elif (os.environ.get("MSGRAPH_API_KEY")
         and os.path.isfile(os.environ.get("MSGRAPH_API_KEY"))):
         key_path = os.environ.get("MSGRAPH_API_KEY")
-        logging.debug('MS graph api key {} found '
-                      'from os evironment variable MSGRAPH_API_KEY'.\
-                      format(os.path.abspath(key_path)))
+        logging.debug(f'MS graph api key {os.path.abspath(key_path)} found '
+                      'from os evironment variable MSGRAPH_API_KEY')
     # from user home dir
     elif os.path.isfile(os.path.expanduser('~/.ms-graph-api-key.yml')):
         key_path = os.path.expanduser('~/.ms-graph-api-key.yml')
-        logging.debug('MS graph api key {} found '
-                      'from user home dir'.format(os.path.abspath(key_path)))
+        logging.debug(f'MS graph api key {os.path.abspath(key_path)} found '
+                      'from user home dir')
     else:
         logging.error('MS graph api key file not found. '
                       'Save .msgraph-api-key.yml to home directory or'
@@ -313,8 +306,7 @@ def msgraph_open(path):
     token_response = None
     token_response = app.acquire_token_for_client(scopes=cfg['scopes'])
     if token_response.get('error_description'):
-        logging.error('MS graph api error: {}'.
-                      format(token_response['error_description']))
+        logging.error(f"MS graph api error: {token_response['error_description']}")
         sys.exit(1)
     return token_response,cfg
 
@@ -356,7 +348,7 @@ def msgraph_load(**kwargs):
         if options.target.endswith(':') else options.target.rsplit(':',1)[1]
 
     # try to add worksheet
-    url = workbook_url + f"/workbook/worksheets"
+    url = workbook_url + f'/workbook/worksheets'
     response = api_call(requests.post, url, {"name": f"{sheet}"})
     if response.status_code == 201:
         logging.info(f'New sheet {sheet} added')
@@ -384,7 +376,7 @@ def msgraph_load(**kwargs):
     # add rows by chanks
     chunksize = 1000
     for g, df in data.groupby(np.arange(len(data)) // chunksize):
-        url = workbook_url + f"/workbook/tables/{table_id}/Rows"
+        url = workbook_url + f'/workbook/tables/{table_id}/Rows'
         body={'values': df.to_dict(orient='split')['data']}
         response = api_call(requests.post, url, body)
 
@@ -420,7 +412,7 @@ def define_source_type(source):
     elif source.find('!') > 0:
         return 'gsheet'
     else:
-        logging.error('Data source (%s) is not recognized', source)
+        logging.error(f'Data source {source} is not recognized')
         return 'not specified'
 
 
@@ -522,7 +514,7 @@ def find_file(path, ends_mask, deep=False):
 
     """
     if not os.path.exists(path):
-        logging.error('{} path not found'.format(path))
+        logging.error(f'{path} path not found')
     elif deep:
         for root, dirs, files in os.walk(path):
             for f in files:
@@ -549,17 +541,17 @@ def get_config():
     # Command line option if set
     if os.path.exists(options.config_path):
         config_path = options.config_path
-        logging.debug('Сonfig {} found from option'.format(config_path))
+        logging.debug(f'Сonfig {config_path} found from option')
 
     # Path to config file in environment
     elif os.path.exists(env_config_path):
         config_path = env_config_path
-        logging.debug('Сonfig {} found from environment'.format(config_path))
+        logging.debug(f'Сonfig {config_path} found from environment')
 
     # Config file in home directory
     elif home_config_file:
         config_path = home_config_file
-        logging.debug('Сonfig {} found from home'.format(config_path))
+        logging.debug(f'Сonfig {config_path} found from home')
 
     # If no config, creating base config by default
     else:
@@ -575,8 +567,7 @@ def get_config():
                         "\n"
                         "#gsheet_key: '~/.gsheets-credentials.json'")
             config_file.write(template)
-        logging.info("New configuration file {} was created".
-                     format(home_config_file))
+        logging.info(f"New configuration file {home_config_file} was created")
         config_path = home_config_file
 
     with open(config_path, 'r') as config_file:
@@ -609,11 +600,10 @@ def main():
                     sql = get_query(sql_path)
                     if unknown_options:
                         sql = str(sql).format(**unknown_options) # ok
-                    logging.info('Executing: {}'.format(sql_path))
+                    logging.info(f'Executing: {sql_path}')
                     database_execute(sql=sql, db_name=source)
                 else:
-                    logging.error('Error: query {} not found'.
-                                  format(options.execute))
+                    logging.error(f'Error: query {options.execute} not found')
             else:
                 for query in query_dict:
                     # Use sql query name as name for
@@ -624,29 +614,27 @@ def main():
                         sql = get_query(sql_path)
                         if unknown_options:
                             sql = str(sql).format(**unknown_options) # ok
-                        logging.info('Getting data from {} database with {}'.
-                                     format(source, sql_path))
+                        logging.info(f'Getting data from {source} ' + \
+                                     f'database with {sql_path}')
                         data = database_extract(sql=sql, db_name=source)
                         target_method(data_block_name=target_name, data=data)
                     else:
-                        logging.error('Error: query {} not found'.
-                                      format(query))
+                        logging.error(f'Error: query {query} not found')
 
         if source_type == 'gsheet':
             workbook_name = source.split('!')[0]
             sheet_name = source.split('!')[1]
-            logging.info('Getting data from {}!{} gsheet'.
-                         format(workbook_name, sheet_name))
+            logging.info(f'Getting data from {workbook_name}!{sheet_name} gsheet')
             data = gsheet_extract(workbook=workbook_name, sheet=sheet_name)
             target_method(data_block_name=target_name, data=data)
 
         if source_type == 'csv':
-            logging.info('Getting data from {} file'.format(source))
+            logging.info(f'Getting data from {source} file')
             data = csv_extract(file_name=source)
             target_method(data_block_name=target_name, data=data)
 
         if source_type == 'xls':
-            logging.info('Getting data from {} file:'.format(source))
+            logging.info(f'Getting data from {source} file:')
             data = xls_extract(file_name=source)
             target_method(data_block_name=target_name, data=data)
 
@@ -707,7 +695,7 @@ def cli(ctx, **kwargs):
 
     unknown_options = {ctx.args[i][2:]: ctx.args[i+1] for i in range(0, len(ctx.args), 2)}
     if unknown_options:
-        logging.debug('Unknown user options: {}'.format(unknown_options))
+        logging.debug(f'Unknown user options: {unknown_options}')
 
     # Read all queries, getting sources
     query_dict = get_queries()
