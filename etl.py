@@ -576,7 +576,7 @@ def get_config():
 
 def main():
     target_type = define_source_type(options.target)
-    logging.debug(f'target method type: {target_type} detected')
+    logging.debug(f'target type: {target_type}')
     target_method_list = {
         'csv': csv_load,
         'gsheet': gsheet_load,
@@ -588,7 +588,9 @@ def main():
 
     for source in source_list:
         source_type = define_source_type(source)
+        logging.debug(f'source type: {source_type}')
         target_name = define_target_name(source)
+        logging.debug(f'target name: {target_name}')
 
         if source_type == 'database':
             # For saving data from multi source list with different names
