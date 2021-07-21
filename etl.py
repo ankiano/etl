@@ -429,15 +429,15 @@ def define_target_name(source):
     if options.target in config.get('databases') \
             and options.load.find('.') > 0:
         name = options.load.split('.')[1]
-    # Exact target file names like test.csv
-    elif options.target.find('.') > 0:
-        name = options.target.split('.')[0]
     # Google sheet name if exist
     elif options.target.find('!') > 0 and not options.target.endswith('!'):
         name = options.target.split('!')[1]
     # MS graph sheet name if exist
     elif options.target.find('.xlsx:') > 0 and not options.target.endswith('.xlsx:'):
         name = options.target.rsplit(':')[1]
+    # Exact target file names like test.csv
+    elif options.target.find('.') > 0:
+        name = options.target.split('.')[0]
     # Sql file name if single set
     elif options.extract:
         if options.extract.endswith('.sql'):
