@@ -576,7 +576,7 @@ def get_config():
 
 def main():
     target_type = define_source_type(options.target)
-    logging.debug(f'target type: {target_type} detected')
+    logging.debug(f'target method type: {target_type} detected')
     target_method_list = {
         'csv': csv_load,
         'gsheet': gsheet_load,
