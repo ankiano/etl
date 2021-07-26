@@ -354,7 +354,7 @@ def msgraph_load(**kwargs):
 
     # clear all worksheet range
     url = workbook_url + f"/workbook/worksheets/{sheet}/range(address='A:XFD')/clear"
-    response = api_call(requests.post, url, {"applyTo": "All"})
+    response = api_call(requests.post, url, {"applyTo": "Contents"})
     response
 
     # add new table
