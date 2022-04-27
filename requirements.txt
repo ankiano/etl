@@ -9,4 +9,4 @@ psycopg2-binary
 PyMySQL==0.7.11
 clickhouse-sqlalchemy==0.1.2
 cx-Oracle==8.1.0
-pymssql==2.1.5
+pymssql
