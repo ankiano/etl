@@ -12,3 +12,4 @@ SQLAlchemy==1.4.18 # connection pooling for datasorces
 #clickhouse-sqlalchemy==0.1.2 # clickhouse adapter
 #cx-Oracle==8.1.0 # oracle adapter
 #pymssql # ms sql server adapter
+#msal # microsoft authentication library
