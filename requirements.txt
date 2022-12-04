@@ -1,15 +1,5 @@
-click==6.7 # command line interfaces
-PyYAML==5.4.1 # yaml parser and emitter
-pandas==1.1.5 # data structures and operations for manipulating numerical tables
-humanize==0.5.1 # human-readable siz
-SQLAlchemy==1.4.18 # connection pooling for datasorces
-
-#pygsheets==2.0.3.1 # google spreadsheets python api v4
-#oauth2client==4.1.3 # client library for oauth 2.0.
-
-#psycopg2-binary # postgresql adapter
-#PyMySQL==0.7.11 # mysql adapter
-#clickhouse-sqlalchemy==0.1.2 # clickhouse adapter
-#cx-Oracle==8.1.0 # oracle adapter
-#pymssql # ms sql server adapter
-#msal # microsoft authentication library
+click # command line interfaces
+PyYAML # yaml parser and emitter
+pandas # data structures and operations for manipulating numerical tables
+humanize # human-readable siz
+SQLAlchemy # connection pooling for datasorces
