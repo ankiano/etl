@@ -2,13 +2,13 @@ script_dir=$(dirname $(readlink -f $0))
 parent_dir=$(dirname $script_dir)
 
 
-# python3 $parent_dir/etl.py --help
+python3 $parent_dir/etl.py --help
 
-python3 $parent_dir/etl.py --source 'https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv?sep=,' \
-                           --target input/titanic.csv
+# python3 $parent_dir/etl.py --source 'https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv?sep=,' \
+#                            --target input/titanic.csv
 
-python3 $parent_dir/etl.py --source input/titanic.csv \
-                           --target 'sqlite:///local.db' --load main.titanic
+# python3 $parent_dir/etl.py --source input/titanic.csv \
+#                            --target 'sqlite:///local.db' --load main.titanic
 
 # python3 $parent_dir/etl.py --source 'sqlite:///local.db' \
 #                            --execute  'drop table {table_name}' --table_name titanic
@@ -60,4 +60,4 @@ python3 $parent_dir/etl.py --source input/titanic.csv \
 #                            --load test-datafeed!titanic \
 #                            --debug
 
-python3 $parent_dir/etl.py --source local --extract sql/age.sql --target output/age.csv
+# python3 $parent_dir/etl.py --source local --extract sql/age.sql --target output/age.csv
