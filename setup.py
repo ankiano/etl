@@ -22,5 +22,5 @@ setup(
     install_requires=requirements,
     zip_safe=False,
     keywords='etl',
-    entry_points={'console_scripts': ['etl=etl.__main__']},
+    entry_points={'console_scripts': ['etl=etl:cli']},
 )

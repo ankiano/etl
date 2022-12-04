@@ -154,14 +154,6 @@ def create_dir(path):
 @cli.option('--config-path', default='', help="Custom path to etl.yml config")
 @cli.option('--debug', default=False, is_flag=True, help="Extended level of logging with more info")
 def get_cli_options(ctx, **kwargs):
-    options = type('OptionValuesClass', (), ctx.params)
-    extra_args = {ctx.args[i][2:]: ctx.args[i+1] for i in range(0, len(ctx.args), 2)}
-    return options, extra_args
-
-
-
-if __name__ == "__main__":
-
 # logging basic setup
     log_level = logging.INFO
     logging.basicConfig(level=log_level, format='%(asctime)s | %(levelname)-5s | %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
@@ -169,9 +161,10 @@ if __name__ == "__main__":
 
 # read cli options and extra args
     try:
-        options, extra_args = get_cli_options(standalone_mode=False)
-    except TypeError:
-        sys.exit(1) # only --help option rise typeError: cannot unpack non-iterable int object
+        options = type('OptionValuesClass', (), ctx.params)
+        extra_args = {ctx.args[i][2:]: ctx.args[i+1] for i in range(0, len(ctx.args), 2)}
+    # except TypeError:
+        # sys.exit(1) # only --help option rise typeError: cannot unpack non-iterable int object
     except Exception as e:
         log.error(e)
         sys.exit(1)
@@ -271,7 +264,6 @@ if __name__ == "__main__":
                         log.error(e)
                         sys.exit(1)
 
-if not options.execute: 
     log.info(dataframe_size_info(dataset))
 
 # load dataset to target
@@ -376,3 +368,7 @@ if not options.execute:
                             log.info(f'saved data to <{table}> table')
                     except Exception as e:
                         log.error(e)
+
+
+if __name__ == "__main__":
+    cli()
