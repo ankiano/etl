@@ -66,10 +66,10 @@ def get_source(source):
             s = cfg.get(source)
             if isinstance(s, list):
                 result = random.choice(s)
-                log.debug(f"source defined like a random choice by alias <{source}> from config file: {result}")
+                log.debug(f"source defined like a random choice by alias <{source}> from config file")
             else:
                 result = s
-                log.debug(f'source defined by alias <{source}> from config file: {result}')
+                log.debug(f'source defined by alias <{source}> from config file')
         else:
             if '.' in source:
                 log.error(f'<{source}> file not found')
@@ -320,7 +320,12 @@ def cli(ctx, **kwargs):
                 log.error(e)
         # load to sources with connection strings
         else:
-            target = get_source(target)
+            target = get_source(target) #target can be set like alias
+            if '?' in target:
+                target, target_params = target.split('?')
+            if target_params:
+                target_params = parse_url_params(target_params)
+            
             if any(s in target for s in special_sources): # any custom sources and apies
                 # load to google sheets
                 if 'google+sheets' in target:
@@ -330,6 +335,7 @@ def cli(ctx, **kwargs):
                         workbook = spreadsheet_open(workbook_name, target_params.get('credentials'))
                         google_err = __import__('pygsheets.exceptions')
                         try:
+                            log.info(f'loading data to google speadsheet <{workbook_name}>')
                             sheet = workbook.worksheet_by_title(sheet_name)
                             sheet.clear(start='A1')
                         except google_err.WorksheetNotFound:
