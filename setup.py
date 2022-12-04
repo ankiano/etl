@@ -12,17 +12,15 @@ with Path('requirements.txt').open() as requirements_txt:
 
 setup(
     name='etl',
-    version='0.0.33',
+    version='1.0.0',
     description='ETL CLI tool',
     long_description='Extract transform load CLI tool for extracting small '
-                     'and middle data volume from sources (databases, '
-                     'csv files, xls files, gspreadsheets) '
-                     'to target (databases, csv files, xls files, '
-                     'gspreadsheets) in free combination.',
+                     'and middle data volume between sources (databases, '
+                     'csv files, xls files, gspreadsheets).',
     py_modules=['etl'],
     include_package_data=True,
     install_requires=requirements,
     zip_safe=False,
     keywords='etl',
-    entry_points={'console_scripts': ['etl=etl:cli']},
+    entry_points={'console_scripts': ['etl=etl']},
 )
