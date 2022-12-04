@@ -153,7 +153,7 @@ def create_dir(path):
 @cli.option('--load', default='', help="Database schema and table name, if target is database")
 @cli.option('--config-path', default='', help="Custom path to etl.yml config")
 @cli.option('--debug', default=False, is_flag=True, help="Extended level of logging with more info")
-def get_cli_options(ctx, **kwargs):
+def cli(ctx, **kwargs):
 # logging basic setup
     log_level = logging.INFO
     logging.basicConfig(level=log_level, format='%(asctime)s | %(levelname)-5s | %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
