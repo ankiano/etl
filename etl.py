@@ -154,6 +154,9 @@ def create_dir(path):
 @cli.option('--config-path', default='', help="Custom path to etl.yml config")
 @cli.option('--debug', default=False, is_flag=True, help="Extended level of logging with more info")
 def cli(ctx, **kwargs):
+    global log
+    global options
+    global extra_args
 # logging basic setup
     log_level = logging.INFO
     logging.basicConfig(level=log_level, format='%(asctime)s | %(levelname)-5s | %(message)s', datefmt='%Y-%m-%d %H:%M:%S')

@@ -4,8 +4,8 @@ parent_dir=$(dirname $script_dir)
 
 python3 $parent_dir/etl.py --help
 
-# python3 $parent_dir/etl.py --source 'https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv?sep=,' \
-#                            --target input/titanic.csv
+python3 $parent_dir/etl.py --source 'https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv?sep=,' \
+                           --target input/titanic.csv
 
 # python3 $parent_dir/etl.py --source input/titanic.csv \
 #                            --target 'sqlite:///local.db' --load main.titanic
