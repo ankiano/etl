@@ -212,6 +212,7 @@ def cli(ctx, **kwargs):
                 source_method = pd.read_csv
             if source.endswith('.xlsx') or source.endswith('.xls'):
                 source_params.setdefault('header',0) # default params
+                source_params.setdefault('engine','openpyxl') # default params
                 source_method = pd.read_excel
             if source.endswith('.parquet'):
                 source_method = pd.read_parquet
@@ -267,6 +268,7 @@ def cli(ctx, **kwargs):
                         log.error(e)
                         sys.exit(1)
 
+    dataset = dataset.dropna() #dropping all rows where are completely empty
     log.info(dataframe_size_info(dataset))
 
 # load dataset to target
