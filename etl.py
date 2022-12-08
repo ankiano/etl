@@ -268,7 +268,7 @@ def cli(ctx, **kwargs):
                         log.error(e)
                         sys.exit(1)
 
-    dataset = dataset.dropna() #dropping all rows where are completely empty
+#     dataset = dataset.dropna() #dropping all rows where are completely empty
     log.info(dataframe_size_info(dataset))
 
 # load dataset to target
