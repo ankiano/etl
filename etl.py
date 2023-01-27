@@ -197,10 +197,10 @@ def cli(ctx, **kwargs):
     dataset = pd.DataFrame()
     if options.source:
         source_params = {}
-        if '?' in options.source:
-            source, source_params = options.source.split('?')
+        if '??' in options.source: # take parameters for sqlalchemy engine
+            source, source_params = options.source.split('??')
             source_params = parse_url_params(source_params)
-        else:
+        else: # parameters after ? will be forwarded directry to source/target
             source = options.source
         
         if os.path.isfile(source): # file
@@ -227,8 +227,8 @@ def cli(ctx, **kwargs):
         # extract from sources with connection string
         else:
             source = get_source(options.source)
-            if '?' in source:
-                source, source_params = source.split('?')
+            if '??' in source: # take parameters for sqlalchemy engine
+                source, source_params = source.split('??')
                 source_params = parse_url_params(source_params)
                 log.debug(f'source params: {source_params}')
 
@@ -274,9 +274,9 @@ def cli(ctx, **kwargs):
 # load dataset to target
     if options.target:
         target_params = {}
-        if '?' in options.target:
-            target, target_params = options.target.split('?')
-        else:
+        if '??' in options.target: # take parameters for sqlalchemy engine
+            target, target_params = options.target.split('??')
+        else: # parameters after ? will be forwarded directry to source/target
             target = options.target
         if target_params:
             target_params = parse_url_params(target_params)
@@ -323,8 +323,8 @@ def cli(ctx, **kwargs):
         # load to sources with connection strings
         else:
             target = get_source(target) #target can be set like alias
-            if '?' in target:
-                target, target_params = target.split('?')
+            if '??' in target: # take parameters for sqlalchemy engine
+                target, target_params = target.split('??')
             if target_params:
                 target_params = parse_url_params(target_params)
             
