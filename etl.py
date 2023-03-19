@@ -372,7 +372,7 @@ def cli(ctx, **kwargs):
                         table = options.load
                         schema = None
                     try:
-                        dataset.to_sql(name=table, schema=schema, con=engine, if_exists='append',index=False)
+                        dataset.to_sql(name=table, schema=schema, con=engine, if_exists='append',index=False, chunksizeint = 10000, method = 'multi')
                         if schema:
                             log.info(f'saved data to <{schema}.{table}> table')
                         else:
