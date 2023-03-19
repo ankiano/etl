@@ -373,11 +373,11 @@ def cli(ctx, **kwargs):
                     if load_params:
                         load_params = parse_url_params(load_params)
                     load_params.setdefault('if_exists','append')
-                    if load_params['index']:
+                    if load_params.get('index'):
                         load_params['index'] = bool(load_params['index'].lower() == 'true')
                     else:
                         load_params.setdefault('index',False)
-                    if load_params['chunksize']:
+                    if load_params.get('chunksize'):
                         load_params['chunksize'] = int(load_params['chunksize'])
                                         
                     log.debug(f'load params: {load_params}')
