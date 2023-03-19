@@ -369,7 +369,7 @@ def cli(ctx, **kwargs):
                     load_params = {}
                     if '??' in options.load: # take parameters for loading data
                         load, load_params = target.split('??')
-                    else
+                    else:
                         load = options.load
                     if load_params:
                         load_params = parse_url_params(load_params)
