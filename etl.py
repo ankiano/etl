@@ -373,7 +373,13 @@ def cli(ctx, **kwargs):
                     if load_params:
                         load_params = parse_url_params(load_params)
                     load_params.setdefault('if_exists','append')
-                    load_params.setdefault('index',False)
+                    if load_params['index']:
+                        load_params['index'] = bool(load_params['index'].lower() == 'true')
+                    else:
+                        load_params.setdefault('index',False)
+                    if load_params['chunksize']:
+                        load_params['chunksize'] = int(load_params['chunksize'])
+                                        
                     log.debug(f'load params: {load_params}')
                     if '.' in load:
                         schema, table  = options.load.split('.')
