@@ -375,6 +375,7 @@ def cli(ctx, **kwargs):
                         load_params = parse_url_params(load_params)
                     load_params.setdefault('if_exists','append')
                     load_params.setdefault('index',False)
+                    log.debug(f'load params: {load_params}')
                     if '.' in load:
                         schema, table  = options.load.split('.')
                     else:
