@@ -368,7 +368,7 @@ def cli(ctx, **kwargs):
                 if options.load:
                     load_params = {}
                     if '??' in options.load: # take parameters for loading data
-                        load, load_params = target.split('??')
+                        load, load_params = options.load.split('??')
                     else:
                         load = options.load
                     if load_params:
