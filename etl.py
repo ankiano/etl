@@ -299,7 +299,7 @@ def cli(ctx, **kwargs):
             target_params.setdefault('index',False)
             try: # load data
                 dataset.to_excel(target, **target_params)
-                log.info(f'data saved to file: {target}')
+                log.info(f'data saved to file <{target}>')
             except Exception as e:
                 log.error(e)
         # load to parquet
@@ -308,7 +308,7 @@ def cli(ctx, **kwargs):
             target_params.setdefault('index',False)
             try: # load data
                 dataset.to_parquet(target, **target_params)
-                log.info(f'data saved to file: {target}')
+                log.info(f'data saved to file <{target}>')
             except Exception as e:
                 log.error(e)
         # load to xml
@@ -317,7 +317,7 @@ def cli(ctx, **kwargs):
             target_params.setdefault('index',False)
             try: # load data
                 dataset.to_xml(target, **target_params)
-                log.info(f'data saved to file: {target}')
+                log.info(f'data saved to file <{target}>')
             except Exception as e:
                 log.error(e)
         # load to sources with connection strings
@@ -366,17 +366,23 @@ def cli(ctx, **kwargs):
                             del inputsizes[bindparam]
 
                 if options.load:
-                    if '.' in options.load:
+                    load_params = {}
+                    if '??' in options.load: # take parameters for loading data
+                        load, load_params = target.split('??')
+                    else
+                        load = options.load
+                    if load_params:
+                        load_params = parse_url_params(load_params)
+                    load_params.setdefault('if_exists','append')
+                    load_params.setdefault('index',False)
+                    if '.' in load:
                         schema, table  = options.load.split('.')
                     else:
                         table = options.load
                         schema = None
                     try:
-                        dataset.to_sql(name=table, schema=schema, con=engine, if_exists='append',index=False, chunksize = 10000, method = 'multi')
-                        if schema:
-                            log.info(f'saved data to <{schema}.{table}> table')
-                        else:
-                            log.info(f'saved data to <{table}> table')
+                        dataset.to_sql(name=table, schema=schema, con=engine, **load_params)
+                        log.info(f'saved data to <{target}> in <{load} table')
                     except Exception as e:
                         log.error(e)
 
