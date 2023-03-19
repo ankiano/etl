@@ -367,10 +367,9 @@ def cli(ctx, **kwargs):
 
                 if options.load:
                     load_params = {}
-                    if '??' in options.load: # take parameters for loading data
-                        load, load_params = options.load.split('??')
-                    else:
-                        load = options.load
+                    load = options.load
+                    if '??' in load: # take parameters for loading data
+                        load, load_params = load.split('??')
                     if load_params:
                         load_params = parse_url_params(load_params)
                     load_params.setdefault('if_exists','append')
