@@ -382,9 +382,9 @@ def cli(ctx, **kwargs):
                                         
                     log.debug(f'load params: {load_params}')
                     if '.' in load:
-                        schema, table  = options.load.split('.')
+                        schema, table  = load.split('.')
                     else:
-                        table = options.load
+                        table = load
                         schema = None
                     try:
                         dataset.to_sql(name=table, schema=schema, con=engine, **load_params)
