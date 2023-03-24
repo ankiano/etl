@@ -4,8 +4,8 @@ parent_dir=$(dirname $script_dir)
 
 # python3 $parent_dir/etl.py --help
 
-python3 $parent_dir/etl.py --source 'https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv?sep=,' \
-                           --target input/titanic.csv
+python3 $parent_dir/etl.py --source 'https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv??sep=,' \
+                           --target 'input/titanic.xlsx??sheet_name=1&if_sheet_exists=replace' --debug
 
 # python3 $parent_dir/etl.py --source input/titanic.csv \
 #                            --target 'sqlite:///local.db' --load main.titanic
@@ -13,16 +13,16 @@ python3 $parent_dir/etl.py --source 'https://raw.githubusercontent.com/mwaskom/s
 # python3 $parent_dir/etl.py --source 'sqlite:///local.db' \
 #                            --execute  'drop table {table_name}' --table_name titanic
 
-python3 $parent_dir/etl.py --source input/titanic.csv \
-                           --target local \
-                           --load main.titanic
+#python3 $parent_dir/etl.py --source input/titanic.csv \
+#                           --target local \
+#                           --load main.titanic
 
 # python3 $parent_dir/etl.py --source input/titanic.csv \
 #                            --target output/titanic.xls \
 #                            --debug
 
 # python3 $parent_dir/etl.py --source input/titanic.csv \
-#                            --target 'output/titanic.xlsx?sheet_name=data' \
+#                            --target 'output/titanic.xlsx??sheet_name=data' \
 #                            --debug
 
 # python3 $parent_dir/etl.py --source input/titanic.csv \
@@ -56,11 +56,11 @@ python3 $parent_dir/etl.py --source input/titanic.csv \
 # python3 $parent_dir/etl.py --source local \
 #                            --extract 'select * from test_{table_name}' \
 #                            --table_name 'xls' \
-#                            --target 'google+sheets:///?credentials=~/.google-api-key.json' \
+#                            --target 'google+sheets:///??credentials=~/.google-api-key.json' \
 #                            --load test-datafeed!titanic \
 #                            --debug
 
-python3 $parent_dir/etl.py --source local --extract sql/age.sql --target gsheets --load test-datafeed!age --debug
+# python3 $parent_dir/etl.py --source local --extract sql/age.sql --target gsheets --load test-datafeed!age --debug
 
 
 # python3 $parent_dir/etl.py --source local --extract sql/age.sql --target output/age.csv

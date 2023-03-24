@@ -3,6 +3,7 @@
 
 import os, sys
 import logging
+from telnetlib import theNULL
 import click as cli # command line interface
 # import pdb #debug
 import pandas as pd
@@ -81,7 +82,7 @@ def get_source(source):
 def dataframe_size_info(df):
     assert isinstance(df, pd.DataFrame), type(df)
     volume = humanize.naturalsize(df.memory_usage(index=True).sum())
-    return f'{volume} of data in amount of {df.shape[0]} rows,{df.shape[1]} columns,{df.size} cells recieved'
+    return f'{volume} of data in amount of {df.shape[0]} rows, {df.shape[1]} columns, {df.size} cells recieved'
 
 def get_config(alias):
     """
@@ -290,16 +291,24 @@ def cli(ctx, **kwargs):
             try: # load data
                 log.debug(f'target params: {target_params}')
                 dataset.to_csv(target, **target_params)
-                log.info(f'data saved to file: {target}')
+                log.info(f'data saved in file: {target}')
             except Exception as e:
                 log.error(e)
         # load to xlsx
         elif target.endswith('.xlsx') or target.endswith('.xls'):
             create_dir(target) # manage folders if not exist
-            target_params.setdefault('index',False)
+            log.debug(f'target params: {target_params}')
+            sheet_name = target_params.pop('sheet_name', 'data')
+            if os.path.exists(target):
+                mode = target_params.pop('mode', 'a') # read file mode or append by default
+            else:    
+                mode='w' #create new file mode
+            if mode == 'w': #if_sheet_exists is valid only when append mode
+                target_params.pop('if_sheet_exists', None)
             try: # load data
-                dataset.to_excel(target, **target_params)
-                log.info(f'data saved to file <{target}>')
+                with pd.ExcelWriter(target, mode=mode, **target_params) as writer:
+                    dataset.to_excel(writer, sheet_name=sheet_name, index=False) 
+                log.info(f'data saved in file <{target}> on sheet <{sheet_name}>')
             except Exception as e:
                 log.error(e)
         # load to parquet
@@ -378,8 +387,7 @@ def cli(ctx, **kwargs):
                     else:
                         load_params.setdefault('index',False)
                     if load_params.get('chunksize'):
-                        load_params['chunksize'] = int(load_params['chunksize'])
-                                        
+                        load_params['chunksize'] = int(load_params['chunksize'])     
                     log.debug(f'load params: {load_params}')
                     if '.' in load:
                         schema, table  = load.split('.')
