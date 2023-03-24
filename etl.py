@@ -297,6 +297,8 @@ def cli(ctx, **kwargs):
         # load to xlsx
         elif target.endswith('.xlsx') or target.endswith('.xls'):
             create_dir(target) # manage folders if not exist
+            target_params.setdefault('engine','openpyxl')
+            target_params.setdefault('if_sheet_exists','replace')
             log.debug(f'target params: {target_params}')
             sheet_name = target_params.pop('sheet_name', 'data')
             if os.path.exists(target):
