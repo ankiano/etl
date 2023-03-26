@@ -10,18 +10,39 @@ About project.
 
 Getting started
 ---------------
-Install application
+How to install
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Install the ``etl`` package
 
-
+.. code:: console
+   $ sudo -H pip3 install git+https://github.com/ankiano/etl.git -U
 
 Install additional source extentions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`etl` uses `SQLAlchemy` engine for connect to many source.
+So you can connect to any source additionaly install dialects extentions.
+
+.. list-table::
+   :widths: 25 50
+   :header-rows: 1
+   * - database
+     - how to install
+   * - posgtres
+     - .. code:: console
+            $ pip install psycopg2
+   * - oracle
+     - .. code:: console
+            $ pip install cx-Oracle
+
 
 .. note::
    Some note.
    You can learn more about :doc:`our two different sites </choosing-a-site>`.
 
+Setup config file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. tip::
+    We recommend that you
 
 Keys decsription
 ---------------
