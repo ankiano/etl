@@ -15,6 +15,7 @@ How to install
 Install the ``etl`` package
 
 .. code:: console
+
    $ sudo -H pip3 install git+https://github.com/ankiano/etl.git -U
 
 Install additional source extentions
