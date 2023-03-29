@@ -45,11 +45,6 @@ This will install the latest version of ETL from the GitHub repository.
 
    To install python on Windows it is make sence to use Anaconda3 package (https://www.anaconda.com)
 
-Install additional source extentions
--------------------
-
-`etl` uses `SQLAlchemy` engine for connect to many source.
-So you can connect to any source additionaly install dialects extentions.
 
 Installing additional dialects
 -------------------------------
@@ -57,7 +52,7 @@ Installing additional dialects
 `etl` uses the `SQLAlchemy` engine to connect to many different sources, and supports additional dialects for connecting to specific databases. 
 Here are some of the SQL databases and sources supported by SQLAlchemy:
 
-.. list-table:: Additional SQLAlchemy Dialects
+.. list-table::
    :header-rows: 1
 
    * - Dialect
@@ -79,11 +74,10 @@ Here are some of the SQL databases and sources supported by SQLAlchemy:
    * - Hive
      - ``pip3 install pyhive[hive]``
 
-Google sheets connection realise in etl package using api.
+Google sheets connection realised by `pygsheets <https://pygsheets.readthedocs.io/en/stable/>`.
 
 .. note::
-   Note that you will need to have the appropriate drivers installed for the dialect to work properly. 
-   Additionally, some dialects may require additional configuration, such as providing connection parameters. 
+   Note that some dialects may require additional configuration or to have the appropriate drivers or client installed. 
    Please refer to the `SQLAlchemy dialects documentation <https://docs.sqlalchemy.org/en/20/dialects/index.html#dialects>`_ for more information on configuring dialects.
 
 
