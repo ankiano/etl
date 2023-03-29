@@ -79,7 +79,7 @@ Keys decsription
 ================
 
 .. figure:: /_static/options-scheme.jpg
-   :width: 80%
+   :width: 100%
    :align: center
    :alt: Options scheme
 
