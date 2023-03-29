@@ -1,7 +1,6 @@
 For documentation and full examples, please see the [documentation](https://etltool.readthedocs.io/en/latest/#).
 
 ### Installation:
-    sudo apt install python3-dev python3-pip
     sudo -H pip3 install git+https://github.com/ankiano/etl.git -U
 
 ### Quick examples of usage:
