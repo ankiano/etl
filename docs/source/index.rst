@@ -15,7 +15,6 @@ ETL allows users to extract data from a variety of sources, including CSV, JSON,
 The lightweight nature of ETL makes it ideal for small to medium-sized projects, where a more heavyweight ETL tool may be overkill. 
 In this documentation, we will cover how to install and use ETL, as well as provide examples and best practices.
 
-.. _installation:
 
 Installation
 ============
@@ -102,7 +101,6 @@ Keys decsription
    when you need run query without result, e.x. ``drop table my_table``
 
 
-
 Setup config file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 In order to set up connections to databases, etl uses the connection string format. However, connection strings can be long. 
@@ -110,6 +108,7 @@ To save time, etl can find the connection string by its alias in a .etl.yml conf
 
 
 .. code-block:: yaml
+
    local: 'sqlite:///local.db'
    db_alias1: 'sqlite:////home/user/workspace/folder/some.db'
    db_alias2: 'postgres://user:pass@host:port/database'
@@ -127,13 +126,11 @@ Config .etl.yml searching priorities:
 .. toctree::
    :maxdepth: 2
 
-   * Overview
-   * :ref:`installation`
-   * Additional Dialects
-   * Setup Config File
-
-
-Indices and tables
-==================
-
-* :ref:`installation`
+   Overview
+   Installation
+   Prerequisites
+   Installing with pip
+   Installing additional dialects
+   Keys decsription
+   Setup config file
+   
