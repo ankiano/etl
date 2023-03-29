@@ -119,7 +119,6 @@ Config .etl.yml searching priorities:
 
 
 .. toctree::
-   :maxdepth: 2
 
    Overview
    Installation
