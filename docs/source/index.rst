@@ -3,10 +3,18 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-etl documentation
-====================================
+ETL tool documentation
+=================
 
-About project.
+Overview
+--------
+
+ETL is a lightweight command-line tool for extracting, transforming, and loading data from various sources. 
+Inspired by the simplicity of SQLite or DuckDB databases, ETL aims to provide a simple, easy-to-use tool for ETL tasks that can be easily set up with just a few commands without the need for complex tools or programming.
+ETL allows users to extract data from a variety of sources, including CSV, JSON, XML, Excel, SQL databases, and Google Sheets. 
+The lightweight nature of ETL makes it ideal for small to medium-sized projects, where a more heavyweight ETL tool may be overkill. 
+In this documentation, we will cover how to install and use ETL, as well as provide examples and best practices.
+
 
 Getting started
 ---------------
