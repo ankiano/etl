@@ -36,13 +36,12 @@ The easiest way to install ETL is to use pip, the Python package installer. Simp
 .. code-block:: console
 
    $ pip install git+https://github.com/ankiano/etl.git
-   $ pip install git+https://github.com/ankiano/etl.git -U
-   $ sudo -H pip install git+https://github.com/ankiano/etl.git -U
+   $ pip install git+https://github.com/ankiano/etl.git -U #Update version if exists 
+   $ sudo -H pip install git+https://github.com/ankiano/etl.git -U #setup to system level
 
 This will install the latest version of ETL from the GitHub repository.
 
 .. tip::
-
    To install python on Windows it is make sence to use Anaconda3 package (https://www.anaconda.com)
 
 
@@ -74,17 +73,11 @@ Here are some of the SQL databases and sources supported by SQLAlchemy:
    * - Hive
      - ``pip3 install pyhive[hive]``
 
-Google sheets connection realised by `pygsheets <https://pygsheets.readthedocs.io/en/stable/>`.
+Google sheets connection realised by `pygsheets <https://pygsheets.readthedocs.io/en/stable/>`_
 
 .. note::
    Note that some dialects may require additional configuration or to have the appropriate drivers or client installed. 
    Please refer to the `SQLAlchemy dialects documentation <https://docs.sqlalchemy.org/en/20/dialects/index.html#dialects>`_ for more information on configuring dialects.
-
-
-Setup config file
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. tip::
-    We recommend that you
 
 Keys decsription
 ---------------
@@ -105,6 +98,31 @@ Keys decsription
 ``-execute``
    Optional key for databases, 
    when you need run query without result, e.x. ``drop table my_table``
+
+
+
+Setup config file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In order to set up connections to databases, etl uses the connection string format. However, connection strings can be long. 
+To save time, etl can find the connection string by its alias in a .etl.yml config file:
+
+.. code-block:: yaml
+   local: 'sqlite:///local.db'
+   db_alias1: 'sqlite:////home/user/workspace/folder/some.db'
+   db_alias2: 'postgres://user:pass@host:port/database'
+   db_alias3: 'mysql+pymysql://user:pass@host:port/database?charset=utf8'
+   db_alias5: 'oracle+cx_oracle://sys:pass@host:port/database?mode=SYSDBA'
+
+Config .etl.yml searching priorities:
+* by command option ``--config`` `/somepath/.etl.yml`
+* by OS environment variable: ``sudo echo "export ETL_CONFIG=~/etl.yml" > /etc/profile.d/etl-config.sh``
+* by default in user home directory
+
+
+.. tip::
+    We recommend that you
+
+
 
 
 .. toctree::
