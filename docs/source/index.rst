@@ -109,7 +109,8 @@ To save time, etl can find the connection string by its alias in a .etl.yml conf
    db_alias1: 'sqlite:////home/user/workspace/folder/some.db'
    db_alias2: 'postgres://user:pass@host:port/database'
    db_alias3: 'mysql+pymysql://user:pass@host:port/database?charset=utf8'
-   db_alias5: 'oracle+cx_oracle://sys:pass@host:port/database?mode=SYSDBA'
+   db_alias4: 'oracle+cx_oracle://sys:pass@host:port/database?mode=SYSDBA'
+   gsheet: 'google+sheets://??credentials=~/.google-api-key.json'
 
 
 Config .etl.yml searching priorities:
