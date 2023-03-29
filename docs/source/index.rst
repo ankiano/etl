@@ -114,9 +114,9 @@ To save time, etl can find the connection string by its alias in a .etl.yml conf
    db_alias5: 'oracle+cx_oracle://sys:pass@host:port/database?mode=SYSDBA'
 
 Config .etl.yml searching priorities:
-* by command option ``--config`` `/somepath/.etl.yml`
-* by OS environment variable: ``sudo echo "export ETL_CONFIG=~/etl.yml" > /etc/profile.d/etl-config.sh``
-* by default in user home directory
+   * by command option ``--config`` `/somepath/.etl.yml`
+   * by OS environment variable: ``sudo echo "export ETL_CONFIG=~/etl.yml" > /etc/profile.d/etl-config.sh``
+   * by default in user home directory
 
 
 .. tip::
