@@ -4,11 +4,11 @@ ETL tool documentation
 Overview
 ========
 
-ETL is a lightweight command-line tool for extracting, transforming, and loading data from various sources. 
-Inspired by the simplicity of SQLite or DuckDB databases, ETL aims to provide a simple, easy-to-use tool for ETL tasks that can be easily set up with just a few commands without the need for complex tools or programming.
-ETL allows users to extract data from a variety of sources, including CSV, JSON, XML, Excel, SQL databases, and Google Sheets. 
-The lightweight nature of ETL makes it ideal for small to medium-sized projects, where a more heavyweight ETL tool may be overkill. 
-In this documentation, we will cover how to install and use ETL, as well as provide examples and best practices.
+`etl` is a lightweight command-line tool for extracting, transforming, and loading data from various sources. 
+Inspired by the simplicity of SQLite or DuckDB databases, `etl` aims to provide a simple, easy-to-use tool for `etl` tasks that can be easily set up with just a few commands without the need for complex tools or programming.
+`etl` allows users to extract data from a variety of sources, including CSV, JSON, XML, Excel, SQL databases, and Google Sheets. 
+The lightweight nature of `etl` makes it ideal for small to medium-sized projects, where a more heavyweight `etl` tool may be overkill. 
+In this documentation, we will cover how to install and use `etl`, as well as provide examples and best practices.
 
 
 Installation
@@ -17,7 +17,7 @@ Installation
 Prerequisites
 -------------
 
-Before installing ETL, you will need the following:
+Before installing `etl`, you will need the following:
 
 - Git (https://git-scm.com/)
 - Python 3.9 or higher (https://www.python.org/downloads/)
@@ -27,7 +27,7 @@ Before installing ETL, you will need the following:
 Installing with pip
 -------------------
 
-The easiest way to install ETL is to use pip, the Python package installer. Simply run the following command in your terminal:
+The easiest way to install `etl` is to use pip, the Python package installer. Simply run the following command in your terminal:
 
 .. code-block:: console
 
@@ -122,3 +122,4 @@ Config .etl.yml searching priorities:
 .. toctree::
    :caption: Table of Contents
 
+   index
