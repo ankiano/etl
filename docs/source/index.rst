@@ -96,8 +96,8 @@ Option keys
    when you need run query without result, e.x. ``drop table my_table``
 
 
-Setup config file
-=================
+Config file
+===========
 In order to set up connections to databases, etl uses the connection string format. However, connection strings can be long. 
 To save time, etl can find the connection string by its alias in a .etl.yml config file:
 
