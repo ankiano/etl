@@ -15,6 +15,8 @@ ETL allows users to extract data from a variety of sources, including CSV, JSON,
 The lightweight nature of ETL makes it ideal for small to medium-sized projects, where a more heavyweight ETL tool may be overkill. 
 In this documentation, we will cover how to install and use ETL, as well as provide examples and best practices.
 
+.. _installation:
+
 Installation
 ============
 
@@ -118,17 +120,13 @@ Config .etl.yml searching priorities:
    * by OS environment variable: ``sudo echo "export ETL_CONFIG=~/etl.yml" > /etc/profile.d/etl-config.sh``
    * by default in user home directory
 
-
-.. tip::
-    We recommend that you
-
-
-
-
 .. toctree::
    :maxdepth: 2
-   :install: Contents:
 
+   Overview
+   Installation :ref:`installation`
+   Additional Dialects
+   Setup Config File
 
 
 Indices and tables
