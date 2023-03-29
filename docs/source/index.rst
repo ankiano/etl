@@ -15,19 +15,6 @@ ETL allows users to extract data from a variety of sources, including CSV, JSON,
 The lightweight nature of ETL makes it ideal for small to medium-sized projects, where a more heavyweight ETL tool may be overkill. 
 In this documentation, we will cover how to install and use ETL, as well as provide examples and best practices.
 
-
-Installation
-============
-
-Install the ``etl`` package
-
-.. code:: console
-
-   $ pip3 install git+https://github.com/ankiano/etl.git
-
-
-
-
 Installation
 ============
 
@@ -60,9 +47,9 @@ This will install the latest version of ETL from the GitHub repository.
 
 Install additional source extentions
 -------------------
+
 `etl` uses `SQLAlchemy` engine for connect to many source.
 So you can connect to any source additionaly install dialects extentions.
-
 
 Installing additional dialects
 -------------------------------
@@ -70,25 +57,27 @@ Installing additional dialects
 `etl` uses the `SQLAlchemy` engine to connect to many different sources, and supports additional dialects for connecting to specific databases. 
 Here are some of the SQL databases and sources supported by SQLAlchemy:
 
-+-------------+-------------------------------------------------------+
-| Dialect     | Install command                                       |
-+=============+=======================================================+
-| PostgreSQL  | ``pip3 install psycopg2-binary``                       |
-+-------------+-------------------------------------------------------+
-| Oracle      | ``pip3 install cx_Oracle``                            |
-+-------------+-------------------------------------------------------+
-| MySQL       | ``pip3 install mysqlclient``                           |
-+-------------+-------------------------------------------------------+
-| SQL Server  | ``pip3 install pyodbc``                                |
-+-------------+-------------------------------------------------------+
-| SQLite      | ``pip3 install pysqlite3``                             |
-+-------------+-------------------------------------------------------+
-| DuckDB      | ``pip3 install duckdb-engine``                     |
-+-------------+-------------------------------------------------------+
-| Presto      | ``pip3 install presto-python-client sqlalchemy_presto`` |
-+-------------+-------------------------------------------------------+
-| Hive        | ``pip3 install pyhive[hive]``                          |
-+-------------+-------------------------------------------------------+
+.. list-table:: Additional SQLAlchemy Dialects
+   :header-rows: 1
+
+   * - Dialect
+     - Install Command
+   * - PostgreSQL
+     - ``pip3 install psycopg2-binary``
+   * - Oracle
+     - ``pip3 install cx_Oracle``
+   * - MySQL
+     - ``pip3 install mysqlclient``
+   * - SQL Server
+     - ``pip3 install pyodbc``
+   * - SQLite
+     - ``pip3 install pysqlite3``
+   * - DuckDB
+     - ``pip3 install duckdb-engine``
+   * - Presto
+     - ``pip3 install presto-python-client sqlalchemy_presto``
+   * - Hive
+     - ``pip3 install pyhive[hive]``
 
 Google sheets connection realise in etl package using api.
 
