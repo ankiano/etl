@@ -123,18 +123,17 @@ Config .etl.yml searching priorities:
    * by OS environment variable: ``sudo echo "export ETL_CONFIG=~/etl.yml" > /etc/profile.d/etl-config.sh``
    * by default in user home directory
 
+
 .. toctree::
    :maxdepth: 2
 
-   Overview
-   Installation :ref:`installation`
-   Additional Dialects
-   Setup Config File
+   * Overview
+   * :ref:`installation`
+   * Additional Dialects
+   * Setup Config File
 
 
 Indices and tables
 ==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+* :ref:`installation`
