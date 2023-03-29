@@ -8,12 +8,11 @@ For documentation and full examples, please see the [documentation](https://etlt
 
     etl --help
 
-    etl --source db1,db2 --extract cube.sql --target xls
-    etl --source some.csv --target some-new.xls
-    etl --source db1 --extract my-query.sql --target db2 --load scema.table_my_query
-    etl --source db1 --extract my-query-template.sql --target csv --user_sql_parameter 123
-    etl --source dbname --extract my-query.sql --target some-gsheet-workbook!my-sheet
-    etl --source dbname --extract my-query.sql --target '/users/user_name@tenant/drive/root:/excel-workbook.xlsx:my-sheet'
+    etl --source 'https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv??sep=,' --target input/titanic.xlsx
+    etl --source 'sqlite:////home/user/my-local.db' --extract my-query.sql --target result.csv
+    etl --source db_alias2 --extract my-query-template.sql --user_sql_parameter 123 --target output/result.xlsx
+    etl --source db_alias3 --extract my-query.sql --target gsheet --load some-gsheet-workbook!my-sheet
+    etl --source input/titanic.xlsx --target 'sqlite:///local.db' --load main.titanic
 
 
 ### Options syntax scheme:
@@ -23,14 +22,12 @@ For documentation and full examples, please see the [documentation](https://etlt
 
 Example of `.etl.yml`:
 
-    databases:
-        local: 'sqlite:///local.db'
-        db_alias1: 'sqlite:////home/user/workspace/folder/some.db'
-        db_alias2: 'postgres://user:pass@host:port/database'
-        db_alias3: 'mysql+pymysql://user:pass@host:port/database?charset=utf8'
-        db_alias4: 'mssql+pymssql://user:pass@host:port/database'
-        db_alias5: 'oracle+cx_oracle://user:pass@host:port/database'
-        db_alias6: 'oracle+cx_oracle://sys:pass@host:port/database?mode=SYSDBA'
+    local: 'sqlite:///local.db' #relative path, e.x. in the same dir where etl runs
+    db_alias1: 'sqlite:////home/user/workspace/folder/some.db' #absolute path
+    db_alias2: 'postgres://user:pass@host:port/database'
+    db_alias3: 'mysql+pymysql://user:pass@host:port/database?charset=utf8'
+    db_alias4: 'oracle+cx_oracle://sys:pass@host:port/database?mode=SYSDBA'
+    gsheet: 'google+sheets://??credentials=~/.google-api-key.json'
 
 Config `.etl.yml` searching priorities:
 
