@@ -75,7 +75,7 @@ Google sheets connection realised by `pygsheets <https://pygsheets.readthedocs.i
    Note that some dialects may require additional configuration or to have the appropriate drivers or client installed. 
    Please refer to the `SQLAlchemy dialects documentation <https://docs.sqlalchemy.org/en/20/dialects/index.html#dialects>`_ for more information on configuring dialects.
 
-Keys decsription
+Option keys
 ================
 
 .. figure:: /_static/options-scheme.png
