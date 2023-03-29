@@ -108,6 +108,7 @@ Setup config file
 In order to set up connections to databases, etl uses the connection string format. However, connection strings can be long. 
 To save time, etl can find the connection string by its alias in a .etl.yml config file:
 
+
 .. code-block:: yaml
    local: 'sqlite:///local.db'
    db_alias1: 'sqlite:////home/user/workspace/folder/some.db'
@@ -115,7 +116,9 @@ To save time, etl can find the connection string by its alias in a .etl.yml conf
    db_alias3: 'mysql+pymysql://user:pass@host:port/database?charset=utf8'
    db_alias5: 'oracle+cx_oracle://sys:pass@host:port/database?mode=SYSDBA'
 
+
 Config .etl.yml searching priorities:
+
    * by command option ``--config`` `/somepath/.etl.yml`
    * by OS environment variable: ``sudo echo "export ETL_CONFIG=~/etl.yml" > /etc/profile.d/etl-config.sh``
    * by default in user home directory
