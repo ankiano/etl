@@ -78,7 +78,7 @@ Google sheets connection realised by `pygsheets <https://pygsheets.readthedocs.i
 Keys decsription
 ================
 
-.. figure:: /_static/options-scheme.jpg
+.. figure:: /_static/options-scheme.png
    :width: 100%
    :align: center
    :alt: Options scheme
