@@ -45,7 +45,7 @@ Installing additional dialects
 ------------------------------
 
 `etl` uses the `SQLAlchemy` engine to connect to many different sources, and supports additional dialects for connecting to specific databases. 
-Here are some of the SQL databases and sources supported by SQLAlchemy:
+Here are some of the SQL databases and sources supported by `SQLAlchemy`:
 
 .. list-table::
    :header-rows: 1
@@ -53,23 +53,24 @@ Here are some of the SQL databases and sources supported by SQLAlchemy:
    * - Dialect
      - Install Command
    * - PostgreSQL
-     - ``pip3 install psycopg2-binary``
+     - ``pip install psycopg2-binary``
    * - Oracle
-     - ``pip3 install cx_Oracle``
+     - ``pip install cx_Oracle``
    * - MySQL
-     - ``pip3 install mysqlclient``
+     - ``pip install mysqlclient``
    * - SQL Server
-     - ``pip3 install pyodbc``
+     - ``pip install pyodbc``
    * - SQLite
-     - ``pip3 install pysqlite3``
+     - ``pip install pysqlite3``
    * - DuckDB
-     - ``pip3 install duckdb-engine``
+     - ``pip install duckdb-engine``
    * - Presto
-     - ``pip3 install presto-python-client sqlalchemy_presto``
+     - ``pip install presto-python-client sqlalchemy_presto``
    * - Hive
-     - ``pip3 install pyhive[hive]``
+     - ``pip install pyhive[hive]``
 
-Google sheets connection realised by `pygsheets <https://pygsheets.readthedocs.io/en/stable/>`_
+Google sheets connection realised by `pygsheets <https://pygsheets.readthedocs.io/en/stable/>`_ 
+Files (csv, xlsx, parquet, xml) input and output realised by `pandas <https://pandas.pydata.org/docs/reference/io.html>`_ functionality. 
 
 .. note::
    Note that some dialects may require additional configuration or to have the appropriate drivers or client installed. 
