@@ -17,7 +17,7 @@ For documentation and full examples, please see the [documentation](https://etlt
 
 
 ### Options syntax scheme:
-![img_alt](etl-options-scheme.jpg)
+![img_alt](docs/source/_static/options-scheme.jpg)
 
 ### Configurating:
 
