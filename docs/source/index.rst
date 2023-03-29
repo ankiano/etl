@@ -120,6 +120,7 @@ Config .etl.yml searching priorities:
 
 
 .. toctree::
+   :maxdepth: 4
    :caption: Table of Contents
 
    index
