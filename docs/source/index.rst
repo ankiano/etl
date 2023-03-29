@@ -103,6 +103,7 @@ To save time, etl can find the connection string by its alias in a .etl.yml conf
 
 
 .. code-block:: yaml
+   :caption: .etl.yml
 
    local: 'sqlite:///local.db'
    db_alias1: 'sqlite:////home/user/workspace/folder/some.db'
@@ -119,4 +120,5 @@ Config .etl.yml searching priorities:
 
 
 .. toctree::
+   :caption: Table of Contents
 
