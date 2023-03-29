@@ -1,10 +1,5 @@
-.. etl-tool documentation master file, created by
-   sphinx-quickstart on Sat Mar 25 23:29:51 2023.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 ETL tool documentation
-=================
+######################
 
 Overview
 ========
@@ -47,7 +42,7 @@ This will install the latest version of ETL from the GitHub repository.
 
 
 Installing additional dialects
--------------------------------
+------------------------------
 
 `etl` uses the `SQLAlchemy` engine to connect to many different sources, and supports additional dialects for connecting to specific databases. 
 Here are some of the SQL databases and sources supported by SQLAlchemy:
@@ -81,7 +76,7 @@ Google sheets connection realised by `pygsheets <https://pygsheets.readthedocs.i
    Please refer to the `SQLAlchemy dialects documentation <https://docs.sqlalchemy.org/en/20/dialects/index.html#dialects>`_ for more information on configuring dialects.
 
 Keys decsription
----------------
+================
 
 .. figure:: /_static/options-scheme.jpg
    :width: 80%
@@ -102,7 +97,7 @@ Keys decsription
 
 
 Setup config file
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=================
 In order to set up connections to databases, etl uses the connection string format. However, connection strings can be long. 
 To save time, etl can find the connection string by its alias in a .etl.yml config file:
 
