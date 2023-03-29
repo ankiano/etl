@@ -120,11 +120,3 @@ Config .etl.yml searching priorities:
 
 .. toctree::
 
-   Overview
-   Installation
-   Prerequisites
-   Installing with pip
-   Installing additional dialects
-   Keys decsription
-   Setup config file
-   
