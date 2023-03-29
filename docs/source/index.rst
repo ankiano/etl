@@ -7,7 +7,7 @@ ETL tool documentation
 =================
 
 Overview
---------
+========
 
 ETL is a lightweight command-line tool for extracting, transforming, and loading data from various sources. 
 Inspired by the simplicity of SQLite or DuckDB databases, ETL aims to provide a simple, easy-to-use tool for ETL tasks that can be easily set up with just a few commands without the need for complex tools or programming.
@@ -16,37 +16,87 @@ The lightweight nature of ETL makes it ideal for small to medium-sized projects,
 In this documentation, we will cover how to install and use ETL, as well as provide examples and best practices.
 
 
-Getting started
----------------
-How to install
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Installation
+============
+
 Install the ``etl`` package
 
 .. code:: console
 
-   $ sudo -H pip3 install git+https://github.com/ankiano/etl.git -U
+   $ pip3 install git+https://github.com/ankiano/etl.git
+
+
+
+
+Installation
+============
+
+Prerequisites
+-------------
+
+Before installing ETL, you will need the following:
+
+- Git (https://git-scm.com/)
+- Python 3.9 or higher (https://www.python.org/downloads/)
+- pip (https://pip.pypa.io/en/stable/installing/)
+
+
+Installing with pip
+-------------------
+
+The easiest way to install ETL is to use pip, the Python package installer. Simply run the following command in your terminal:
+
+.. code-block:: console
+
+   $ pip install git+https://github.com/ankiano/etl.git
+   $ pip install git+https://github.com/ankiano/etl.git -U
+   $ sudo -H pip install git+https://github.com/ankiano/etl.git -U
+
+This will install the latest version of ETL from the GitHub repository.
+
+.. tip::
+
+   To install python on Windows it is make sence to use Anaconda3 package (https://www.anaconda.com)
 
 Install additional source extentions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------
 `etl` uses `SQLAlchemy` engine for connect to many source.
 So you can connect to any source additionaly install dialects extentions.
 
-.. list-table::
-   :widths: 25 50
-   :header-rows: 1
-   * - database
-     - how to install
-   * - posgtres
-     - .. code:: console
-            $ pip install psycopg2
-   * - oracle
-     - .. code:: console
-            $ pip install cx-Oracle
 
+Installing additional dialects
+-------------------------------
+
+`etl` uses the `SQLAlchemy` engine to connect to many different sources, and supports additional dialects for connecting to specific databases. 
+Here are some of the SQL databases and sources supported by SQLAlchemy:
+
++-------------+-------------------------------------------------------+
+| Dialect     | Install command                                       |
++=============+=======================================================+
+| PostgreSQL  | ``pip3 install psycopg2-binary``                       |
++-------------+-------------------------------------------------------+
+| Oracle      | ``pip3 install cx_Oracle``                            |
++-------------+-------------------------------------------------------+
+| MySQL       | ``pip3 install mysqlclient``                           |
++-------------+-------------------------------------------------------+
+| SQL Server  | ``pip3 install pyodbc``                                |
++-------------+-------------------------------------------------------+
+| SQLite      | ``pip3 install pysqlite3``                             |
++-------------+-------------------------------------------------------+
+| DuckDB      | ``pip3 install duckdb-engine``                     |
++-------------+-------------------------------------------------------+
+| Presto      | ``pip3 install presto-python-client sqlalchemy_presto`` |
++-------------+-------------------------------------------------------+
+| Hive        | ``pip3 install pyhive[hive]``                          |
++-------------+-------------------------------------------------------+
+
+Google sheets connection realise in etl package using api.
 
 .. note::
-   Some note.
-   You can learn more about :doc:`our two different sites </choosing-a-site>`.
+   Note that you will need to have the appropriate drivers installed for the dialect to work properly. 
+   Additionally, some dialects may require additional configuration, such as providing connection parameters. 
+   Please refer to the `SQLAlchemy dialects documentation <https://docs.sqlalchemy.org/en/20/dialects/index.html#dialects>`_ for more information on configuring dialects.
+
 
 Setup config file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
