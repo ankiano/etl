@@ -1,5 +1,5 @@
 ### Documentation
-    [etltool.readthedocs.io](https://etltool.readthedocs.io/en/latest/#).
+    For documentation and full examples, please see the [documentation](https://etltool.readthedocs.io/en/latest/#)).
 
 ### Installation:
     sudo apt install python3-dev python3-pip
