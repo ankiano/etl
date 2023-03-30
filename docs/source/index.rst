@@ -133,17 +133,17 @@ Provide examples of how to use `etl` in real-world scenarios. This will help use
 
 #) Internet datasets
 
-etl --source 'https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv??sep=,' --target input/titanic.xlsx
+  etl --source 'https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv??sep=,' --target input/titanic.xlsx
 
 #) Report or dashboard update
-etl --source db_alias3 --extract my-query.sql --target gsheet --load some-gsheet-workbook!my-sheet
+  etl --source db_alias3 --extract my-query.sql --target gsheet --load some-gsheet-workbook!my-sheet
 
 #) Parameters inside sql query
-etl --source db_alias2 --extract my-query-template.sql --user_sql_parameter 123 --target output/result.xlsx
+  etl --source db_alias2 --extract my-query-template.sql --user_sql_parameter 123 --target output/result.xlsx
 
 #) Sheduling and logging
 
-
+#) Avoiding limit with google api
 
 Configurating
 =============
