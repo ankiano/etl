@@ -192,7 +192,18 @@ Examples of how to use `etl` in real scenarios. This will help understand how to
 1) Shell command files
 
   Usefull to run and reapet `etl` commands put it in `update.sh` file.
-  You can build simple pipelines using `etl` several times.
+  You can build simple pipelines using `etl` several times and usin files or local database for intermidiate result saving.
+  
+  .. code-block:: concole
+    :caption: update.sh
+    :linenos:
+    
+    #! /bin/bash
+
+    etl --source base_a --extract data-1.sql --target local --load main.data_1
+    etl --source base_b --extract data-2.sql --target local --load main.data_2
+    elt --source local --extract 'select * from data_1 t join data_2 d on t.key=d.key'
+
 
 2) Internet datasets
   
@@ -207,10 +218,35 @@ Examples of how to use `etl` in real scenarios. This will help understand how to
     etl --source "$dataset_file??sep=," --target input/titanic.xlsx
 
 3) Report or dashboard update
-  etl --source db_alias3 --extract my-query.sql --target gsheet --load some-gsheet-workbook!my-sheet
+
+  We can build quick report and dashboards using google sheets. 
+  You just need create worbook, share this book to technical email in `.google-api.key.json` and use `etl` to upload data to needed sheet.
+  If sheet not exists, `etl` create it automaticaly.
+  If you will load data several times, `etl` erase each time erase values from sheet and insert new data.
+  
+  .. code-block:: concole
+    :caption: update.sh
+    :linenos:
+    
+    #! /bin/bash
+
+    etl --source some_db --extract sql/query.sql --target gsheet --load some-gsheet-workbook!my-sheet
 
 4) Parameters inside sql query
-  etl --source db_alias2 --extract my-query-template.sql --user_sql_parameter 123 --target output/result.xlsx
+  
+  Where is some possibility use parameters inside of sql. 
+  In sql you shoud plase parameter in python format ``select * from table where param={user_sql_parameter}``
+  And add option key with name of this custom parameter to update query with value.
+
+  .. code-block:: concole
+    :caption: update.sh
+    :linenos:
+    
+    #! /bin/bash
+
+    etl --source some_db --extract sql/query-template.sql \
+        --user_sql_parameter 123 
+        --target output/result.xlsx
 
 5) Sheduling and logging
 
