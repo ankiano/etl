@@ -7,7 +7,7 @@ Overview
 `etl` is a lightweight command-line tool for extracting, transforming, and loading data from various sources. 
 Inspired by the simplicity of SQLite or DuckDB databases, `etl` aims to provide a simple, easy-to-use tool for `etl` tasks that can be easily set up with just a few commands without the need for complex tools or programming.
 `etl` allows users to extract data from a variety of sources, including CSV, JSON, XML, Excel, SQL databases, and Google Sheets. 
-The lightweight nature of `etl` makes it ideal for small to medium-sized projects, where a more heavyweight `etl` tool may be overkill. 
+The lightweight nature of `etl` makes it ideal for small to medium-sized projects, where a more heavyweight `etl` tool may be overkill.
 In this documentation, we will cover how to install and use `etl`, as well as provide examples and best practices.
 
 
@@ -76,8 +76,15 @@ Files (csv, xlsx, parquet, xml) input and output realised by `pandas <https://pa
    Note that some dialects may require additional configuration or to have the appropriate drivers or client installed. 
    Please refer to the `SQLAlchemy dialects documentation <https://docs.sqlalchemy.org/en/20/dialects/index.html#dialects>`_ for more information on configuring dialects.
 
+
+Usage instructions
+==================
+`etl` can be accessed from the terminal or console. 
+You can also create shell or batch files that contain ETL commands, which can then be scheduled to run at specific intervals using tools like cron. 
+
+
 Option keys
-================
+-----------
 
 .. figure:: /_static/options-scheme.png
    :width: 150%
@@ -85,7 +92,7 @@ Option keys
    :alt: Options scheme
 
 ``--help``
-  Short help about commands
+  Short help aqbout commands
 ``--source``
   you can setup different kind of sources
 ``--extract``
@@ -97,14 +104,44 @@ Option keys
    when you need run query without result, e.x. ``drop table my_table``
 
 
-Config file
-===========
+Quick examples
+--------------
+
+.. code-block:: console
+  :linenos:
+
+etl --help
+etl --source 'https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv??sep=,' --target input/titanic.xlsx
+etl --source 'sqlite:////home/user/my-local.db' --extract my-query.sql --target result.csv
+etl --source db_alias2 --extract my-query-template.sql --user_sql_parameter 123 --target output/result.xlsx
+etl --source db_alias3 --extract my-query.sql --target gsheet --load some-gsheet-workbook!my-sheet
+etl --source input/titanic.xlsx --target 'sqlite:///local.db' --load main.titanic
+
+
+
+Scenarios and best practices
+----------------------------
+Provide examples of how to use your project in real-world scenarios. This will help users understand how to integrate your project into their own projects.
+
+Converting csv to xlsx
+
+Extract data from database
+
+Upload to database
+
+Troubleshooting
+
+
+
+Configurating
+=============
 In order to set up connections to databases, etl uses the connection string format. However, connection strings can be long. 
 To save time, etl can find the connection string by its alias in a .etl.yml config file:
 
 
 .. code-block:: yaml
    :caption: .etl.yml
+   :linenos:
 
    local: 'sqlite:///local.db'
    db_alias1: 'sqlite:////home/user/workspace/folder/some.db'
@@ -119,6 +156,12 @@ Config .etl.yml searching priorities:
    * by command option ``--config`` `/somepath/.etl.yml`
    * by OS environment variable: ``sudo echo "export ETL_CONFIG=~/etl.yml" > /etc/profile.d/etl-config.sh``
    * by default in user home directory
+
+Parameters to source database
+-----------------------------
+
+Parameters to SQLAlchemy engine
+-------------------------------
 
 
 .. toctree::
