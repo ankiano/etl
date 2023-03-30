@@ -233,13 +233,15 @@ Best practices
    db_alias3: 'mysql+pymysql://user:pass@host:port/database?charset=utf8'
    db_alias4: 'oracle+cx_oracle://sys:pass@host:port/database?mode=SYSDBA'
 
+
 .. code-block:: console
    :caption: update.sh
    :linenos:
 
-  \#!/bin/bash
+  #!/bin/bash
   cd "$(dirname "$0")"
   elt --source local --extract sql/my-query.sql --target output/result.xlsx
+
 
 .. code-block:: console
    :caption: crontab
@@ -250,21 +252,23 @@ Best practices
   PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/opt/homebrew/bin
   HOME="/home/me/"
   ETL_CONFIG=/home/me/.etl.yml
+
   ###### test job
   #*/1 * * * * date >./cron.log 2>&1
   #*/1 * * * * printenv >>./cron.log 2>&1
   #*/1 * * * * etl --help >>./cron.log 2>&1
 
+
 .. code-block:: console
    :caption: crontab-update.sh
    :linenos:
 
-  #! /bin/bash
+    #! /bin/bash
 
-  cd "$(dirname "$0")"
+    cd "$(dirname "$0")"
 
-  crontab -l > ./crontab~
-  crontab ./crontab
+    crontab -l > ./crontab~
+    crontab ./crontab
 
 
 .. toctree::
