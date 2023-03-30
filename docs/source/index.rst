@@ -84,7 +84,7 @@ Usage instructions
 You can also create shell or batch files that contain ETL commands, which can then be scheduled to run at specific intervals using tools like cron. 
 
 
-Option keys
+Options list
 -----------
 
 .. figure:: /_static/options-scheme.png
@@ -129,27 +129,19 @@ Best practices and cases
 ------------------------
 Provide examples of how to use `etl` in real-world scenarios. This will help users understand how to integrate your project into their own projects.
 
-Shell command files
+#) Shell command files
 
-Internet datasets
+#) Internet datasets
 
 etl --source 'https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv??sep=,' --target input/titanic.xlsx
 
-
-etl --source db_alias2 --extract my-query-template.sql --user_sql_parameter 123 --target output/result.xlsx
-
+#) Report or dashboard update
 etl --source db_alias3 --extract my-query.sql --target gsheet --load some-gsheet-workbook!my-sheet
 
-Report or dashboard update
+#) Parameters inside sql query
+etl --source db_alias2 --extract my-query-template.sql --user_sql_parameter 123 --target output/result.xlsx
 
-
-Parameters inside sql query
-
-
-Parameters for pandas
-
-
-Sheduling and logging
+#) Sheduling and logging
 
 
 
@@ -180,39 +172,39 @@ Config .etl.yml searching priorities:
 Parameters to source/target
 -----------------------------
 When connecting to a database using a connection string, you can specify various parameters that customize the connection.
-These parameters are appended to the connection string, separated by a ``?`` character. 
+These parameters are appended to the connection string, separated by a ``?`` character and can be combined with ``&``.
 
-- `?charset=utf8`: Sets the character encoding to UTF-8 for MySQL
-- `?mode=SYSDBA`: Connects to the database using the SYSDBA system privilege for Oracle
-- `?connection_timeout=<seconds>`: Specifies the number of seconds to wait for a connection to be established before timing out for Microsoft SQL Server
-- `?s3_staging_dir=<s3-staging-dir>`: Specifies the Amazon S3 location where query results are stored.
-- `?workgroup=<workgroup-name>`: Specifies the name of the workgroup to use for the connection.
+- ``?charset=utf8``: Sets the character encoding to UTF-8 for MySQL
+- ``?mode=SYSDBA``: Connects to the database using the SYSDBA system privilege for Oracle
+- ``?connection_timeout=<seconds>``: Specifies the number of seconds to wait for a connection to be established before timing out for Microsoft SQL Server
+- ``?s3_staging_dir=<s3-staging-dir>``: Specifies the Amazon S3 location where query results are stored.
+- ``?workgroup=<workgroup-name>``: Specifies the name of the workgroup to use for the connection.
 
 For additional details on the parameters supported by your database, please refer to the official documentation of the corresponding database.
 
 Parameters to Pandas and Engine
 ------------------------------------------
-These parameters are appended to the connection string, separated by a ``??`` character. 
+These parameters are appended to the connection string, separated by a ``??`` character and can be combined with ``&``.
 
 When specifying databases using the ``--source`` and ``--target`` option keys, you can pass additional parameters to the engine.
 For example, `??max_identifier_length=128` extend the maximum length of column names when saving to certain database systems.
 
 When specifying files using the ``--source`` and ``--target`` option keys, you can pass additional parameters.
   `to_csv <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_csv.html?highlight=to_csv#pandas.DataFrame.to_csv>`_: 
-    - `??header=0` specify the row index to use as column names when loading CSV files. 0 mean firs row.
-    - `??sep=;` specify the column delimiter when loading or saving CSV files
-    - `??low_memory=false` disable the memory usage optimization for reading large files
+    - ``??header=0`` specify the row index to use as column names when loading CSV files. 0 mean firs row.
+    - ``??sep=;`` specify the column delimiter when loading or saving CSV files
+    - ``??low_memory=false`` disable the memory usage optimization for reading large files
   `to_excel <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_excel.html>`_: 
-    - `sheet_name=data` specify the sheet name to use when saving to an Excel file
-    - `mode=a` file mode to use (write or append)
-    - `engine=openpyxl` write engine to use, ‘openpyxl’ or ‘xlsxwriter’.
+    - ``??sheet_name=data`` specify the sheet name to use when saving to an Excel file
+    - ``??mode=a`` file mode to use (write or append)
+    - ``??engine=openpyxl`` write engine to use, ‘openpyxl’ or ‘xlsxwriter’.
 
 When loading data to databases using the ``--load`` option key, you can pass additional parameters.
   `to_sql <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_sql.html?highlight=to_sql>`_: 
-    - `chunk_size=1000` Specify the number of rows in each batch to be written at a time
-    - `if_exists=replace` Drop the table before inserting new values
-    - `if_exists=append` (by default) insert new values to the existing table.
-    - `method=multi` Pass multiple values in a single INSERT clause
+    - ``chunk_size=1000`` Specify the number of rows in each batch to be written at a time
+    - ``if_exists=replace`` Drop the table before inserting new values
+    - ``if_exists=append`` (by default) insert new values to the existing table.
+    - ``method=multi`` Pass multiple values in a single INSERT clause
 
 
 .. toctree::
