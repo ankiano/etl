@@ -103,7 +103,7 @@ Option keys
    You can setup different kinds of targets, such as a filepath, database connection string, or alias from the config file
 ``--load``
   Used for loading data to a database to identify which table to load the data into.
-``--config-paht``
+``--config-path``
   A custom path to the etl.yml config.
 ``--debug``
   Enables an extended level of logging with more information.
@@ -146,6 +146,9 @@ Report or dashboard update
 Parameters inside sql query
 
 
+Parameters for pandas
+
+
 Sheduling and logging
 
 
@@ -177,7 +180,7 @@ Config .etl.yml searching priorities:
 Parameters to source/target
 -----------------------------
 When connecting to a database using a connection string, you can specify various parameters that customize the connection.
-These parameters are appended to the end of the connection string, separated by a ? character. 
+These parameters are appended to the connection string, separated by a ``?`` character. 
 
 - `?charset=utf8`: Sets the character encoding to UTF-8 for MySQL
 - `?mode=SYSDBA`: Connects to the database using the SYSDBA system privilege for Oracle
@@ -189,25 +192,27 @@ For additional details on the parameters supported by your database, please refe
 
 Parameters to Pandas and Engine
 ------------------------------------------
+These parameters are appended to the connection string, separated by a ``??`` character. 
 
-In option key `--source` and `--target` when we specifies databases we can trougth parameter for engine.
-- `max_identifier_length=128` limit the maximum length of column names when saving to certain database systems
+When specifying databases using the ``--source`` and ``--target`` option keys, you can pass additional parameters to the engine.
+For example, `??max_identifier_length=128` extend the maximum length of column names when saving to certain database systems.
 
-In option key `--source` and `--target` when we specifies files we can additional througt parameters.
+When specifying files using the ``--source`` and ``--target`` option keys, you can pass additional parameters.
   `to_csv <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_csv.html?highlight=to_csv#pandas.DataFrame.to_csv>`_: 
-- `??header=0`: specify the row index to use as column names when loading CSV files
-- `??sep=;`: specify the column delimiter when loading or saving CSV files
-- `??low_memory=false`: disable the memory usage optimization for reading large files
+    - `??header=0` specify the row index to use as column names when loading CSV files. 0 mean firs row.
+    - `??sep=;` specify the column delimiter when loading or saving CSV files
+    - `??low_memory=false` disable the memory usage optimization for reading large files
   `to_excel <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_excel.html>`_: 
-- `sheet_name=data`: specify the sheet name to use when saving to an Excel file
-- `mode=a`: File mode to use (write or append)
-- `engine=openpyxl`: Write engine to use, ‘openpyxl’ or ‘xlsxwriter’.
-In option key `--load` for databases we can additionaly pass
+    - `sheet_name=data` specify the sheet name to use when saving to an Excel file
+    - `mode=a` file mode to use (write or append)
+    - `engine=openpyxl` write engine to use, ‘openpyxl’ or ‘xlsxwriter’.
+
+When loading data to databases using the ``--load`` option key, you can pass additional parameters.
   `to_sql <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_sql.html?highlight=to_sql>`_: 
-- `chunk_size=1000` Specify the number of rows in each batch to be written at a time
-- `if_exists=replace` Drop the table before inserting new values
-- `if_exists=append` (by default) insert new values to the existing table.
-- `method=multi` Pass multiple values in a single INSERT clause
+    - `chunk_size=1000` Specify the number of rows in each batch to be written at a time
+    - `if_exists=replace` Drop the table before inserting new values
+    - `if_exists=append` (by default) insert new values to the existing table.
+    - `method=multi` Pass multiple values in a single INSERT clause
 
 
 .. toctree::
