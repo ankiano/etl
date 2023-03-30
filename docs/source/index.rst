@@ -289,6 +289,19 @@ Best practices
     
     elt --source local --extract sql/my-query.sql --target output/result.xlsx
 
+.. code-block:: console
+   :caption: .bash_aliases
+   :linenos:
+
+    # custom alias for run update.sh or other sh with adding logging
+    upd () {
+      if [[ -z $@ ]]; then
+        sh update.sh |& tee update.log
+      elif [[ $1 =~ '.sh' ]]; then
+        sh $1 |& tee ${1%.sh}.log
+      fi
+    }
+
 
 .. code-block:: console
    :caption: crontab
