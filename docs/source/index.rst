@@ -91,17 +91,25 @@ Option keys
    :align: center
    :alt: Options scheme
 
-``--help``
-  Short help aqbout commands
 ``--source``
-  you can setup different kind of sources
+  Уou can setup different kind of sources: filepath, database connection string, alias from config file
 ``--extract``
   Optional key for databases. Able to run query and get result.
   You can pass query like string ``select * from table``.
   Or paht to query file ``sql/query.sql``
-``-execute``
+``--execute``
    Optional key for databases, 
    when you need run query without result, e.x. ``drop table my_table``
+``--target``
+   Уou can setup different kind of targets: filepath, database connection string, alias from config file
+``--load``
+  Uses for loading data to database to identify in which table we are going load data.
+``--config-paht``
+  Custom path to etl.yml config.
+``--debug``
+  Extended level of loggin with more info
+``--help``
+  Short help about commands
 
 
 Quick examples
@@ -110,26 +118,32 @@ Quick examples
 .. code-block:: console
   :linenos:
 
-etl --help
-etl --source 'https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv??sep=,' --target input/titanic.xlsx
-etl --source 'sqlite:////home/user/my-local.db' --extract my-query.sql --target result.csv
-etl --source db_alias2 --extract my-query-template.sql --user_sql_parameter 123 --target output/result.xlsx
-etl --source db_alias3 --extract my-query.sql --target gsheet --load some-gsheet-workbook!my-sheet
-etl --source input/titanic.xlsx --target 'sqlite:///local.db' --load main.titanic
+  etl --help
+  etl --source input.csv --target output.xlsx
+  etl --source input.csv --target 'sqlite:///local.db' --load main.my_table
+  etl --source db_alias --extract my-query.sql --target result.xlsx
 
 
-
-Scenarios and best practices
+Best practices
 ----------------------------
 Provide examples of how to use your project in real-world scenarios. This will help users understand how to integrate your project into their own projects.
 
-Converting csv to xlsx
+Internet datasets
 
-Extract data from database
+etl --source 'https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv??sep=,' --target input/titanic.xlsx
 
-Upload to database
 
-Troubleshooting
+etl --source db_alias2 --extract my-query-template.sql --user_sql_parameter 123 --target output/result.xlsx
+
+etl --source db_alias3 --extract my-query.sql --target gsheet --load some-gsheet-workbook!my-sheet
+
+Report or dashboard update
+
+
+Parameters inside sql query
+
+
+Sheduling and logging
 
 
 
