@@ -237,7 +237,7 @@ Best practices
    :caption: update.sh
    :linenos:
 
-  #!/bin/bash
+  \#!/bin/bash
   cd "$(dirname "$0")"
   elt --source local --extract sql/my-query.sql --target output/result.xlsx
 
@@ -250,7 +250,6 @@ Best practices
   PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/opt/homebrew/bin
   HOME="/home/me/"
   ETL_CONFIG=/home/me/.etl.yml
-
   ###### test job
   #*/1 * * * * date >./cron.log 2>&1
   #*/1 * * * * printenv >>./cron.log 2>&1
