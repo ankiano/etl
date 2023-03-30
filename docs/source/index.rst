@@ -174,7 +174,7 @@ Config .etl.yml searching priorities:
    * by OS environment variable: ``sudo echo "export ETL_CONFIG=~/etl.yml" > /etc/profile.d/etl-config.sh``
    * by default in user home directory
 
-Parameters to source database
+Parameters to source/target
 -----------------------------
 When connecting to a database using a connection string, you can specify various parameters that customize the connection.
 These parameters are appended to the end of the connection string, separated by a ? character. 
@@ -194,20 +194,20 @@ In option key `--source` and `--target` when we specifies databases we can troug
 - `max_identifier_length=128` limit the maximum length of column names when saving to certain database systems
 
 In option key `--source` and `--target` when we specifies files we can additional througt parameters.
-`to_csv <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_csv.html?highlight=to_csv#pandas.DataFrame.to_csv>`_: 
+  `to_csv <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_csv.html?highlight=to_csv#pandas.DataFrame.to_csv>`_: 
 - `??header=0`: specify the row index to use as column names when loading CSV files
 - `??sep=;`: specify the column delimiter when loading or saving CSV files
 - `??low_memory=false`: disable the memory usage optimization for reading large files
- 
- `to_excel <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_excel.html>`_: 
+  `to_excel <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_excel.html>`_: 
 - `sheet_name=data`: specify the sheet name to use when saving to an Excel file
-- `mode=a`: specify the mode when saving to an existing Excel file, either 'a' (append) or 'w' (overwrite)
-- `engine=openpyxl`: select the engine to use when loading or saving Excel files
+- `mode=a`: File mode to use (write or append)
+- `engine=openpyxl`: Write engine to use, ‘openpyxl’ or ‘xlsxwriter’.
 In option key `--load` for databases we can additionaly pass
-`to_sql <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_sql.html?highlight=to_sql>`_: 
+  `to_sql <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_sql.html?highlight=to_sql>`_: 
 - `chunk_size=1000` Specify the number of rows in each batch to be written at a time
-- `if_exists=replace`
-- `method=multi`
+- `if_exists=replace` Drop the table before inserting new values
+- `if_exists=append` (by default) insert new values to the existing table.
+- `method=multi` Pass multiple values in a single INSERT clause
 
 
 .. toctree::
