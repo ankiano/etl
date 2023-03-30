@@ -248,9 +248,7 @@ Examples of how to use `etl` in real scenarios. This will help understand how to
         --user_sql_parameter 123 
         --target output/result.xlsx
 
-5) Sheduling and logging
-
-6) Avoiding limit with google api
+5) Avoiding limit with google api
 
   Google api has per-minute quotas, request limit of 300 per minute per project.
   You can extend this limit using several api keys at the same time. 
