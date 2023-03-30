@@ -125,25 +125,46 @@ Open terminal and try to type commands.
   etl --source db_alias --extract my-query.sql --target result.xlsx
 
 
-Best practices and cases
-------------------------
-Provide examples of how to use `etl` in real-world scenarios. This will help users understand how to integrate your project into their own projects.
+Use cases
+---------
+Examples of how to use `etl` in real scenarios. This will help understand how to integrate your project into their own projects.
 
-#) Shell command files
+1) Shell command files
 
-#) Internet datasets
 
+2) Internet datasets
   etl --source 'https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv??sep=,' --target input/titanic.xlsx
 
-#) Report or dashboard update
+3) Report or dashboard update
   etl --source db_alias3 --extract my-query.sql --target gsheet --load some-gsheet-workbook!my-sheet
 
-#) Parameters inside sql query
+4) Parameters inside sql query
   etl --source db_alias2 --extract my-query-template.sql --user_sql_parameter 123 --target output/result.xlsx
 
-#) Sheduling and logging
+5) Sheduling and logging
 
-#) Avoiding limit with google api
+6) Avoiding limit with google api
+
+  Google api has per-minute quotas, request limit of 300 per minute per project.
+  You can extend this limit using several api keys at the same time. 
+  You have to setup one alias name but with different keys files.
+  Each time `etl` runs will select one of them randomly.
+
+.. code-block:: yaml
+   :caption: .etl.yml
+   :linenos:
+
+   gsheet: 'google+sheets://??credentials=~/.google-api-key-1.json'
+   gsheet: 'google+sheets://??credentials=~/.google-api-key-2.json'
+   gsheet: 'google+sheets://??credentials=~/.google-api-key-3.json'
+
+
+
+Best practices
+---------------
+
+
+
 
 Configurating
 =============
