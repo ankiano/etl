@@ -191,9 +191,20 @@ Examples of how to use `etl` in real scenarios. This will help understand how to
 
 1) Shell command files
 
+  Usefull to run and reapet `etl` commands put it in `update.sh` file.
+  You can build simple pipelines using `etl` several times.
 
 2) Internet datasets
-  etl --source 'https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv??sep=,' --target input/titanic.xlsx
+  
+  For data playing perspective it is easy to recive famous dataset from Internet.
+
+  .. code-block:: concole
+    :caption: update.sh
+    :linenos:
+    
+    #! /bin/bash
+    dataset_file='https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv'
+    etl --source "$dataset_file??sep=," --target input/titanic.xlsx
 
 3) Report or dashboard update
   etl --source db_alias3 --extract my-query.sql --target gsheet --load some-gsheet-workbook!my-sheet
@@ -240,7 +251,7 @@ Best practices
 
     #!/bin/bash
     
-    cd "$(dirname "$0")"
+    cd "$(dirname "$0")" # you need this line if you are planning to sheduling it with cron
     
     elt --source local --extract sql/my-query.sql --target output/result.xlsx
 
@@ -260,6 +271,9 @@ Best practices
     #*/1 * * * * printenv >>./cron.log 2>&1
     #*/1 * * * * etl --help >>./cron.log 2>&1
 
+    ###### reports
+    # demo-dashboard
+    0 6 * * * ./playground/demo-dashboard/update.sh >./playground/demo-dashboard/update.log 2>&1
 
 .. code-block:: console
    :caption: crontab-update.sh
@@ -269,7 +283,7 @@ Best practices
 
     cd "$(dirname "$0")"
 
-    crontab -l > ./crontab~
+    crontab -l > ./crontab~ #backup current crontab
     crontab ./crontab
 
 
