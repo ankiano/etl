@@ -270,6 +270,7 @@ Best practices
 
 .. code-block:: console
    :caption: filestructure
+
       └── home
           └── me
               ├── playground
