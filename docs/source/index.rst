@@ -270,33 +270,32 @@ Best practices
 
 .. code-block:: console
    :caption: filestructure
-    .
-    └── home
-        └── me
-            ├── playground
-            │   ├── demo-dashboard
-            │   │   ├── sql
-            │   │   │   └── data-cube.sql
-            │   │   └── update.sh
-            │   ├── demo-datafeed
-            │   │   ├── input
-            │   │   │   └── titanic.xlsx
-            │   │   ├── update.log
-            │   │   └── update.sh
-            │   ├── demo-report
-            │   │   ├── input
-            │   │   │   └── titanic.xlsx
-            │   │   ├── sql
-            │   │   │   ├── data-dd.sql
-            │   │   │   └── data-mm.sql
-            │   │   ├── local.db
-            │   │   ├── update.log
-            │   │   └── update.sh
-            │   ├── crontab
-            │   └── crontab-update.sh
-            ├── .bash_aliases
-            ├── .etl.yml
-            └── .google-api-key.json
+      └── home
+          └── me
+              ├── playground
+              │   ├── demo-dashboard
+              │   │   ├── sql
+              │   │   │   └── data-cube.sql
+              │   │   └── update.sh
+              │   ├── demo-datafeed
+              │   │   ├── input
+              │   │   │   └── titanic.xlsx
+              │   │   ├── update.log
+              │   │   └── update.sh
+              │   ├── demo-report
+              │   │   ├── input
+              │   │   │   └── titanic.xlsx
+              │   │   ├── sql
+              │   │   │   ├── data-dd.sql
+              │   │   │   └── data-mm.sql
+              │   │   ├── local.db
+              │   │   ├── update.log
+              │   │   └── update.sh
+              │   ├── crontab
+              │   └── crontab-update.sh
+              ├── .bash_aliases
+              ├── .etl.yml
+              └── .google-api-key.json
 
 
 .. code-block:: yaml
