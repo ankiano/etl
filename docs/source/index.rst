@@ -277,12 +277,12 @@ Best practices
               │   ├── demo-dashboard
               │   │   ├── sql
               │   │   │   └── data-cube.sql
-              │   │   └── :red:update.sh
+              │   │   └── `update.sh`
               │   ├── demo-datafeed
               │   │   ├── input
               │   │   │   └── titanic.xlsx
               │   │   ├── update.log
-              │   │   └── :red:update.sh
+              │   │   └── `update.sh`
               │   ├── demo-report
               │   │   ├── input
               │   │   │   └── titanic.xlsx
@@ -291,9 +291,9 @@ Best practices
               │   │   │   └── data-mm.sql
               │   │   ├── local.db
               │   │   ├── update.log
-              │   │   └── :red:update.sh
+              │   │   └── `update.sh`
               │   ├── crontab
-              │   └── :red:crontab-update.sh
+              │   └── `crontab-update.sh`
               ├── .bash_aliases
               ├── .etl.yml
               └── .google-api-key.json
