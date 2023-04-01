@@ -268,7 +268,7 @@ Examples of how to use `etl` in real scenarios. This will help understand how to
 Best practices
 ---------------
 
-.. code-block:: ini
+.. code-block:: concole
    :caption: filestructure
 
       └── home
@@ -352,15 +352,13 @@ Best practices
 
     ###### reports
     # demo-dashboard
-    0 6 * * * ./playground/demo-dashboard/update.sh >./playground/demo-dashboard/update.log 2>&1
+    0 6 * * * ./playground/report/demo-report/update.sh >./playground/report/demo-report/update.log 2>&1
 
 .. code-block:: console
    :caption: crontab-update.sh
    :linenos:
 
     #! /bin/bash
-
-    cd "$(dirname "$0")"
 
     crontab -l > ./crontab~ #backup current crontab
     crontab ./crontab
