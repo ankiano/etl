@@ -191,8 +191,8 @@ Examples of how to use `etl` in real scenarios. This will help understand how to
 
 1) Shell command files
 
-  Usefull to run and reapet `etl` commands put it in `update.sh` file.
-  You can build simple pipelines using `etl` several times and usin files or local database for intermidiate result saving.
+  Usefull to run and repeat `etl` commands put it in `update.sh` file.
+  You can build simple pipelines using `etl` several times and using files or local database for intermidiate result saving.
   
   .. code-block:: concole
     :caption: update.sh
@@ -200,8 +200,8 @@ Examples of how to use `etl` in real scenarios. This will help understand how to
     
     #! /bin/bash
 
-    etl --source base_a --extract data-1.sql --target local --load main.data_1
-    etl --source base_b --extract data-2.sql --target local --load main.data_2
+    etl --source database_a --extract data-1.sql --target local --load main.data_1
+    etl --source database_b --extract data-2.sql --target local --load main.data_2
     elt --source local --extract 'select * from data_1 t join data_2 d on t.key=d.key'
 
 
@@ -214,8 +214,10 @@ Examples of how to use `etl` in real scenarios. This will help understand how to
     :linenos:
     
     #! /bin/bash
+
     dataset_file='https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv'
-    etl --source "$dataset_file??sep=," --target input/titanic.xlsx
+    etl --source "$dataset_file??sep=," \
+        --target input/titanic.xlsx
 
 3) Report or dashboard update
 
@@ -230,7 +232,8 @@ Examples of how to use `etl` in real scenarios. This will help understand how to
     
     #! /bin/bash
 
-    etl --source some_db --extract sql/query.sql --target gsheet --load some-gsheet-workbook!my-sheet
+    etl --source some_db --extract sql/query.sql \
+        --target gsheet --load some-gsheet-workbook!my-sheet
 
 4) Parameters inside sql query
   
@@ -245,7 +248,7 @@ Examples of how to use `etl` in real scenarios. This will help understand how to
     #! /bin/bash
 
     etl --source some_db --extract sql/query-template.sql \
-        --user_sql_parameter 123 
+        --user_sql_parameter 123 \
         --target output/result.xlsx
 
 5) Avoiding limit with google api
@@ -326,6 +329,7 @@ Best practices
    :linenos:
 
     # custom alias for run update.sh or other sh with adding logging
+    # just type 'upd' and you see running log, after exectuing you will see update.log
     upd () {
       if [[ -z $@ ]]; then
         sh update.sh |& tee update.log
