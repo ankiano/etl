@@ -272,35 +272,42 @@ Best practices
 ---------------
 
 .. code-block:: concole
-   :caption: filestructure
 
-      └── home
-          └── me
-              ├── playground
-              │   ├── demo-dashboard
-              │   │   ├── sql
-              │   │   │   └── data-cube.sql
-              │   │   └── update.sh
-              │   ├── demo-datafeed
-              │   │   ├── input
-              │   │   │   └── titanic.xlsx
-              │   │   ├── update.log
-              │   │   └── update.sh
-              │   ├── demo-report
-              │   │   ├── input
-              │   │   │   └── titanic.xlsx
-              │   │   ├── sql
-              │   │   │   ├── data-dd.sql
-              │   │   │   └── data-mm.sql
-              │   │   ├── local.db
-              │   │   ├── update.log
-              │   │   └── update.sh
-              │   ├── crontab
-              │   └── crontab-update.sh
-              ├── .bash_aliases
-              ├── .etl.yml
-              └── .google-api-key.json
+    home
+    └── me
+        ├── playground
+        │   ├── ad-hoc
+        │   ├── report
+        │   │   ├── demo-dashboard
+        │   │   │   ├── sql
+        │   │   │   │   └── data-cube.sql
+        │   │   │   └── update.sh
+        │   │   ├── demo-datafeed
+        │   │   │   ├── sql
+        │   │   │   │   └── dataset.sql
+        │   │   │   ├── update.log
+        │   │   │   └── update.sh
+        │   │   └── demo-report
+        │   │       ├── input
+        │   │       │   └── titanic.xlsx
+        │   │       ├── sql
+        │   │       │   ├── data-dd.sql
+        │   │       │   └── data-mm.sql
+        │   │       ├── local.db
+        │   │       ├── update.log
+        │   │       └── update.sh
+        │   ├── crontab
+        │   └── crontab-update.sh
+        ├── .bash_aliases
+        ├── .etl.yml
+        └── .google-api-key.json
 
+
+- Config files we can store in user directory
+- Reports and ad-hoc activities we can store in separated way
+- Sheduling plan crontab for update reports we can store in `playground` directory
+- All sql query we can put in sql directory
+- For each report, dashboard, datafeed we create update.sh with same name
 
 .. code-block:: yaml
    :caption: .etl.yml
