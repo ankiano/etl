@@ -10,7 +10,7 @@ Inspired by the simplicity of SQLite or DuckDB databases, `etl` aims to provide 
 The lightweight nature of `etl` makes it ideal for small to medium-sized projects, where a more heavyweight `etl` tool may be overkill.
 In this documentation, we will cover how to install and use `etl`, as well as provide examples and best practices.
 
-`GitHub etl project<https://github.com/ankiano/etl.gitl>`_
+`GitHub etl project <https://github.com/ankiano/etl.gitl>`_
 
 Installation
 ============
