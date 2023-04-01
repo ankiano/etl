@@ -271,6 +271,8 @@ Examples of how to use `etl` in real scenarios. This will help understand how to
 Best practices
 ---------------
 
+Some example of organizing working directory.
+
 .. code-block:: concole
 
     home
