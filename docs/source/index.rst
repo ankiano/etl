@@ -273,17 +273,17 @@ Best practices
 
       └── home
           └── me
-              ├── playground
-              │   ├── demo-dashboard
+              ├── **playground**
+              │   ├── **demo-dashboard**
               │   │   ├── sql
               │   │   │   └── data-cube.sql
-              │   │   └── :green:`update.sh`
-              │   ├── demo-datafeed
+              │   │   └── update.sh
+              │   ├── **demo-datafeed**
               │   │   ├── input
               │   │   │   └── titanic.xlsx
               │   │   ├── update.log
-              │   │   └── :red:`update.sh`
-              │   ├── demo-report
+              │   │   └── update.sh
+              │   ├── **demo-report**
               │   │   ├── input
               │   │   │   └── titanic.xlsx
               │   │   ├── sql
@@ -291,9 +291,9 @@ Best practices
               │   │   │   └── data-mm.sql
               │   │   ├── local.db
               │   │   ├── update.log
-              │   │   └── :grey:`update.sh`
+              │   │   └── update.sh
               │   ├── crontab
-              │   └── :blue:`crontab-update.sh`
+              │   └── ``crontab-update.sh``
               ├── .bash_aliases
               ├── .etl.yml
               └── .google-api-key.json
