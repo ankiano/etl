@@ -268,22 +268,22 @@ Examples of how to use `etl` in real scenarios. This will help understand how to
 Best practices
 ---------------
 
-.. code-block:: console
+.. code-block:: ini
    :caption: filestructure
 
       └── home
           └── me
-              ├── **playground**
-              │   ├── **demo-dashboard**
+              ├── playground
+              │   ├── demo-dashboard
               │   │   ├── sql
               │   │   │   └── data-cube.sql
               │   │   └── update.sh
-              │   ├── **demo-datafeed**
+              │   ├── demo-datafeed
               │   │   ├── input
               │   │   │   └── titanic.xlsx
               │   │   ├── update.log
               │   │   └── update.sh
-              │   ├── **demo-report**
+              │   ├── demo-report
               │   │   ├── input
               │   │   │   └── titanic.xlsx
               │   │   ├── sql
@@ -293,7 +293,7 @@ Best practices
               │   │   ├── update.log
               │   │   └── update.sh
               │   ├── crontab
-              │   └── ``crontab-update.sh``
+              │   └── crontab-update.sh
               ├── .bash_aliases
               ├── .etl.yml
               └── .google-api-key.json
