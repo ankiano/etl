@@ -188,7 +188,8 @@ Open terminal and try to type commands.
 
 Use cases
 ---------
-Examples of how to use `etl` in real scenarios. This will help understand how to integrate your project into their own projects.
+These examples show how to use 'etl' in a variety of situations.
+This will help understand how to integrate your project into their own projects.
 
 1) Shell command files
 
