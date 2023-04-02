@@ -323,6 +323,8 @@ Some example of organizing working directory.
    db_alias2: 'postgres://user:pass@host:port/database'
    db_alias3: 'mysql+pymysql://user:pass@host:port/database?charset=utf8'
    db_alias4: 'oracle+cx_oracle://sys:pass@host:port/database?mode=SYSDBA'
+   db_alias5: 'awsathena+rest://aws_access_key_id:aws_secret_access_key@athena.region_name.amazonaws.com:443/schema_name?s3_staging_dir=s3_staging_dir'
+   db_alias6: 'clickhouse+http://user:password@host:8443/db?protocol=https'
 
 
 .. code-block:: console
