@@ -4,8 +4,8 @@ ETL tool documentation
 Overview
 ========
 
-`etl` is a lightweight command-line tool for extracting, transforming, and loading data from various sources. 
-Inspired by the simplicity of SQLite or DuckDB databases, `etl` aims to provide a simple, easy-to-use tool for `etl` tasks that can be easily set up with just a few commands without the need for complex tools or programming.
+`etl` is a lite command-line tool for extracting, transforming, and loading data from various sources. 
+Inspired by the simplicity of SQLite or DuckDB databases, `etl` aims to provide a simple, easy-to-use tool for tasks that can be easily set up with just a few commands without the need for complex tools or programming.
 `etl` allows users to extract data from a variety of sources, including CSV, JSON, XML, Excel, SQL databases, and Google Sheets. 
 The lightweight nature of `etl` makes it ideal for small to medium-sized projects, where a more heavyweight `etl` tool may be overkill.
 In this documentation, we will cover how to install and use `etl`, as well as provide examples and best practices.
