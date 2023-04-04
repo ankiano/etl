@@ -398,7 +398,7 @@ def cli(ctx, **kwargs):
                         schema = None
                     try:
                         dataset.to_sql(name=table, schema=schema, con=engine, **load_params)
-                        log.info(f'saved data to <{option.target}> in <{option.load}> table')
+                        log.info(f'saved data to <{options.target}> in <{options.load}> table')
                     except Exception as e:
                         log.error(e)
 
