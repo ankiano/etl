@@ -248,6 +248,15 @@ Some example of organizing working directory.
     └── me
         ├── playground
         │   ├── ad-hoc
+        |   |   ├── process-set-of-files
+        |   │   │   ├── input
+        │   │   │   |   ├── file1.csv
+        │   │   │   |   ├── file2.csv
+        │   │   │   |   ├── file3.csv
+        │   │   │   |   └── file4.csv
+        |   |   |   ├── local.db
+        |   |   |   ├── update.log
+        │   │   |   └── update.sh
         │   ├── report
         │   │   ├── demo-dashboard
         │   │   │   ├── sql
