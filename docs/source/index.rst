@@ -212,6 +212,29 @@ This will help understand how to integrate your project into their own projects.
    gsheet: 'google+sheets://??credentials=~/.google-api-key-2.json'
    gsheet: 'google+sheets://??credentials=~/.google-api-key-3.json'
 
+6) Loading a set of similar files
+
+  Sometimes you have a lot of files to process. 
+  
+  .. code-block:: concole
+
+    ├── input
+        ├── file1.csv
+        ├── file2.csv
+        ├── file3.csv
+        └── file4.csv
+  
+  Using native bash loop end `etl` can help you.
+
+.. code-block:: concole
+    :caption: update.sh
+    :linenos:
+    
+    #! /bin/bash
+
+    for f in input/file*.csv; do
+      etl --source "$f" --target local --load main.files_content
+    done
 
 
 Best practices
