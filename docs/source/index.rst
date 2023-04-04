@@ -102,6 +102,12 @@ Config .etl.yml searching priorities:
    * by OS environment variable: ``sudo echo "export ETL_CONFIG=~/etl.yml" > /etc/profile.d/etl-config.sh``
    * by default in user home directory
 
+.. note::
+  ``windows C:\Users\user\``
+  ``linux \home\user\``
+  ``mac \Users\user\`` 
+
+
 Parameters to source/target
 -----------------------------
 When connecting to a database using a connection string, you can specify various parameters that customize the connection.
