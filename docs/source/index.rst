@@ -204,7 +204,9 @@ This will help understand how to integrate your project into their own projects.
 
     etl --source database_a --extract data-1.sql --target local --load main.data_1
     etl --source database_b --extract data-2.sql --target local --load main.data_2
-    elt --source local --extract 'select * from data_1 t join data_2 d on t.key=d.key'
+    
+    elt --source local --extract 'select * from data_1 t join data_2 d on t.key=d.key' \
+        --target result.xlsx
 
 
 2) Internet datasets
@@ -226,7 +228,7 @@ This will help understand how to integrate your project into their own projects.
   We can build quick report and dashboards using google sheets. 
   You just need create worbook, share this book to technical email in `.google-api.key.json` and use `etl` to upload data to needed sheet.
   If sheet not exists, `etl` create it automaticaly.
-  If you will load data several times, `etl` erase each time erase values from sheet and insert new data.
+  If you will load data several times, `etl` erase each time values from sheet and insert new data.
   
   .. code-block:: concole
     :caption: update.sh
@@ -239,8 +241,8 @@ This will help understand how to integrate your project into their own projects.
 
 4) Parameters inside sql query
   
-  Where is some possibility use parameters inside of sql. 
-  In sql you shoud plase parameter in python format ``select * from table where param={user_sql_parameter}``
+  It is possibility to use parameters inside of sql. 
+  In sql you should place parameter in python format ``select * from table where param = {user_sql_parameter}``
   And add option key with name of this custom parameter to update query with value.
 
   .. code-block:: concole
@@ -325,6 +327,7 @@ Some example of organizing working directory.
    db_alias4: 'oracle+cx_oracle://sys:pass@host:port/database?mode=SYSDBA'
    db_alias5: 'awsathena+rest://aws_access_key_id:aws_secret_access_key@athena.region_name.amazonaws.com:443/schema_name?s3_staging_dir=s3_staging_dir'
    db_alias6: 'clickhouse+http://user:password@host:8443/db?protocol=https'
+   db_alias7: 'duckdb:///C:\\Users\\user\\Desktop\\test.duckdb' # windows path style
 
 
 .. code-block:: console
