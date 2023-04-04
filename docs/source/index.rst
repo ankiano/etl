@@ -202,6 +202,8 @@ This will help understand how to integrate your project into their own projects.
   You have to setup one alias name but with different keys files.
   Each time `etl` runs will select one of them randomly.
 
+  This technique can also be used to load balance across identical relational database replica instances.
+
 .. code-block:: yaml
    :caption: .etl.yml
    :linenos:
