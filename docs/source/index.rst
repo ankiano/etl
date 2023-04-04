@@ -78,72 +78,6 @@ Files (csv, xlsx, parquet, xml) input and output realised by `pandas <https://pa
    Note that some dialects may require additional configuration or to have the appropriate drivers or client installed. 
    Please refer to the `SQLAlchemy dialects documentation <https://docs.sqlalchemy.org/en/20/dialects/index.html#dialects>`_ for more information on configuring dialects.
 
-Configurating
-=============
-In order to set up connections to databases, etl uses the connection string format. However, connection strings can be long. 
-To save time, etl can find the connection string by its alias in a .etl.yml config file:
-
-
-.. code-block:: yaml
-   :caption: .etl.yml
-   :linenos:
-
-   local: 'sqlite:///local.db'
-   db_alias1: 'sqlite:////home/user/workspace/folder/some.db'
-   db_alias2: 'postgres://user:pass@host:port/database'
-   db_alias3: 'mysql+pymysql://user:pass@host:port/database?charset=utf8'
-   db_alias4: 'oracle+cx_oracle://sys:pass@host:port/database?mode=SYSDBA'
-   gsheet: 'google+sheets://??credentials=~/.google-api-key.json'
-
-
-Config .etl.yml searching priorities:
-
-   * by command option ``--config`` `/somepath/.etl.yml`
-   * by OS environment variable: ``sudo echo "export ETL_CONFIG=~/etl.yml" > /etc/profile.d/etl-config.sh``
-   * by default in user home directory
-
-.. note::
-  ``windows C:\Users\user\``
-  ``linux \home\user\``
-  ``mac \Users\user\`` 
-
-
-Parameters to source/target
------------------------------
-When connecting to a database using a connection string, you can specify various parameters that customize the connection.
-These parameters are appended to the connection string, separated by a ``?`` character and can be combined with ``&``.
-
-- ``?charset=utf8``: Sets the character encoding to UTF-8 for MySQL
-- ``?mode=SYSDBA``: Connects to the database using the SYSDBA system privilege for Oracle
-- ``?connection_timeout=<seconds>``: Specifies the number of seconds to wait for a connection to be established before timing out for Microsoft SQL Server
-- ``?s3_staging_dir=<s3-staging-dir>``: Specifies the Amazon S3 location where query results are stored.
-- ``?workgroup=<workgroup-name>``: Specifies the name of the workgroup to use for the connection.
-
-For additional details on the parameters supported by your database, please refer to the official documentation of the corresponding database.
-
-Parameters to Pandas and Engine
-------------------------------------------
-These parameters are appended to the connection string, separated by a ``??`` character and can be combined with ``&``.
-
-When specifying databases using the ``--source`` and ``--target`` option keys, you can pass additional parameters to the engine.
-For example, `??max_identifier_length=128` extend the maximum length of column names when saving to certain database systems.
-
-When specifying files using the ``--source`` and ``--target`` option keys, you can pass additional parameters.
-  `to_csv <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_csv.html?highlight=to_csv#pandas.DataFrame.to_csv>`_: 
-    - ``??header=0`` specify the row index to use as column names when loading CSV files. 0 mean firs row.
-    - ``??sep=;`` specify the column delimiter when loading or saving CSV files
-    - ``??low_memory=false`` disable the memory usage optimization for reading large files
-  `to_excel <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_excel.html>`_: 
-    - ``??sheet_name=data`` specify the sheet name to use when saving to an Excel file
-    - ``??mode=a`` file mode to use (write or append)
-    - ``??engine=openpyxl`` write engine to use, ‘openpyxl’ or ‘xlsxwriter’.
-
-When loading data to databases using the ``--load`` option key, you can pass additional parameters.
-  `to_sql <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_sql.html?highlight=to_sql>`_: 
-    - ``chunk_size=1000`` Specify the number of rows in each batch to be written at a time
-    - ``if_exists=replace`` Drop the table before inserting new values
-    - ``if_exists=append`` (by default) insert new values to the existing table.
-    - ``method=multi`` Pass multiple values in a single INSERT clause
 
 Usage instructions
 ==================
@@ -388,6 +322,74 @@ Some example of organizing working directory.
 
     crontab -l > ./crontab~ #backup current crontab
     crontab ./crontab
+
+
+Configurating
+=============
+In order to set up connections to databases, etl uses the connection string format. However, connection strings can be long. 
+To save time, etl can find the connection string by its alias in a .etl.yml config file:
+
+
+.. code-block:: yaml
+   :caption: .etl.yml
+   :linenos:
+
+   local: 'sqlite:///local.db'
+   db_alias1: 'sqlite:////home/user/workspace/folder/some.db'
+   db_alias2: 'postgres://user:pass@host:port/database'
+   db_alias3: 'mysql+pymysql://user:pass@host:port/database?charset=utf8'
+   db_alias4: 'oracle+cx_oracle://sys:pass@host:port/database?mode=SYSDBA'
+   gsheet: 'google+sheets://??credentials=~/.google-api-key.json'
+
+
+Config .etl.yml searching priorities:
+
+   * by command option ``--config`` `/somepath/.etl.yml`
+   * by OS environment variable: ``sudo echo "export ETL_CONFIG=~/etl.yml" > /etc/profile.d/etl-config.sh``
+   * by default in user home directory
+
+.. note::
+  ``windows C:\Users\user\``
+  ``linux \home\user\``
+  ``mac \Users\user\`` 
+
+
+Parameters to source/target
+-----------------------------
+When connecting to a database using a connection string, you can specify various parameters that customize the connection.
+These parameters are appended to the connection string, separated by a ``?`` character and can be combined with ``&``.
+
+- ``?charset=utf8``: Sets the character encoding to UTF-8 for MySQL
+- ``?mode=SYSDBA``: Connects to the database using the SYSDBA system privilege for Oracle
+- ``?connection_timeout=<seconds>``: Specifies the number of seconds to wait for a connection to be established before timing out for Microsoft SQL Server
+- ``?s3_staging_dir=<s3-staging-dir>``: Specifies the Amazon S3 location where query results are stored.
+- ``?workgroup=<workgroup-name>``: Specifies the name of the workgroup to use for the connection.
+
+For additional details on the parameters supported by your database, please refer to the official documentation of the corresponding database.
+
+Parameters to Pandas and Engine
+------------------------------------------
+These parameters are appended to the connection string, separated by a ``??`` character and can be combined with ``&``.
+
+When specifying databases using the ``--source`` and ``--target`` option keys, you can pass additional parameters to the engine.
+For example, `??max_identifier_length=128` extend the maximum length of column names when saving to certain database systems.
+
+When specifying files using the ``--source`` and ``--target`` option keys, you can pass additional parameters.
+  `to_csv <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_csv.html?highlight=to_csv#pandas.DataFrame.to_csv>`_: 
+    - ``??header=0`` specify the row index to use as column names when loading CSV files. 0 mean firs row.
+    - ``??sep=;`` specify the column delimiter when loading or saving CSV files
+    - ``??low_memory=false`` disable the memory usage optimization for reading large files
+  `to_excel <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_excel.html>`_: 
+    - ``??sheet_name=data`` specify the sheet name to use when saving to an Excel file
+    - ``??mode=a`` file mode to use (write or append)
+    - ``??engine=openpyxl`` write engine to use, ‘openpyxl’ or ‘xlsxwriter’.
+
+When loading data to databases using the ``--load`` option key, you can pass additional parameters.
+  `to_sql <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_sql.html?highlight=to_sql>`_: 
+    - ``??chunk_size=1000`` Specify the number of rows in each batch to be written at a time
+    - ``??if_exists=replace`` Drop the table before inserting new values
+    - ``??if_exists=append`` (by default) insert new values to the existing table.
+    - ``??method=multi`` Pass multiple values in a single INSERT clause
 
 
 .. toctree::
