@@ -41,7 +41,7 @@ def spreadsheet_open(workbook_name, credentials_path):
     # To prevent email printing by pygsheets
     sys.stdout = open(os.devnull, "w")
     try:
-        gclient = pygsheets.authorize(service_file=credentials_path, no_cache=True, retries=3)
+        gclient = pygsheets.authorize(service_file=credentials_path)
     except Exception as e:
         log.error(e)
         sys.exit(1)
