@@ -3,3 +3,4 @@ PyYAML # yaml parser and emitter
 pandas==1.5.2 # data structures and operations for manipulating numerical tables
 humanize # human-readable siz
 SQLAlchemy==1.4.18 # connection pooling for datasorces
+pygsheets==2.0.3 # client for google sheets
