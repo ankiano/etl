@@ -2,4 +2,4 @@ click # command line interfaces
 PyYAML # yaml parser and emitter
 pandas==1.5.3 # data structures and operations for manipulating numerical tables
 humanize # human-readable siz
-SQLAlchemy # connection pooling for datasorces
+SQLAlchemy==1.4 # connection pooling for datasorces
