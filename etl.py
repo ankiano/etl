@@ -5,7 +5,6 @@ import os, sys
 import logging
 from telnetlib import theNULL
 import click as cli # command line interface
-# import pdb #debug
 import pandas as pd
 import sqlalchemy
 import yaml
@@ -13,8 +12,10 @@ import humanize
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
 import random
+import numpy as np
+import urllib
 
-special_sources = ['http','https','ftp','google+sheets']
+special_sources = ['http','https','ftp','google+sheets', 'microsoft+graph']
 
 def parse_url_params(url):
     result = dict()
@@ -23,6 +24,28 @@ def parse_url_params(url):
         a,b=i.split("=")
         result[a]=b
     return result
+
+def colnum_string(n):
+    '''
+    >>> colnum_string(28)
+    >>> AB
+    '''
+    string = ""
+    while n > 0:
+        n, remainder = divmod(n - 1, 26)
+        string = chr(65 + remainder) + string
+    return string
+
+def api_call(method, url, body=None, **kwargs):
+    resource = kwargs.get('resource', None)
+    access_token = kwargs.get('access_token', None)
+    http_headers = {'Authorization':  access_token,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'}
+    endpoint = urllib.parse.urljoin(resource,url.lstrip('/'))
+    logging.debug(f'endpoint: {endpoint}')
+    return method(endpoint, headers=http_headers, json=body)
+
 
 def spreadsheet_open(workbook_name, credentials_path):
     """
@@ -56,6 +79,38 @@ def spreadsheet_open(workbook_name, credentials_path):
         log.error(e)
         sys.exit(1)
     return workbook
+
+def msgraph_open(credentials_path):
+    """
+    Authorize microsoft graph api client and get token
+
+    """
+    msal = __import__('msal')
+    # command option --msgraph_api_key
+    credentials_path = os.path.expanduser(credentials_path)
+    if os.path.isfile(credentials_path):
+        log.debug(f'graph api key {credentials_path} found')
+    else:
+        log.error(f'graph api key file {credentials_path} not found.')
+        sys.exit(1)
+
+    # read config from yaml file
+    with open(credentials_path, 'r') as config_file:
+        cfg = yaml.safe_load(config_file)
+
+    # create the MSAL confidential client application and require token
+    app = msal.ConfidentialClientApplication(
+        client_id = cfg['client_id'], 
+        authority=cfg['authority'], 
+        client_credential=cfg['client_credential']
+        )
+    token_response = None
+    token_response = app.acquire_token_for_client(scopes=cfg['scopes'])
+    if token_response.get('error_description'):
+        logging.error('microsoft graph api error: {}'.
+                      format(token_response['error_description']))
+        sys.exit(1)
+    return token_response,cfg
 
 def get_source(source):
     if '://' in source:
@@ -239,6 +294,23 @@ def cli(ctx, **kwargs):
                     workbook = spreadsheet_open(options.extract.split('!')[0], source_params['credentials'])
                     sheet = workbook.worksheet_by_title(options.extract.split('!')[1])
                     dataset = sheet.get_as_df()
+                if 'microsoft+graph' in source:
+                    token_response, cfg = msgraph_open(source_params.get('credentials'))
+                    log.debug(token_response)
+                    workbook_url = options.extract
+                    sheet_name = 'data'
+                    if '??' in options.extract:
+                        workbook_url, sheet_name = options.extract.split('??')
+                        sheet_name = parse_url_params(sheet_name)
+                        sheet_name = sheet_name.pop('sheet_name', 'data')
+                    
+                    requests = __import__('requests')
+                    url = workbook_url + f"/workbook/worksheets/{sheet_name}/usedRange()"
+                    response = api_call(requests.get, url, resource=cfg['resource'], access_token=token_response['access_token'])
+                    response
+                    data = response.json()['values']
+                    dataset = pd.DataFrame(data[1:], columns = data[0])
+
                 # extract csv from internent
                 if any(s in source for s in ['http','https','ftp']) and source.endswith('.csv'):
                     log.info(f'extracting data from {source}')
@@ -340,10 +412,10 @@ def cli(ctx, **kwargs):
                 target_params = parse_url_params(target_params)
             
             if any(s in target for s in special_sources): # any custom sources and apies
+                log.debug(f'target params: {target_params}')
                 # load to google sheets
                 if 'google+sheets' in target:
                     if dataset.size <= 5000000:
-                        log.debug(f'target params: {target_params}')
                         workbook_name, sheet_name = options.load.split('!')
                         workbook = spreadsheet_open(workbook_name, target_params.get('credentials'))
                         google_err = __import__('pygsheets.exceptions')
@@ -363,6 +435,53 @@ def cli(ctx, **kwargs):
                         log.info(f'data saved to <{workbook_name}!{sheet_name}> spreadsheet')
                     else:
                         log.error('saving to gsheet is ommited due to limit 5M of cells')
+                        sys.exit(1)
+                if 'microsoft+graph' in target:
+                    if dataset.size <= 5000000:
+                        token_response, cfg = msgraph_open(target_params.get('credentials'))
+                        log.debug(token_response)
+                        urllib = __import__('urllib')
+                        requests = __import__('requests')
+                        # access_token = token_response['access_token']
+                        
+                        workbook_url = options.load
+                        sheet_name = 'data'
+                        if '??' in options.load:
+                            workbook_url, sheet_name = options.load.split('??')
+                            sheet_name = parse_url_params(sheet_name)
+                            sheet_name = sheet_name.pop('sheet_name', 'data')
+                        url = workbook_url + f"/workbook/worksheets"
+                        # try to add worksheet
+                        response = api_call(requests.post, url, {"name": f"{sheet_name}"}, resource=cfg['resource'], access_token=token_response['access_token'])
+                        if response.status_code == 201:
+                            logging.info(f'New sheet <{sheet_name}> added')
+                        # clear all worksheet range
+                        url = workbook_url + f"/workbook/worksheets/{sheet_name}/range(address='A:XFD')/clear"
+                        response = api_call(requests.post, url, {"applyTo": "All"}, resource=cfg['resource'], access_token=token_response['access_token'])
+                        logging.debug(response)
+                        # add new table
+                        url = workbook_url + f"/workbook/worksheets/{sheet_name}/tables/add"
+                        col_range = 'A1:%s1' % colnum_string(len(dataset.columns))
+                        response = api_call(requests.post, url, {"address": f"{col_range}","hasHeaders": True, "name": sheet_name}, resource=cfg['resource'], access_token=token_response['access_token']).json()
+                        table_id = response.get('id')
+                        if response.get('error'):
+                            logging.error(f"{response['error']['code']}: {response['error']['message']}")
+                            sys.exit(1)
+                        # add table header
+                        url = workbook_url + f"/workbook/worksheets/{sheet_name}/range(address='{col_range}')"
+                        body = {'values': [dataset.to_dict(orient='split')['columns']]}
+                        response = api_call(requests.patch, url, body, resource=cfg['resource'], access_token=token_response['access_token'])
+                        dataset = dataset.fillna('')
+                        # add rows by chanks
+                        chunksize = 1000
+                        for g, df in dataset.groupby(np.arange(len(dataset)) // chunksize):
+                            url = workbook_url + f"/workbook/tables/{table_id}/Rows"
+                            body={'values': df.to_dict(orient='split')['data']}
+                            response = api_call(requests.post, url, body, resource=cfg['resource'], access_token=token_response['access_token'])
+                        if response.status_code == 201:
+                            logging.info(f'Saved data to <{workbook_url}> on <{sheet_name}> sheet')
+                    else:
+                        log.error('saving to graph api is ommited due to limit 5M of cells')
                         sys.exit(1)
             # any sql sources supported by sqlalchemy or its extentions
             else: 
