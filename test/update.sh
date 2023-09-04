@@ -75,10 +75,12 @@ parent_dir=$(dirname $script_dir)
 
 #python3 $parent_dir/etl.py --source input/titanic.xlsx \
 #                           --target sharepoint \
-#                           --load "/users/a.akinshyn@kasta.ua/drive/root:/Book.xlsx:??sheet_name=xxx" \
+#                           --load "/users/jonh.do@domain.com/drive/root:/Book.xlsx:??sheet_name=data" \
 #                           --debug
 
 #python3 $parent_dir/etl.py --source sharepoint \
-#                           --extract "/users/a.akinshyn@kasta.ua/drive/root:/Book.xlsx:??sheet_name=xxx" \
+#                           --extract "/users/john.do@domain.com/drive/root:/Book.xlsx:??sheet_name=data" \
 #                           --target output/test.csv \
 #                           --debug
+
+#python3 $parent_dir/etl.py --source local --extract 'select * from main.titanic' --target output/titanic.xlsx
