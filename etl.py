@@ -342,7 +342,8 @@ def cli(ctx, **kwargs):
                         sys.exit(1)
 
 #     dataset = dataset.dropna() #dropping all rows where are completely empty
-    log.info(dataframe_size_info(dataset))
+    if not options.execute:
+        log.info(dataframe_size_info(dataset))
 
 # load dataset to target
     if options.target:
