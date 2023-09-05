@@ -14,6 +14,7 @@ from urllib.parse import parse_qs
 import random
 import numpy as np
 import urllib
+import json
 
 special_sources = ['http','https','ftp','google+sheets', 'microsoft+graph']
 
@@ -477,7 +478,9 @@ def cli(ctx, **kwargs):
                         chunksize = 1000
                         for g, df in dataset.groupby(np.arange(len(dataset)) // chunksize):
                             url = workbook_url + f"/workbook/tables/{table_id}/Rows"
-                            body={'values': df.to_dict(orient='split')['data']}
+                            data_dictionary = df.to_dict(orient='split')['data']
+                            data_body = json.dumps(data_dictionary, default=str) # to awoid TypeError: Object of type date is not JSON serializable
+                            body={'values': json.loads(data_body)}
                             response = api_call(requests.post, url, body, resource=cfg['resource'], access_token=token_response['access_token'])
                         if response.status_code == 201:
                             logging.info(f'Saved data to <{workbook_url}> on <{sheet_name}> sheet')
