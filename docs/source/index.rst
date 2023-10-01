@@ -199,10 +199,10 @@ This will help understand how to integrate your project into their own projects.
     etl --source some_db --extract sql/query.sql \
         --target sharepoint --load "$workbook??sheet_name=_query"
 
-  You can setup path to excel file with different notations.
-  OneDrive Business : ``/users/john.do@organizaion.org/drive/root:/Test/Book1.xlsx:``
-  Sharepoint Sites: ``/sites/{site-id}/drive/root:/Sales/Book2.xlsx:``
-  To find site-id you can open url like ``https://organizaion.sharepoint.com/sites/{site-name}/_api/site/id``
+  You can setup path to excel file with different notations::
+- OneDrive Business : ``/users/john.do@organizaion.org/drive/root:/Test/Book1.xlsx:``
+- Sharepoint Sites: ``/sites/{site-id}/drive/root:/Sales/Book2.xlsx:``
+| To find site-id you can open url like ``https://organizaion.sharepoint.com/sites/{site-name}/_api/site/id``
 
 5) Parameters inside sql query
   
