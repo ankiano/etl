@@ -163,7 +163,7 @@ This will help understand how to integrate your project into their own projects.
     etl --source "$dataset_file??sep=," \
         --target input/titanic.xlsx
 
-3) Report or dashboard update
+3) Report or dashboard update in google sheets
 
   We can build quick report and dashboards using google sheets. 
   You just need create worbook, share this book to technical email in `.google-api.key.json` and use `etl` to upload data to needed sheet.
@@ -179,7 +179,32 @@ This will help understand how to integrate your project into their own projects.
     etl --source some_db --extract sql/query.sql \
         --target gsheet --load some-gsheet-workbook!my-sheet
 
-4) Parameters inside sql query
+4) Report or dashboard update in sharepoint or onedrive business excel
+
+  Also We can build quick report and dashboards using excel.
+  You have to configure `.ms-api-key.yml` (you can find details in Configurating chapter)
+  Then you can create worbook and use `etl` to upload data to needed sheet.
+  If sheet not exists, `etl` create it automaticaly.
+  If you will load data several times, `etl` erase each time values from sheet and insert new data.
+  
+  .. code-block:: concole
+    :caption: update.sh
+    :linenos:
+    
+    #! /bin/bash
+
+    #workbook='users/john.do@organization.org/drive/root:/report.xlsx:' #onedrive
+    workbook='sites/381b6266-d315-4e73-a947-65742ed52999/drive/root:/report.xlsx:' #sharepoint
+
+    etl --source some_db --extract sql/query.sql \
+        --target sharepoint --load "$workbook??sheet_name=_query"
+
+  You can setup path to excel file with different notations.
+  OneDrive Business : ``/users/john.do@organizaion.org/drive/root:/Test/Book1.xlsx:``
+  Sharepoint Sites: ``/sites/{site-id}/drive/root:/Sales/Book2.xlsx:``
+  To find site-id you can open url like ``https://organizaion.sharepoint.com/sites/{site-name}/_api/site/id``
+
+5) Parameters inside sql query
   
   It is possibility to use parameters inside of sql. 
   In sql you should place parameter in python format ``select * from table where param = {user_sql_parameter}``
@@ -195,7 +220,7 @@ This will help understand how to integrate your project into their own projects.
         --user_sql_parameter 123 \
         --target output/result.xlsx
 
-5) Avoiding limit with google api
+6) Avoiding limit with google api
 
   Google api has per-minute quotas, request limit of 300 per minute per project.
   You can extend this limit using several api keys at the same time. 
@@ -212,7 +237,7 @@ This will help understand how to integrate your project into their own projects.
    gsheet: 'google+sheets://??credentials=~/.google-api-key-2.json'
    gsheet: 'google+sheets://??credentials=~/.google-api-key-3.json'
 
-6) Loading a set of similar files
+7) Loading a set of similar files
 
   Sometimes you have a lot of files to process. 
   
@@ -280,7 +305,8 @@ Some example of organizing working directory.
         │   └── crontab-update.sh
         ├── .bash_aliases
         ├── .etl.yml
-        └── .google-api-key.json
+        ├── .google-api-key.json
+        └── .ms-api-key.json
 
 
 - Config files we can store in user directory
@@ -295,6 +321,7 @@ Some example of organizing working directory.
 
    local: 'duckdb:///local.db' # use this alias when you need local database in project directory
    gsheet: 'google+sheets://??credentials=~/.google-api-key.json' # use this alias to load data to google sheets
+   sharepoint: 'microsoft+graph://??credentials=~/.ms-api-key.yml'
    db_alias1: 'sqlite:////home/user/workspace/folder/some.db'
    db_alias2: 'postgres://user:pass@host:port/database'
    db_alias3: 'mysql+pymysql://user:pass@host:port/database?charset=utf8'
@@ -387,6 +414,21 @@ Config .etl.yml searching priorities:
   ``linux \home\user\``
   ``mac \Users\user\`` 
 
+To set up connection to microsoft graph api create file.
+
+.. code-block:: yaml
+   :caption: .ms-api-key.yml
+   :linenos:
+
+   resource: "https://graph.microsoft.com/v1.0/"
+   scopes: ["https://graph.microsoft.com/.default"]
+   client_id: "{Application ID}" #you registered in active direvroty application
+   authority: "https://login.microsoftonline.com/{Tenant ID}" #you organization tenant id
+   secret_id: "{Secret id}"
+   client_credential: "{Value}" #of Secret ID
+
+You have to register application in microsoft azure active directory of your organization.
+Give permissions on microsoft graph `Sites.ReadWrite.All`, `Files.ReadWrite.All`.
 
 Parameters to source/target
 -----------------------------
@@ -425,6 +467,9 @@ When loading data to databases using the ``--load`` option key, you can pass add
     - ``??if_exists=append`` (by default) insert new values to the existing table.
     - ``??method=multi`` Pass multiple values in a single INSERT clause
 
+Parameters to Pandas and Engine
+------------------------------------------
+These parameters are appended to the connection string, separated by a ``??`` character and can be combined with ``&``.
 
 .. toctree::
    :maxdepth: 4
