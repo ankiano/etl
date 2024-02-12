@@ -467,10 +467,6 @@ When loading data to databases using the ``--load`` option key, you can pass add
     - ``??if_exists=append`` (by default) insert new values to the existing table.
     - ``??method=multi`` Pass multiple values in a single INSERT clause
 
-Parameters to Pandas and Engine
-------------------------------------------
-These parameters are appended to the connection string, separated by a ``??`` character and can be combined with ``&``.
-
 .. toctree::
    :maxdepth: 4
    :caption: Table of Contents
