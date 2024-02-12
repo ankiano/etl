@@ -452,7 +452,7 @@ For example, `??max_identifier_length=128` extend the maximum length of column n
 
 When specifying files using the ``--source`` and ``--target`` option keys, you can pass additional parameters.
   `to_csv <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_csv.html?highlight=to_csv#pandas.DataFrame.to_csv>`_: 
-    - ``??header=0`` specify the row index to use as column names when loading CSV files. 0 mean firs row.
+    - ``??header=`` same as header=False, to save data without header
     - ``??sep=;`` specify the column delimiter when loading or saving CSV files
     - ``??low_memory=false`` disable the memory usage optimization for reading large files
   `to_excel <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_excel.html>`_: 
