@@ -462,7 +462,7 @@ When specifying files using the ``--source`` and ``--target`` option keys, you c
 
 When loading data to databases using the ``--load`` option key, you can pass additional parameters.
   `to_sql <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_sql.html?highlight=to_sql>`_: 
-    - ``??chunk_size=1000`` Specify the number of rows in each batch to be written at a time
+    - ``??chunksize=1000`` Specify the number of rows in each batch to be written at a time
     - ``??if_exists=replace`` Drop the table before inserting new values
     - ``??if_exists=append`` (by default) insert new values to the existing table.
     - ``??method=multi`` Pass multiple values in a single INSERT clause
