@@ -1,9 +1,8 @@
-#!/usr/bin/env python3.9
+#!/usr/bin/env python3.10
 # coding=utf-8
 
 import os, sys
 import logging
-from telnetlib import theNULL
 import click as cli # command line interface
 import pandas as pd
 import sqlalchemy

@@ -33,9 +33,9 @@ The easiest way to install `etl` is to use pip, the Python package installer. Si
 .. code-block:: console
   :linenos:
 
-   $ pip install git+https://github.com/ankiano/etl.git
-   $ pip install git+https://github.com/ankiano/etl.git -U # update version if exists 
-   $ sudo -H pip install git+https://github.com/ankiano/etl.git -U # install to system level
+   $ pip3 install git+https://github.com/ankiano/etl.git
+   $ pip3 install git+https://github.com/ankiano/etl.git -U # update version if exists 
+   $ sudo -H pip3 install git+https://github.com/ankiano/etl.git -U # install to system level
 
 This will install the latest version of ETL from the GitHub repository.
 
@@ -55,21 +55,24 @@ Here are some of the SQL databases and sources supported by `SQLAlchemy`:
    * - Dialect
      - Install Command
    * - PostgreSQL
-     - ``pip install psycopg2-binary``
+     - ``sudo -H pip3 install psycopg2-binary``
    * - Oracle
-     - ``pip install cx_Oracle``
+     - ``sudo -H pip3 install cx_Oracle``
    * - MySQL
-     - ``pip install mysqlclient``
-   * - SQL Server
-     - ``pip install pyodbc``
+     - ``sudo -H pip3 install mysqlclient``
+   * - MS SQL Server
+     - ``sudo -H pip3 install pymssql``
    * - SQLite
-     - ``pip install pysqlite3``
+     - ``sudo -H pip3 install pysqlite3``
    * - DuckDB
-     - ``pip install duckdb-engine``
+     - ``sudo -H pip3 install duckdb-engine``
    * - Presto
-     - ``pip install presto-python-client sqlalchemy_presto``
+     - ``sudo -H pip3 install presto-python-client sqlalchemy_presto``
    * - Hive
-     - ``pip install pyhive[hive]``
+     - ``sudo -H pip3 install pyhive[hive]``
+   * - Clickhouse
+     - ``sudo -H pip3 install clickhouse-driver==0.2.6 clickhouse-sqlalchemy==0.2.3``
+
 
 Google sheets connection realised by `pygsheets <https://pygsheets.readthedocs.io/en/stable/>`_ 
 Files (csv, xlsx, parquet, xml) input and output realised by `pandas <https://pandas.pydata.org/docs/reference/io.html>`_ functionality. 
