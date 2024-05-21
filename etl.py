@@ -56,9 +56,9 @@ def spreadsheet_open(workbook_name, credentials_path):
     # command option --google_api_key
     credentials_path = os.path.expanduser(credentials_path)
     if os.path.isfile(credentials_path):
-        log.debug(f'google api key {credentials_path} found')
+        log.debug(f'google api key found <{credentials_path}>')
     else:
-        log.error(f'google api key file {credentials_path} not found.')
+        log.error(f'google api key file not found <{credentials_path}>')
         sys.exit(1)
 
     # To prevent email printing by pygsheets
@@ -73,7 +73,7 @@ def spreadsheet_open(workbook_name, credentials_path):
     try:
         workbook = gclient.open(workbook_name)
     except pygsheets.exceptions.SpreadsheetNotFound:
-        log.error(f'spreadsheetNotFound error. share spreadsheet {workbook_name} with service email')
+        log.error(f'SpreadsheetNotFound: share spreadsheet <{workbook_name}> with service email')
         sys.exit(1)
     except Exception as e:
         log.error(e)
@@ -89,9 +89,9 @@ def msgraph_open(credentials_path):
     # command option --msgraph_api_key
     credentials_path = os.path.expanduser(credentials_path)
     if os.path.isfile(credentials_path):
-        log.debug(f'graph api key {credentials_path} found')
+        log.debug(f'graph api key found <{credentials_path}>')
     else:
-        log.error(f'graph api key file {credentials_path} not found.')
+        log.error(f'graph api key file not found <{credentials_path}>')
         sys.exit(1)
 
     # read config from yaml file
@@ -115,29 +115,29 @@ def msgraph_open(credentials_path):
 def get_source(source):
     if '://' in source:
         result = source
-        log.debug(f'source defined like a connection string: {source}')
+        log.debug(f'source defined like a connection string <{source}>')
     else:
         cfg = get_config(source)
         if cfg.get(source):
             s = cfg.get(source)
             if isinstance(s, list):
                 result = random.choice(s)
-                log.debug(f"source defined like a random choice by alias <{source}> from config file")
+                log.debug(f"source defined like a random choice by alias <{source}>")
             else:
                 result = s
-                log.debug(f'source defined by alias <{source}> from config file')
+                log.debug(f'source defined by alias from config file <{source}>')
         else:
             if '.' in source:
-                log.error(f'<{source}> file not found')
+                log.error(f'file name not found <{source}>')
             else:
-                log.error(f'alias <{source}> not found in config file')
+                log.error(f'source alias not found <{source}>')
             sys.exit(1)
     return result
 
 def dataframe_size_info(df):
     assert isinstance(df, pd.DataFrame), type(df)
     volume = humanize.naturalsize(df.memory_usage(index=True).sum())
-    return f'{volume} of data in amount of {df.shape[0]} rows, {df.shape[1]} columns, {df.size} cells recieved'
+    return f'{volume} of data received in amount of {df.shape[0]} rows, {df.shape[1]} columns, {df.size} cells'
 
 def get_config(alias):
     """
@@ -153,19 +153,19 @@ def get_config(alias):
     # Command line option if set
     if os.path.exists(options.config_path):
         config_path = options.config_path
-        log.debug(f'config file found from command option: {config_path}')
+        log.debug(f'config file found from command option <{config_path}>')
 
     # Path to config file in environment
     elif os.path.exists(env_config_path):
         config_path = env_config_path
-        log.debug(f'config file found from environment: {config_path}')
+        log.debug(f'config file found from environment <{config_path}>')
 
     # Config file in home directory
     elif os.path.exists(home_config_file):
         config_path = home_config_file
-        log.debug(f'config file found from home dir: {config_path}')
+        log.debug(f'config file found from home dir <{config_path}>')
     else:
-        log.error(f'alias <{alias}> not possible to recognize, config file not found')
+        log.error(f'config file not found, alias not possible to recognize <{alias}>')
         sys.exit(1)
 
     with open(config_path, 'r') as config_file:
@@ -181,7 +181,7 @@ def get_query(query, extra_args):
                 sql = open(sql_file_path, 'r', encoding='utf-8')
                 result = " ".join(sql.readlines())
             else:
-                log.error(f'query file <{query}> not found. check query name and path.')
+                log.error(f'query file not found <{query}>')
                 sys.exit(1)
         else:
             result = query
@@ -198,7 +198,7 @@ def create_dir(path):
     dir = os.path.dirname(path)
     if dir and not os.path.exists(dir):
         os.makedirs(dir)
-        log.info(f'folder {dir} created')
+        log.info(f'folder created <{dir}>')
 
 @cli.command(context_settings=dict(ignore_unknown_options=True, allow_extra_args=True))
 @cli.pass_context
@@ -215,7 +215,7 @@ def cli(ctx, **kwargs):
     global extra_args
 # logging basic setup
     log_level = logging.INFO
-    logging.basicConfig(level=log_level, format='%(asctime)s | %(levelname)-5s | %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    logging.basicConfig(level=log_level, format='%(asctime)s | %(levelname)-5s | %(process)d | %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
     log = logging.getLogger()
 
 # read cli options and extra args
@@ -230,7 +230,7 @@ def cli(ctx, **kwargs):
     if options.debug:
         log.setLevel(logging.DEBUG)
 
-    log.debug(f'project dir: {os.getcwd()}')
+    log.debug(f'project dir <{os.getcwd()}>')
 
 # print cli option in debug mode
     if options.debug:
@@ -275,7 +275,7 @@ def cli(ctx, **kwargs):
             if source.endswith('.xml'):
                 source_method = pd.read_xml
             try:
-                log.info(f'extracting data from {source}')
+                log.info(f'extracting data from <{source}>')
                 dataset = source_method(source, **source_params)
             except Exception as e:
                 log.error(e)
@@ -313,7 +313,7 @@ def cli(ctx, **kwargs):
 
                 # extract csv from internent
                 if any(s in source for s in ['http','https','ftp']) and source.endswith('.csv'):
-                    log.info(f'extracting data from {source}')
+                    log.info(f'extracting data from <{source}>')
                     source_params.setdefault('sep',';') # default params
                     source_params.setdefault('header',0) # default params # means you have the names of columns in the first row in the file
                     try:
@@ -334,7 +334,7 @@ def cli(ctx, **kwargs):
                         else:
                             log.info(f'executed <{options.execute}>')
                     if options.extract:
-                        log.info(f'extracting data from a <{options.source}> using query <{options.extract}>')
+                        log.info(f'extracting data from <{options.source}> using query <{options.extract}>')
                         source_query = get_query(options.extract, extra_args)
                         dataset = pd.read_sql(sql=source_query, con=source_engine)
                 except Exception as e:
@@ -364,7 +364,7 @@ def cli(ctx, **kwargs):
             try: # load data
                 log.debug(f'target params: {target_params}')
                 dataset.to_csv(target, **target_params)
-                log.info(f'data saved in file: {target}')
+                log.info(f'data saved to file <{target}>')
             except Exception as e:
                 log.error(e)
         # load to xlsx
@@ -383,7 +383,7 @@ def cli(ctx, **kwargs):
             try: # load data
                 with pd.ExcelWriter(target, mode=mode, **target_params) as writer:
                     dataset.to_excel(writer, sheet_name=sheet_name, index=False) 
-                log.info(f'data saved in file <{target}> on sheet <{sheet_name}>')
+                log.info(f'data saved to file <{target}> on sheet <{sheet_name}>')
             except Exception as e:
                 log.error(e)
         # load to parquet
@@ -426,14 +426,14 @@ def cli(ctx, **kwargs):
                             sheet.clear(start='A1')
                         except google_err.WorksheetNotFound:
                             sheet = workbook.add_worksheet(sheet_name, rows=1, cols=1)
-                            log.info(f'new sheet <{sheet_name}> added')
+                            log.info(f'new sheet added <{sheet_name}>')
                         except Exception as e:
                             log.error(e)
                         
                         dataset = dataset.fillna('')
                         dataset = dataset.astype(str)
                         sheet.set_dataframe(dataset, start="A1", fit=True, nan='')
-                        log.info(f'data saved to <{workbook_name}!{sheet_name}> spreadsheet')
+                        log.info(f'data saved to spreadsheet <{workbook_name}!{sheet_name}>')
                     else:
                         log.error('saving to gsheet is ommited due to limit 5M of cells')
                         sys.exit(1)
@@ -520,7 +520,7 @@ def cli(ctx, **kwargs):
                         schema = None
                     try:
                         dataset.to_sql(name=table, schema=schema, con=engine, **load_params)
-                        log.info(f'saved data to <{options.target}> in <{options.load}> table')
+                        log.info(f'data saved to <{options.target}> in table <{options.load}>')
                     except Exception as e:
                         log.error(e)
 
