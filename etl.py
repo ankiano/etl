@@ -404,6 +404,15 @@ def cli(ctx, **kwargs):
                 log.info(f'data saved to file <{target}>')
             except Exception as e:
                 log.error(e)
+        # load to html
+        elif target.endswith('.html'):
+            create_dir(target) # manage folders if not exist
+            target_params.setdefault('index',False)
+            try: # load data
+                dataset.to_html(target, **target_params)
+                log.info(f'data saved to file <{target}>')
+            except Exception as e:
+                log.error(e)
         # load to sources with connection strings
         else:
             target = get_source(target) #target can be set like alias
