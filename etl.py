@@ -15,7 +15,7 @@ import numpy as np
 import urllib
 import json
 
-special_sources = ['http','https','ftp','google+sheets', 'microsoft+graph']
+special_sources = ['http://','https://','ftp://','google+sheets', 'microsoft+graph']
 
 def parse_url_params(url):
     result = dict()
