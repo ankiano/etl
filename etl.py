@@ -136,7 +136,13 @@ def get_source(source):
 
 def dataframe_size_info(df):
     assert isinstance(df, pd.DataFrame), type(df)
-    volume = humanize.naturalsize(df.memory_usage(index=True).sum())
+    # Check if the DataFrame is empty and handle accordingly
+    if df.empty:
+        memory_usage = 0  # Set to zero if the DataFrame is empty
+    else:
+        memory_usage = df.memory_usage(index=True).sum()
+    # Only apply humanize if there's memory usage; otherwise, set to "0 B" or an appropriate default
+    volume = humanize.naturalsize(memory_usage, binary=True) if memory_usage > 0 else "0 B"
     return f'{volume} of data received in amount of {df.shape[0]} rows, {df.shape[1]} columns, {df.size} cells'
 
 def get_config(alias):
