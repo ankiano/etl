@@ -191,9 +191,9 @@ def get_query(query, extra_args):
                 sys.exit(1)
         else:
             result = query
-        result = sqlalchemy.text(result)
         if extra_args:
             result = str(result).format(**extra_args) 
+        result = sqlalchemy.text(result)
         log.debug(f'sql:\n{result}')
         return result
     except Exception as e:
