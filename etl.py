@@ -435,7 +435,7 @@ def cli(ctx, **kwargs):
                 log.debug(f'target params: {target_params}')
                 # load to google sheets
                 if 'google+sheets' in target:
-                    if dataset.size <= 5000000:
+                    if dataset.size <= 10000000:
                         workbook_name, sheet_name = options.load.split('!')
                         workbook = spreadsheet_open(workbook_name, target_params.get('credentials'))
                         google_err = __import__('pygsheets.exceptions')
@@ -454,7 +454,7 @@ def cli(ctx, **kwargs):
                         sheet.set_dataframe(dataset, start="A1", fit=True, nan='')
                         log.info(f'data saved to spreadsheet <{workbook_name}!{sheet_name}>')
                     else:
-                        log.error('saving to gsheet is ommited due to limit 5M of cells')
+                        log.error('saving to gsheet is ommited due to limit 10M of cells')
                         sys.exit(1)
                 if 'microsoft+graph' in target:
                     if dataset.size <= 5000000:
