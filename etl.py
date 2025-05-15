@@ -353,9 +353,13 @@ def cli(ctx, **kwargs):
 
     if not options.execute:
         log.info(dataframe_size_info(dataset))
-        # dataset = dataset.dropna(how='all') #dropping all rows where are completely empty
+    
+    # check if dataset is empty
+    if dataset.empty:
+        log.warning("no data received, exiting without updating target")
+        return sys.exit(0)
 
-# load dataset to target
+    # load dataset to target
     if options.target:
         target_params = {}
         if '??' in options.target: # take parameters for sqlalchemy engine
