@@ -355,7 +355,7 @@ def cli(ctx, **kwargs):
         log.info(dataframe_size_info(dataset))
     
     # check if dataset is empty
-    if dataset.empty:
+    if options.extract and dataset.empty:
         log.warning("no data received, exiting without updating target")
         return sys.exit(0)
 
