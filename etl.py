@@ -249,6 +249,9 @@ def cli(ctx, **kwargs):
         log.debug(f'command options: {o}')
         if extra_args:
             log.debug(f'custom params for query: {extra_args}')
+    else:
+        import urllib3
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # check options
     if options.extract and options.execute:
