@@ -270,7 +270,7 @@ def cli(ctx, **kwargs):
 
         if os.path.isfile(source): # file
             log.debug(f'source params: {source_params}')
-            if source.endswith('.csv'):
+            if source.endswith('.csv') or source.endswith('.csv.zip'):
                 source_params.setdefault('header',0) # default params # means you have the names of columns in the first row in the file
                 source_params.setdefault('sep',';') # default params
                 source_method = pd.read_csv
@@ -374,11 +374,13 @@ def cli(ctx, **kwargs):
             target_params = parse_url_params(target_params)
         
         # load to csv
-        if target.endswith('.csv'):
+        if target.endswith('.csv') or target.endswith('.csv.zip'):
             create_dir(target) # manage folders if not exist
             target_params.setdefault('sep',';') # default params
             target_params.setdefault('encoding','utf-8')
             target_params.setdefault('index',False)
+            if target.endswith('.csv.zip'):
+                target_params.setdefault('compression','zip')
             try: # load data
                 log.debug(f'target params: {target_params}')
                 dataset.to_csv(target, **target_params)
@@ -465,7 +467,6 @@ def cli(ctx, **kwargs):
                             log.info(f'new sheet added <{sheet_name}>')
                         except Exception as e:
                             log.error(e)
-                        
                         dataset = dataset.fillna('')
                         dataset = dataset.astype(str)
                         sheet.set_dataframe(dataset, start="A1", fit=True, nan='')
