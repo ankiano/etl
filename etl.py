@@ -302,6 +302,7 @@ def cli(ctx, **kwargs):
             if any(s in source for s in special_sources): # any custom sources and apies
                 # extract from google sheets
                 if 'google+sheets' in source:
+                    log.info(f'extracting data from google speadsheet <{workbook_name}>')
                     workbook = spreadsheet_open(options.extract.split('!')[0], source_params['credentials'])
                     sheet = workbook.worksheet_by_title(options.extract.split('!')[1])
                     dataset = sheet.get_as_df()
