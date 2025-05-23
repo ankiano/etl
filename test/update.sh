@@ -4,6 +4,8 @@ parent_dir=$(dirname $script_dir)
 
 #python3 $parent_dir/etl.py --help
 
+#python3 $parent_dir/etl.py --source 'https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv??sep=,' > titanic.csv
+
 #python3 $parent_dir/etl.py --source 'https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv??sep=,' \
 #                           --target 'input/titanic.xlsx??sheet_name=2&if_sheet_exists=replace' --debug
 
@@ -84,3 +86,14 @@ parent_dir=$(dirname $script_dir)
 #                           --debug
 
 #python3 $parent_dir/etl.py --source local --extract 'select * from main.titanic' --target output/titanic.xlsx
+
+#cat titanic.csv | python3 $parent_dir/etl.py --target 'input/titanic.xlsx??sheet_name=2&if_sheet_exists=replace'
+
+#cat titanic.csv | python3 $parent_dir/etl.py > test.csv
+
+#cat titanic.csv | python3 $parent_dir/etl.py | cat
+
+#cat titanic.csv | python3 $parent_dir/etl.py | wc -l
+
+#cat titanic.csv | python3 $parent_dir/etl.py | grep female | wc -l
+

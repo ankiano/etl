@@ -208,10 +208,10 @@ def create_dir(path):
 
 @cli.command(context_settings=dict(ignore_unknown_options=True, allow_extra_args=True))
 @cli.pass_context
-@cli.option('--source', required=True, type=str, help="Source for extracting data. Database name, csv or xls filename")
+@cli.option('--source', required=False, type=str, help="Source for extracting data. Database name, csv or xls filename. Defaults to stdin if not provided.")
 @cli.option('--extract', default='', help="Sql file name for extracting data from database")
 @cli.option('--execute', default='', help="Sql file name for executing without extracting data")
-@cli.option('--target', help="Target for inserting data. Database name, csv or xls filename")
+@cli.option('--target', required=False, type=str, help="Target for inserting data. Database name, csv or xls filename. Defaults to stdout if not provided.")
 @cli.option('--load', default='', help="Database schema and table name, if target is database")
 @cli.option('--config-path', default='', help="Custom path to etl.yml config")
 @cli.option('--debug', default=False, is_flag=True, help="Extended level of logging with more info")
@@ -221,8 +221,9 @@ def cli(ctx, **kwargs):
     global extra_args
 # logging basic setup
     log_level = logging.INFO
-    logging.basicConfig(level=log_level, format='%(asctime)s | %(levelname)-5s | %(process)d | %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    logging.basicConfig(level=log_level, format='%(asctime)s | %(levelname)-5s | %(process)d | %(message)s', datefmt='%Y-%m-%d %H:%M:%S', stream=sys.stderr)
     log = logging.getLogger()
+
 
 # read cli options and extra args
     try:
@@ -354,6 +355,10 @@ def cli(ctx, **kwargs):
                 except Exception as e:
                         log.error(e)
                         sys.exit(1)
+    else:
+        log.info(f'extracting data from stdin')
+        dataset = pd.read_csv(sys.stdin, sep=';', header=0)
+        
 
     if not options.execute:
         log.info(dataframe_size_info(dataset))
@@ -560,6 +565,9 @@ def cli(ctx, **kwargs):
                         log.info(f'data saved to <{options.target}> in table <{options.load}>')
                     except Exception as e:
                         log.error(e)
+    else:
+        log.info(f'loading data to stdout')
+        dataset.to_csv(sys.stdout, sep=';', header=True, index=False)
 
 
 if __name__ == "__main__":
