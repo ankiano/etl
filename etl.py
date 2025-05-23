@@ -267,13 +267,12 @@ def cli(ctx, **kwargs):
             source_params = parse_url_params(source_params)
         else: # parameters after ? will be forwarded directry to source/target
             source = options.source
-        
+
         if os.path.isfile(source): # file
             log.debug(f'source params: {source_params}')
             if source.endswith('.csv'):
                 source_params.setdefault('header',0) # default params # means you have the names of columns in the first row in the file
                 source_params.setdefault('sep',';') # default params
-                source_params.setdefault('low_memory',False) # default params
                 source_method = pd.read_csv
             if source.endswith('.xlsx') or source.endswith('.xls'):
                 source_params.setdefault('header',0) # default params
