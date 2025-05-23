@@ -282,6 +282,8 @@ def cli(ctx, **kwargs):
                 source_method = pd.read_parquet
             if source.endswith('.xml'):
                 source_method = pd.read_xml
+            if source.endswith('.json'):
+                source_method = pd.read_json
             try:
                 log.info(f'extracting data from <{source}>')
                 dataset = source_method(source, **source_params)
@@ -426,6 +428,15 @@ def cli(ctx, **kwargs):
             target_params.setdefault('index',False)
             try: # load data
                 dataset.to_html(target, **target_params)
+                log.info(f'data saved to file <{target}>')
+            except Exception as e:
+                log.error(e)
+        # load to json
+        elif target.endswith('.json'):
+            create_dir(target) # manage folders if not exist
+            target_params.setdefault('index',False)
+            try: # load data
+                dataset.to_json(target, **target_params)
                 log.info(f'data saved to file <{target}>')
             except Exception as e:
                 log.error(e)

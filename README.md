@@ -33,4 +33,3 @@ Config `.etl.yml` searching priorities:
 1. by command option `--config /somepath/.etl.yml`
 2. by os enviroment variable ```sudo echo "export ETL_CONFIG=~/etl.yml" > /etc/profile.d/etl-config.sh```
 3. by default in home directory
-4. if nothing found, then will be created default config with some examples
