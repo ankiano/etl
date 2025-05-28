@@ -566,7 +566,7 @@ def cli(ctx, **kwargs):
                         log.info(f'data saved to <{options.target}> in table <{options.load}>')
                     except Exception as e:
                         log.error(e)
-    else:
+    elif not options.execute:
         log.info(f'loading data to stdout')
         dataset.to_csv(sys.stdout, sep=';', header=True, index=False)
 

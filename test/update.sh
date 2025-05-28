@@ -97,3 +97,6 @@ parent_dir=$(dirname $script_dir)
 
 #cat titanic.csv | python3 $parent_dir/etl.py | grep female | wc -l
 
+#cat titanic.csv | python3 $parent_dir/etl.py --target local --load main.titanic
+
+#python3 $parent_dir/etl.py --source local --execute "truncate table main.titanic"
