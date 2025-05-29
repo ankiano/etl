@@ -1,0 +1,35 @@
+@startebnf
+option_scheme = "etl", 
+      [ 
+        ? stdin ?
+      | ( source, ( 
+            "file.csv" 
+          | "file.csv.zip" 
+          | "file.json" 
+          | "file.xlsx" 
+          | "file.parquet" 
+          | ( "db_alias" | "sqlalchemy_url" (* db://user:pass@host:port *) ),
+            [ 
+              ( execute, ( "file.sql" | "query_string" (* "truncate table main.test" *) ) ) 
+            | ( extract, ( "file.sql" | "query_string" (* "select * from main.test" *) ) ) 
+            ] 
+          | "gsheet_alias" (* from etl.yml *), extract, "spreadsheet!source-sheet" (* ceo-datafeed!_dataset *)
+          | "sharepoint_alias" (* from etl.yml *), extract, "workbook.xlsx!source-sheet"
+        ) )
+      ], 
+      [ 
+        ( 
+          ? stdout ?
+        | ( target, ( 
+              "file.csv"
+            | "file.csv.zip" 
+            | "file.json" 
+            | "file.xlsx" 
+            | "file.parquet" 
+            | ( "db_alias" | "sqlalchemy_url" (* db://user:pass@host:port *) ), load, "schema.table"
+            | "gsheet_alias", load, "spreadsheet!target-sheet" 
+            | "sharepoint_alias", load, "workbook.xlsx!target-sheet"
+          ) )
+        )
+      ];
+@endebnf
