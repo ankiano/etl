@@ -2,22 +2,21 @@
 option_scheme = "etl", 
       source * ( 
         ? stdin ? (* if source is ommited *)
-      | "--", source, ? param ?, 
+      | source, " argument ", 
             [ 
             (
-              "--", execute
-            | "--", extract 
-            ), ? param ?
+              execute
+            | extract 
+            ), " argument "
             ] 
       ), 
       target * ( 
-        ? stdout ? 
-      | "--", target, ? param ?, 
+        ? stdout ? (* if target is ommited *)
+      | target, " argument ", 
             [ 
-              "--", load, ? param ?
+              load, " argument "
             ] 
       );
-      
 source = ( 
         ? stdin ?
       | ( source, ( 
