@@ -91,7 +91,7 @@ You can also create shell or batch files that contain ETL commands, which can th
 Options list
 -----------
 
-.. figure:: /_static/options-scheme.png
+.. figure:: /_static/options-scheme-white.png
    :width: 150%
    :align: center
    :alt: Options scheme
