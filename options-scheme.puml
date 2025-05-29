@@ -1,6 +1,24 @@
 @startebnf
 option_scheme = "etl", 
-      [ 
+      source * ( 
+        ? stdin ? (* if source is ommited *)
+      | "--", source, ? param ?, 
+            [ 
+            (
+              "--", execute
+            | "--", extract 
+            ), ? param ?
+            ] 
+      ), 
+      target * ( 
+        ? stdout ? 
+      | "--", target, ? param ?, 
+            [ 
+              "--", load, ? param ?
+            ] 
+      );
+      
+source = ( 
         ? stdin ?
       | ( source, ( 
             "file.csv" 
@@ -8,7 +26,7 @@ option_scheme = "etl",
           | "file.json" 
           | "file.xlsx" 
           | "file.parquet" 
-          | ( "db_alias" | "sqlalchemy_url" (* db://user:pass@host:port *) ),
+          | ( "db_alias"  (* from etl.yml *) | "sqlalchemy_url" (* db://user:pass@host:port *) ),
             [ 
               ( execute, ( "file.sql" | "query_string" (* "truncate table main.test" *) ) ) 
             | ( extract, ( "file.sql" | "query_string" (* "select * from main.test" *) ) ) 
@@ -16,10 +34,10 @@ option_scheme = "etl",
           | "gsheet_alias" (* from etl.yml *), extract, "spreadsheet!source-sheet" (* ceo-datafeed!_dataset *)
           | "sharepoint_alias" (* from etl.yml *), extract, "workbook.xlsx!source-sheet"
         ) )
-      ], 
-      [ 
+      );
+target =
         ( 
-          ? stdout ?
+          ? stdout ? (* if target is ommited *)
         | ( target, ( 
               "file.csv"
             | "file.csv.zip" 
@@ -30,6 +48,5 @@ option_scheme = "etl",
             | "gsheet_alias", load, "spreadsheet!target-sheet" 
             | "sharepoint_alias", load, "workbook.xlsx!target-sheet"
           ) )
-        )
-      ];
+        );
 @endebnf
