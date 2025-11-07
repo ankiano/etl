@@ -12,7 +12,7 @@ with Path('requirements.txt').open() as requirements_txt:
 
 setup(
     name='etl',
-    version='1.0.27',
+    version='1.0.28',
     description='ETL CLI tool',
     long_description='Extract transform load CLI tool for extracting small '
                      'and middle data volume between sources (databases, '

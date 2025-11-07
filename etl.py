@@ -473,8 +473,11 @@ def cli(ctx, **kwargs):
                             log.info(f'new sheet added <{sheet_name}>')
                         except Exception as e:
                             log.error(e)
-                        dataset = dataset.fillna('')
-                        dataset = dataset.astype(str)
+                        for col in dataset.columns:
+                            if pd.api.types.is_numeric_dtype(dataset[col]):
+                                dataset[col] = dataset[col].fillna(0)
+                            else:
+                                dataset[col] = dataset[col].fillna('')
                         sheet.set_dataframe(dataset, start="A1", fit=True, nan='')
                         log.info(f'data saved to spreadsheet <{workbook_name}!{sheet_name}>')
                     else:
