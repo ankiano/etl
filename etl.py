@@ -13,8 +13,8 @@ import random
 import numpy as np
 import urllib
 import json
-import gc
 import psutil
+
 
 special_sources = ['http://','https://','ftp://','google+sheets', 'microsoft+graph']
 
@@ -223,6 +223,7 @@ def create_dir(path):
 @cli.option('--source', required=False, type=str, help="Source for extracting data. Database name, csv or xls filename. Defaults to stdin if not provided.")
 @cli.option('--extract', default='', help="Sql file name for extracting data from database")
 @cli.option('--execute', default='', help="Sql file name for executing without extracting data")
+@cli.option('--transform', default='', help="Sql file name for transforming data in extracted dataset")
 @cli.option('--target', required=False, type=str, help="Target for inserting data. Database name, csv or xls filename. Defaults to stdout if not provided.")
 @cli.option('--load', default='', help="Database schema and table name, if target is database")
 @cli.option('--config-path', default='', help="Custom path to etl.yml config")
@@ -356,7 +357,7 @@ def cli(ctx, **kwargs):
                                  connection.execute(source_query)
                         else: # SQLAlchemy < 2.0
                             source_engine.execute(source_query)
-                        if extra_args:
+                        if extra_args: #TODO remove for consistency
                             log.info(f'executed <{options.execute}> with user_variables {extra_args}')
                         else:
                             log.info(f'executed <{options.execute}>')
@@ -370,14 +371,25 @@ def cli(ctx, **kwargs):
     else:
         log.info(f'extracting data from stdin')
         dataset = pd.read_csv(sys.stdin, sep=';', header=0)
-        
+
     if not options.execute:
         log.info(dataframe_size_info(dataset))
-          
+
     # check if dataset is empty
     if options.extract and dataset.empty:
         log.warning("no data received, exiting without updating target")
         return sys.exit(0)
+
+    if options.transform:
+        import duckdb
+        log.info(f'transforming data with <{options.transform}>')
+        trasform_query = str(get_query(options.transform, extra_args))
+        try:
+            duckdb.register('dataset', dataset)
+            dataset = duckdb.sql(trasform_query).df()
+        except Exception as e:
+            log.error(e)
+            sys.exit(1)
 
     # load dataset to target
     if options.target:
