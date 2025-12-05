@@ -7,13 +7,14 @@ import click as cli # command line interface
 import pandas as pd
 import sqlalchemy
 import yaml
-import humanize
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
 import random
 import numpy as np
 import urllib
 import json
+import gc
+import psutil
 
 special_sources = ['http://','https://','ftp://','google+sheets', 'microsoft+graph']
 
@@ -133,16 +134,27 @@ def get_source(source):
                 log.error(f'source alias not found <{source}>')
             sys.exit(1)
     return result
-
+def naturalsize(num):
+    if num == 0: return "0 B"
+    units = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"]
+    base = 1024
+    i = 0
+    abs_num = abs(num)
+    while abs_num >= base and i < len(units) - 1:
+        abs_num /= base
+        i += 1
+    if i == 0:
+        formatted_num = str(num)
+    else:
+        formatted_num = f"{abs_num * (1 if num >= 0 else -1):.1f}"
+    return f"{formatted_num} {units[i]}"
 def dataframe_size_info(df):
     assert isinstance(df, pd.DataFrame), type(df)
-    # Check if the DataFrame is empty and handle accordingly
     if df.empty:
         memory_usage = 0  # Set to zero if the DataFrame is empty
     else:
-        memory_usage = df.memory_usage(index=True).sum()
-    # Only apply humanize if there's memory usage; otherwise, set to "0 B" or an appropriate default
-    volume = humanize.naturalsize(memory_usage, binary=True) if memory_usage > 0 else "0 B"
+        memory_usage = df.memory_usage(index=True, deep=True).sum()
+    volume = naturalsize(memory_usage)
     return f'{volume} of data received in amount of {df.shape[0]} rows, {df.shape[1]} columns, {df.size} cells'
 
 def get_config(alias):
@@ -223,7 +235,6 @@ def cli(ctx, **kwargs):
     log_level = logging.INFO
     logging.basicConfig(level=log_level, format='%(asctime)s | %(levelname)-5s | %(process)d | %(message)s', datefmt='%Y-%m-%d %H:%M:%S', stream=sys.stderr)
     log = logging.getLogger()
-
 
 # read cli options and extra args
     try:
@@ -360,10 +371,9 @@ def cli(ctx, **kwargs):
         log.info(f'extracting data from stdin')
         dataset = pd.read_csv(sys.stdin, sep=';', header=0)
         
-
     if not options.execute:
         log.info(dataframe_size_info(dataset))
-    
+          
     # check if dataset is empty
     if options.extract and dataset.empty:
         log.warning("no data received, exiting without updating target")
@@ -573,6 +583,7 @@ def cli(ctx, **kwargs):
         log.info(f'loading data to stdout')
         dataset.to_csv(sys.stdout, sep=';', header=True, index=False)
 
+    log.debug(f"memory usage (rss): {psutil.Process().memory_info().rss / 1024**2:.2f} MB")
 
 if __name__ == "__main__":
     cli()

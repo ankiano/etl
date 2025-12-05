@@ -1,5 +1,4 @@
 click # command line interfaces
 PyYAML # yaml parser and emitter
 pandas # data structures and operations for manipulating numerical tables
-humanize # human-readable size
 SQLAlchemy # connection pooling for data sources
