@@ -134,7 +134,8 @@ def get_source(source):
                 log.error(f'source alias not found <{source}>')
             sys.exit(1)
     return result
-def naturalsize(num):
+
+def natural_size(num):
     if num == 0: return "0 B"
     units = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"]
     base = 1024
@@ -148,13 +149,14 @@ def naturalsize(num):
     else:
         formatted_num = f"{abs_num * (1 if num >= 0 else -1):.1f}"
     return f"{formatted_num} {units[i]}"
+
 def dataframe_size_info(df):
     assert isinstance(df, pd.DataFrame), type(df)
     if df.empty:
         memory_usage = 0  # Set to zero if the DataFrame is empty
     else:
         memory_usage = df.memory_usage(index=True, deep=True).sum()
-    volume = naturalsize(memory_usage)
+    volume = natural_size(memory_usage)
     return f'{volume} of data received in amount of {df.shape[0]} rows, {df.shape[1]} columns, {df.size} cells'
 
 def get_config(alias):
@@ -317,7 +319,11 @@ def cli(ctx, **kwargs):
                     log.info(f'extracting data from google speadsheet <{options.extract}>')
                     workbook = spreadsheet_open(options.extract.split('!')[0], source_params['credentials'])
                     sheet = workbook.worksheet_by_title(options.extract.split('!')[1])
-                    dataset = sheet.get_as_df()
+                    dataset = sheet.get_as_df(start='A1')
+                    dataset.columns = [
+                        colnum_string(i + 1) if col_name == '' else col_name 
+                        for i, col_name in enumerate(dataset.columns)
+                    ]
                 if 'microsoft+graph' in source:
                     token_response, cfg = msgraph_open(source_params.get('credentials'))
                     log.debug(token_response)
@@ -327,7 +333,6 @@ def cli(ctx, **kwargs):
                         workbook_url, sheet_name = options.extract.split('??')
                         sheet_name = parse_url_params(sheet_name)
                         sheet_name = sheet_name.pop('sheet_name', 'data')
-                    
                     requests = __import__('requests')
                     url = workbook_url + f"/workbook/worksheets/{sheet_name}/usedRange()"
                     response = api_call(requests.get, url, resource=cfg['resource'], access_token=token_response['access_token'])
@@ -400,7 +405,6 @@ def cli(ctx, **kwargs):
             target = options.target
         if target_params:
             target_params = parse_url_params(target_params)
-        
         # load to csv
         if target.endswith('.csv') or target.endswith('.csv.zip'):
             create_dir(target) # manage folders if not exist
@@ -477,7 +481,6 @@ def cli(ctx, **kwargs):
                 target, target_params = target.split('??')
             if target_params:
                 target_params = parse_url_params(target_params)
-            
             if any(s in target for s in special_sources): # any custom sources and apies
                 log.debug(f'target params: {target_params}')
                 # load to google sheets
@@ -500,7 +503,7 @@ def cli(ctx, **kwargs):
                                 dataset[col] = dataset[col].fillna(0)
                             else:
                                 dataset[col] = dataset[col].fillna('')
-                        sheet.set_dataframe(dataset, start="A1", fit=True, nan='')
+                        sheet.set_dataframe(dataset, start="A1", fit=True, nan='', include_tailing_empty=False)
                         log.info(f'data saved to spreadsheet <{workbook_name}!{sheet_name}>')
                     else:
                         log.error('saving to gsheet is ommited due to limit 10M of cells')
@@ -512,7 +515,6 @@ def cli(ctx, **kwargs):
                         urllib = __import__('urllib')
                         requests = __import__('requests')
                         # access_token = token_response['access_token']
-                        
                         workbook_url = options.load
                         sheet_name = 'data'
                         if '??' in options.load:
@@ -558,7 +560,7 @@ def cli(ctx, **kwargs):
             else: 
                 target_params.setdefault('max_identifier_length', 128) # default params
                 engine = sqlalchemy.create_engine(target, **target_params)
-                
+ 
                 @sqlalchemy.event.listens_for(engine, "do_setinputsizes")
                 # The CLOB datatype in cx_Oracle incurs a significant performance overhead
                 def _remove_clob(inputsizes, cursor, statement, parameters, context):
