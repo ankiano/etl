@@ -164,29 +164,23 @@ def get_config(alias):
     Detect and get etl config
 
     """
-    home_config_file =  os.path.expanduser('~/.etl.yml')
-
-    env_config_path = os.environ.get("ETL_CONFIG")
-    env_config_path = '' if not env_config_path else env_config_path
-    env_config_path = os.path.expanduser(env_config_path)
-
-    # Command line option if set
-    if os.path.exists(options.config_path):
-        config_path = options.config_path
-        log.debug(f'config file found from command option <{config_path}>')
-
-    # Path to config file in environment
-    elif os.path.exists(env_config_path):
-        config_path = env_config_path
-        log.debug(f'config file found from environment <{config_path}>')
-
-    # Config file in home directory
-    elif os.path.exists(home_config_file):
-        config_path = home_config_file
-        log.debug(f'config file found from home dir <{config_path}>')
-    else:
+    config_candidates = [
+        (os.path.expanduser(path), source)
+        for path, source in filter(lambda x: x[0], (
+            (options.config_path,            'cli option --config-path'),  # --config-path CLI option
+            (os.environ.get('ETL_CONFIG'),   'env ETL_CONFIG'),            # ETL_CONFIG env variable
+            ('~/.config/etl/.etl.yml',       'xdg hidden'),                # XDG hidden
+            ('~/.config/etl/etl.yml',        'xdg'),                       # XDG
+            ('~/.etl.yml',                   'home hidden'),                # home hidden
+            ('~/etl.yml',                    'home'),                       # home
+        ))
+    ]
+    result = next(((p, s) for p, s in config_candidates if os.path.exists(p)), None)
+    if not result:
         log.error(f'config file not found, alias not possible to recognize <{alias}>')
         sys.exit(1)
+    config_path, config_source = result
+    log.debug(f'config file found via {config_source} <{config_path}>')
 
     with open(config_path, 'r') as config_file:
         cfg = yaml.safe_load(config_file)

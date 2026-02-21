@@ -4,7 +4,7 @@ parent_dir=$(dirname $script_dir)
 
 #python3 $parent_dir/etl.py --help
 
-#python3 $parent_dir/etl.py --source 'https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv??sep=,' > titanic.csv
+#python3 $parent_dir/etl.py --source 'https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv??sep=,' > input/titanic.csv
 
 #python3 $parent_dir/etl.py --source 'https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv??sep=,' \
 #                           --target 'input/titanic.xlsx??sheet_name=2&if_sheet_exists=replace' --debug
@@ -13,10 +13,11 @@ parent_dir=$(dirname $script_dir)
 #                           --target local --load 'main.titanic'
 
 #python3 $parent_dir/etl.py --source input/titanic.csv \
-#                           --target 'sqlite:///local.db' --load main.titanic
+#                           --target 'duckdb:///local.db' --load main.titanic
 
 #python3 $parent_dir/etl.py --source local \
-#                           --execute  'drop table {table_name}' --table_name titanic
+#                           --execute  'drop table {table_name}' --table_name titanic \
+#                           --debug
 
 #python3 $parent_dir/etl.py --source input/titanic.csv \
 #                           --target local \
