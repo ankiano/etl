@@ -1,0 +1,66 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "etl"
+version = "1.1.2"
+description = "ETL CLI tool"
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["etl"]
+
+# Core dependencies — always installed
+dependencies = [
+    "click",
+    "PyYAML",
+    "pandas",
+    "SQLAlchemy",
+    "duckdb",
+    "duckdb-engine",
+    "psutil",
+    "numpy",
+    "urllib3",
+]
+
+# Optional dependencies — install only what you need
+# Examples:
+#   pipx install "git+https://github.com/ankiano/etl[postgres]"
+#   pipx install "git+https://github.com/ankiano/etl[clickhouse]"
+#   pipx install "git+https://github.com/ankiano/etl[all]"
+[project.optional-dependencies]
+postgres   = ["psycopg2-binary"]
+mysql      = ["mysqlclient"]
+oracle     = ["cx_Oracle"]
+mssql      = ["pymssql"]
+sqlite     = ["pysqlite3"]
+clickhouse = ["clickhouse-driver", "clickhouse-sqlalchemy"]
+duckdb     = ["duckdb", "duckdb-engine"]
+presto     = ["presto-python-client", "sqlalchemy_presto"]
+hive       = ["pyhive[hive]"]
+google     = ["pygsheets"]
+msgraph    = ["msal", "requests"]
+excel      = ["openpyxl"]
+all        = [
+    "psycopg2-binary",
+    "mysqlclient",
+    "cx_Oracle",
+    "pymssql",
+    "pysqlite3",
+    "clickhouse-driver",
+    "clickhouse-sqlalchemy",
+    "duckdb-engine",
+    "presto-python-client",
+    "sqlalchemy_presto",
+    "pyhive[hive]",
+    "pygsheets",
+    "msal",
+    "requests",
+    "openpyxl",
+]
+
+[project.scripts]
+etl = "etl:cli"
+
+[tool.setuptools]
+py-modules = ["etl"]

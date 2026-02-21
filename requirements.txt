@@ -1,5 +1,0 @@
-click # command line interfaces
-PyYAML # yaml parser and emitter
-pandas # data structures and operations for manipulating numerical tables
-SQLAlchemy # connection pooling for data sources
-duckdb # for transform data engine

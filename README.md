@@ -1,8 +1,17 @@
+Extract transform load CLI tool for extracting small and middle data volume between sources
+(databases, csv, xls, parquet, json, xml, gspreadsheets, stdin, stdout).
+
 For documentation and full examples, please see the [documentation](https://etltool.readthedocs.io/en/latest/#).
 
 ### Installation:
-    pip install git+https://github.com/ankiano/etl.git -U
-    sudo -H pip3 install git+https://github.com/ankiano/etl.git -U
+    pipx install "git+https://github.com/ankiano/etl #core, minimal set of dependencies
+
+    pipx install "git+https://github.com/ankiano/etl[postgres]"
+    pipx install "git+https://github.com/ankiano/etl[clickhouse]"
+    pipx install "git+https://github.com/ankiano/etl[all]" #all dependencies
+    
+    pip install git+https://github.com/ankiano/etl.git -U #for user install
+    sudo -H pip3 install git+https://github.com/ankiano/etl.git -U #global install
 
 ### Quick examples of usage:
 
