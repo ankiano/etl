@@ -25,7 +25,7 @@ For documentation and full examples, please see the [documentation](https://etlt
 
 
 ### Options syntax scheme:
-![img_alt](docs/source/_static/options-scheme.png)
+![img_alt](docs/source/_static/options-scheme-white.png)
 
 ### Configurating:
 

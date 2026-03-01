@@ -593,5 +593,27 @@ def cli(ctx, **kwargs):
 
     log.debug(f"memory usage (rss): {psutil.Process().memory_info().rss / 1024**2:.2f} MB")
 
+def upd_script():
+    """Entry point for the `upd` CLI command.
+
+    Locates the bundled scripts/upd.sh inside the installed package
+    and replaces the current process with bash running that script,
+    forwarding all CLI arguments transparently.
+    """
+    import sys
+    import os
+
+    # __file__ is etl.py; scripts/upd.sh lives next to it in the package
+    script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "scripts", "upd.sh")
+
+    if not os.path.isfile(script):
+        sys.stderr.write(f"upd: script not found: {script}\n")
+        sys.exit(1)
+
+    # os.execv replaces this process entirely — no Python overhead remains
+    os.execv("/bin/bash", ["/bin/bash", script] + sys.argv[1:])
+
+
 if __name__ == "__main__":
     cli()
+
