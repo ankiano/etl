@@ -82,6 +82,7 @@ log_error() { echo "$(date "+%Y-%m-%d %H:%M:%S") | ERROR | $$ | $*" >&2; }
 
 create_update_sh() {
     log_warn "update.sh not found in $(pwd)"
+    log_info "to create new update.sh - select a template:"
 
     local options=("blank" "ad-hoc" "datafeed" "datamart" "cancel")
 
