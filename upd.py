@@ -1,4 +1,15 @@
-#!/usr/bin/env bash
+def main():
+    """Entry point for the `upd` CLI command.
+
+    The bash script is embedded here to make the package self-contained —
+    no package_data needed, works with pip and pipx.
+    """
+    import sys
+    import os
+    import tempfile
+    import subprocess
+
+    script = r"""#!/usr/bin/env bash
 # upd — run update.sh (or any .sh file) with logging; create update.sh via TUI if absent
 
 set -euo pipefail
@@ -8,7 +19,6 @@ set -euo pipefail
 run_script() {
     local script="$1"
     local logfile="${script%.sh}.log"
-#    echo "▶  Running $script (log → $logfile)"
     bash "$script" 2>&1 | tee "$logfile"
 }
 
@@ -78,21 +88,14 @@ create_update_sh() {
     echo ""
 
     local options=("blank" "ad-hoc" "datafeed" "datamart" "cancel")
-    local descriptions=(
-        "empty stub with comments"
-        "process local Excel/CSV files via DuckDB"
-        "load DB data to Google Sheets / SharePoint Excel"
-        "refresh fact + dimension tables (with date_arg)"
-        "exit without creating"
-    )
 
     PS3=$'\n  Your choice [1-5]: '
     select opt in "${options[@]}"; do
         case "$opt" in
-            blank)    tpl_blank    > update.sh ;;
-            ad-hoc)   tpl_adhoc   > update.sh ;;
-            datafeed) tpl_datafeed > update.sh ;;
-            datamart) tpl_datamart > update.sh ;;
+            blank)    tpl_blank     > update.sh ;;
+            ad-hoc)   tpl_adhoc    > update.sh ;;
+            datafeed) tpl_datafeed  > update.sh ;;
+            datamart) tpl_datamart  > update.sh ;;
             cancel)   echo "  Cancelled."; exit 0 ;;
             *)        echo "  Invalid choice, try again."; continue ;;
         esac
@@ -108,14 +111,12 @@ create_update_sh() {
 # ─── main ───────────────────────────────────────────────────────────────────
 
 if [[ $# -eq 0 ]]; then
-    # no arguments — run update.sh or create it
     if [[ -f update.sh ]]; then
         run_script update.sh
     else
         create_update_sh
     fi
 elif [[ "$1" == *.sh ]]; then
-    # explicit script name passed
     if [[ -f "$1" ]]; then
         run_script "$1"
     else
@@ -128,3 +129,15 @@ else
     echo "  upd my_script.sh — run my_script.sh, log to my_script.log" >&2
     exit 1
 fi
+"""
+
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
+        f.write(script)
+        tmp = f.name
+
+    try:
+        result = subprocess.run(["/bin/bash", tmp] + sys.argv[1:])
+    finally:
+        os.unlink(tmp)
+
+    sys.exit(result.returncode)

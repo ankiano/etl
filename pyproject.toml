@@ -61,10 +61,7 @@ all        = [
 
 [project.scripts]
 etl = "etl:cli"
-upd = "etl:upd_script"
+upd = "upd:main"
 
 [tool.setuptools]
-py-modules = ["etl"]
-
-[tool.setuptools.package-data]
-"*" = ["scripts/upd.sh"]
+py-modules = ["etl", "upd"]
