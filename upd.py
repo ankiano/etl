@@ -14,13 +14,6 @@ def main():
 
 set -euo pipefail
 
-# ─── helpers ────────────────────────────────────────────────────────────────
-
-run_script() {
-    local script="$1"
-    local logfile="${script%.sh}.log"
-    bash "$script" 2>&1 | tee "$logfile"
-}
 
 # ─── template definitions ───────────────────────────────────────────────────
 
@@ -79,31 +72,35 @@ cd "$(dirname "$0")"
 EOF
 }
 
+# ─── logging ────────────────────────────────────────────────────────────────
+
+log_info()  { echo "$(date "+%Y-%m-%d %H:%M:%S") | INFO  | $$ | $*"; }
+log_warn()  { echo "$(date "+%Y-%m-%d %H:%M:%S") | WARN  | $$ | $*" >&2; }
+log_error() { echo "$(date "+%Y-%m-%d %H:%M:%S") | ERROR | $$ | $*" >&2; }
+
 # ─── TUI: choose a template and create update.sh ────────────────────────────
 
 create_update_sh() {
-    echo ""
-    echo "  update.sh not found in $(pwd)"
-    echo "  choose a template to create it:"
-    echo ""
+    log_warn "update.sh not found in $(pwd)"
 
     local options=("blank" "ad-hoc" "datafeed" "datamart" "cancel")
 
     PS3=$'\n  Your choice [1-5]: '
+    echo ""
     select opt in "${options[@]}"; do
         case "$opt" in
             blank)    tpl_blank     > update.sh ;;
             ad-hoc)   tpl_adhoc    > update.sh ;;
             datafeed) tpl_datafeed  > update.sh ;;
             datamart) tpl_datamart  > update.sh ;;
-            cancel)   echo "  Cancelled."; exit 0 ;;
-            *)        echo "  Invalid choice, try again."; continue ;;
+            cancel)   log_info "cancelled"; exit 0 ;;
+            *)        log_warn "invalid choice, try again"; continue ;;
         esac
 
         chmod +x update.sh
         echo ""
-        echo "$(date "+%Y-%m-%d %H:%M:%S") | INFO  | $$ | update.sh created (template: $opt)"
-        echo "  open update.sh, edit it, then run: upd"
+        log_info "update.sh created (template: $opt)"
+        log_info "open update.sh, edit it, then run: upd"
         break
     done
 }
@@ -112,24 +109,26 @@ create_update_sh() {
 
 if [[ $# -eq 0 ]]; then
     if [[ -f update.sh ]]; then
-        run_script update.sh
+        bash update.sh 2>&1 | tee update.log
     else
         create_update_sh
     fi
 elif [[ "$1" == *.sh ]]; then
     if [[ -f "$1" ]]; then
-        run_script "$1"
+        bash "$1" 2>&1 | tee "${1%.sh}.log"
     else
-        echo "Error: file not found: $1" >&2
+        log_error "file not found: $1"
         exit 1
     fi
 else
-    echo "Usage: upd [script.sh]" >&2
-    echo "  upd              — run update.sh (or create it via TUI if absent)" >&2
-    echo "  upd my_script.sh — run my_script.sh, log to my_script.log" >&2
+    log_error "usage: upd [script.sh]"
+    log_error "  upd              — run update.sh (or create it via TUI if absent)"
+    log_error "  upd my_script.sh — run my_script.sh, log to my_script.log"
     exit 1
 fi
 """
+
+
 
     with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
         f.write(script)
