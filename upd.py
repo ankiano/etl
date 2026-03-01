@@ -22,8 +22,7 @@ cat << 'EOF'
 #!/bin/bash
 cd "$(dirname "$0")"
 
-# add your etl commands here, for example:
-# etl --source mydb --extract query.sql --target output/result.xlsx
+# etl --source mydb --extract query.sql --target result.csv
 EOF
 }
 
@@ -43,12 +42,13 @@ cat << 'EOF'
 #!/bin/bash
 cd "$(dirname "$0")"
 
+# load to google sheet
 # workbook='your-google-sheet-name'
 # etl --source database --extract query1.sql --target gsheet --load "$workbook!sheet1" &
 # etl --source database --extract query2.sql --target gsheet --load "$workbook!sheet2" &
 # wait
 
-# alternative: load to SharePoint / OneDrive Excel
+# load to sharepoint / onedrive excel
 # workbook='sites/YOUR-SITE-ID/drive/root:/report.xlsx:'
 # etl --source database --extract query.sql --target sharepoint --load "$workbook??sheet_name=data"
 EOF
