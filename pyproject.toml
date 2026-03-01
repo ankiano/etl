@@ -67,4 +67,4 @@ upd = "etl:upd_script"
 py-modules = ["etl"]
 
 [tool.setuptools.package-data]
-"" = ["scripts/upd.sh"]
+"*" = ["scripts/upd.sh"]
