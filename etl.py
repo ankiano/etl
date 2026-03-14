@@ -184,6 +184,14 @@ def get_config(alias):
 
     with open(config_path, 'r') as config_file:
         cfg = yaml.safe_load(config_file)
+        # expand paths in config values
+        for a, s in cfg.items():
+            if isinstance(s, str):
+                s = os.path.expandvars(s)
+                if '~/' in s:
+                    home = os.path.expanduser('~')
+                    s = s.replace('~/', home + '/')
+                cfg[a] = s
         # log.debug(f'config contains: {cfg}')
     return cfg
 
