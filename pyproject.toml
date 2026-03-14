@@ -24,10 +24,6 @@ dependencies = [
 ]
 
 # Optional dependencies — install only what you need
-# Examples:
-#   pipx install "git+https://github.com/ankiano/etl[postgres]"
-#   pipx install "git+https://github.com/ankiano/etl[clickhouse]"
-#   pipx install "git+https://github.com/ankiano/etl[all]"
 [project.optional-dependencies]
 postgres   = ["psycopg2-binary"]
 mysql      = ["mysqlclient"]

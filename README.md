@@ -6,10 +6,12 @@ For documentation and full examples, please see the [documentation](https://etlt
 ### Installation:
     pipx install "git+https://github.com/ankiano/etl #core, minimal set of dependencies
 
-    pipx install "git+https://github.com/ankiano/etl[postgres]"
-    pipx install "git+https://github.com/ankiano/etl[clickhouse]"
-    pipx install "git+https://github.com/ankiano/etl[all]" #all dependencies
-    
+    pipx install "etl[postgres] @ git+https://github.com/ankiano/etl"
+    pipx install "etl[clickhouse] @ git+https://github.com/ankiano/etl"
+    pipx install "etl[all] @ git+https://github.com/ankiano/etl" #all dependencies
+
+    pipx inject etl pymssql #to add extra driver
+
     pip install git+https://github.com/ankiano/etl.git -U #for user install
     sudo -H pip3 install git+https://github.com/ankiano/etl.git -U #global install
 
