@@ -355,8 +355,6 @@ def cli(ctx, **kwargs):
                 # extract from bigquery
                 if 'bigquery://' in source:
                     log.debug(f'source params: {source_params}')
-                    log.info(f'extracting data from <{source}> using query <{options.extract}>')
-                    source_query = get_query(options.extract, extra_args)
                     project_id = urlparse(source).hostname
                     gbq_params = {}
                     if source_params.get('credentials_path'):
@@ -366,16 +364,35 @@ def cli(ctx, **kwargs):
                             credentials_path,
                             scopes=['https://www.googleapis.com/auth/bigquery'],
                         )
-                    try:
-                        dataset = pd.read_gbq(
-                            query=str(source_query),
-                            project_id=project_id,
-                            dialect='standard',
-                            **gbq_params,
-                        )
-                    except Exception as e:
-                        log.error(e)
-                        sys.exit(1)
+                    if options.execute:
+                        log.info(f'executing <{options.execute}> on <{options.source}>')
+                        source_query = get_query(options.execute, extra_args)
+                        bigquery = __import__('google.cloud.bigquery', fromlist=['Client'])
+                        client = bigquery.Client(project=project_id, credentials=gbq_params.get('credentials'))
+                        try:
+                            query_job = client.query(str(source_query))
+                            query_job.result()  # Waits for job to complete.
+                            if extra_args:
+                                log.info(f'executed <{options.execute}> with user_variables {extra_args}')
+                            else:
+                                log.info(f'executed <{options.execute}>')
+                        except Exception as e:
+                            log.error(e)
+                            sys.exit(1)
+                    if options.extract:
+                        log.info(f'extracting data from <{source}> using query <{options.extract}>')
+                        source_query = get_query(options.extract, extra_args)
+                        try:
+                            pandas_gbq = __import__('pandas_gbq')
+                            dataset = pandas_gbq.read_gbq(
+                                query=str(source_query),
+                                project_id=project_id,
+                                dialect='standard',
+                                **gbq_params,
+                            )
+                        except Exception as e:
+                            log.error(e)
+                            sys.exit(1)
             else:
                 try:
                     source_params.setdefault('max_identifier_length',128) # default params
@@ -614,7 +631,9 @@ def cli(ctx, **kwargs):
                         full_table_id = f"{schema}.{table}" if schema else table
                         log.debug(f'load params: {load_params}')
                         try:
-                            dataset.to_gbq(
+                            pandas_gbq = __import__('pandas_gbq')
+                            pandas_gbq.to_gbq(
+                                dataset,
                                 destination_table=full_table_id,
                                 project_id=project_id,
                                 **load_params,
