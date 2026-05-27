@@ -397,6 +397,7 @@ def cli(ctx, **kwargs):
                                 str(source_query),
                                 project_id=project_id,
                                 dialect='standard',
+                                progress_bar_type=None,
                                 **gbq_params,
                             )
                         except Exception as e:
@@ -620,10 +621,6 @@ def cli(ctx, **kwargs):
                         if load_params:
                             load_params = parse_url_params(load_params)
                         load_params.setdefault('if_exists', 'append')
-                        if load_params.get('progress_bar'):
-                            load_params['progress_bar'] = bool(load_params['progress_bar'].lower() == 'true')
-                        else:
-                            load_params.setdefault('progress_bar', False)
                         if target_params.get('credentials_path'):
                             service_account = __import__('google.oauth2.service_account', fromlist=['Credentials'])
                             credentials_path = os.path.expanduser(target_params['credentials_path'])
@@ -645,6 +642,7 @@ def cli(ctx, **kwargs):
                                 dataset,
                                 destination_table=full_table_id,
                                 project_id=project_id,
+                                progress_bar=False,
                                 **load_params,
                             )
                             log.info(f'data saved to <{options.target}> in table <{options.load}>')
