@@ -34,7 +34,7 @@ clickhouse = ["clickhouse-driver", "clickhouse-sqlalchemy"]
 duckdb     = ["duckdb", "duckdb-engine"]
 presto     = ["presto-python-client", "sqlalchemy_presto"]
 hive       = ["pyhive[hive]"]
-google     = ["pygsheets"]
+google     = ["pygsheets", "pandas-gbq", "google-cloud-bigquery"]
 msgraph    = ["msal", "requests"]
 excel      = ["openpyxl"]
 all        = [
@@ -53,6 +53,8 @@ all        = [
     "msal",
     "requests",
     "openpyxl",
+    "pandas-gbq",
+    "google-cloud-bigquery",
 ]
 
 [project.scripts]
