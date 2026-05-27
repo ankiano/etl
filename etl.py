@@ -16,7 +16,7 @@ import json
 import psutil
 
 
-special_sources = ['http://','https://','ftp://','google+sheets', 'microsoft+graph']
+special_sources = ['http://','https://','ftp://','google+sheets', 'microsoft+graph', 'bigquery://']
 
 def parse_url_params(url):
     result = dict()
@@ -279,7 +279,7 @@ def cli(ctx, **kwargs):
     dataset = pd.DataFrame()
     if options.source:
         source_params = {}
-        if '??' in options.source: # take parameters for sqlalchemy engine
+        if '??' in options.source: # take parameters for engine/source-specific config
             source, source_params = options.source.split('??')
             source_params = parse_url_params(source_params)
         else: # parameters after ? will be forwarded directry to source/target
@@ -319,7 +319,7 @@ def cli(ctx, **kwargs):
                 # extract from google sheets
                 if 'google+sheets' in source:
                     log.info(f'extracting data from google speadsheet <{options.extract}>')
-                    workbook = spreadsheet_open(options.extract.split('!')[0], source_params['credentials'])
+                    workbook = spreadsheet_open(options.extract.split('!')[0], source_params.get('credentials'))
                     sheet = workbook.worksheet_by_title(options.extract.split('!')[1])
                     dataset = sheet.get_as_df(start='A1')
                     dataset.columns = [
@@ -349,6 +349,30 @@ def cli(ctx, **kwargs):
                     source_params.setdefault('header',0) # default params # means you have the names of columns in the first row in the file
                     try:
                         dataset = pd.read_csv(source, **source_params)
+                    except Exception as e:
+                        log.error(e)
+                        sys.exit(1)
+                # extract from bigquery
+                if 'bigquery://' in source:
+                    log.debug(f'source params: {source_params}')
+                    log.info(f'extracting data from <{source}> using query <{options.extract}>')
+                    source_query = get_query(options.extract, extra_args)
+                    project_id = urlparse(source).hostname
+                    gbq_params = {}
+                    if source_params.get('credentials_path'):
+                        service_account = __import__('google.oauth2.service_account', fromlist=['Credentials'])
+                        credentials_path = os.path.expanduser(source_params['credentials_path'])
+                        gbq_params['credentials'] = service_account.Credentials.from_service_account_file(
+                            credentials_path,
+                            scopes=['https://www.googleapis.com/auth/bigquery'],
+                        )
+                    try:
+                        dataset = pd.read_gbq(
+                            query=str(source_query),
+                            project_id=project_id,
+                            dialect='standard',
+                            **gbq_params,
+                        )
                     except Exception as e:
                         log.error(e)
                         sys.exit(1)
@@ -510,6 +534,7 @@ def cli(ctx, **kwargs):
                     else:
                         log.error('saving to gsheet is ommited due to limit 10M of cells')
                         sys.exit(1)
+                # load to microsoft 365 excel
                 if 'microsoft+graph' in target:
                     if dataset.size <= 5000000:
                         token_response, cfg = msgraph_open(target_params.get('credentials'))
@@ -558,6 +583,45 @@ def cli(ctx, **kwargs):
                     else:
                         log.error('saving to graph api is ommited due to limit 5M of cells')
                         sys.exit(1)
+                # load to bigquery
+                if 'bigquery://' in target:
+                    log.debug(f'target params: {target_params}')
+                    if options.load:
+                        load_params = {}
+                        load = options.load
+                        if '??' in load:
+                            load, load_params = load.split('??')
+                        if load_params:
+                            load_params = parse_url_params(load_params)
+                        load_params.setdefault('if_exists', 'append')
+                        if load_params.get('progress_bar'):
+                            load_params['progress_bar'] = bool(load_params['progress_bar'].lower() == 'true')
+                        else:
+                            load_params.setdefault('progress_bar', False)
+                        if target_params.get('credentials_path'):
+                            service_account = __import__('google.oauth2.service_account', fromlist=['Credentials'])
+                            credentials_path = os.path.expanduser(target_params['credentials_path'])
+                            load_params['credentials'] = service_account.Credentials.from_service_account_file(
+                                credentials_path,
+                                scopes=['https://www.googleapis.com/auth/bigquery'],
+                            )
+                        if '.' in load:
+                            schema, table = load.split('.')
+                        else:
+                            table = load
+                            schema = None
+                        project_id = urlparse(target).hostname
+                        full_table_id = f"{schema}.{table}" if schema else table
+                        log.debug(f'load params: {load_params}')
+                        try:
+                            dataset.to_gbq(
+                                destination_table=full_table_id,
+                                project_id=project_id,
+                                **load_params,
+                            )
+                            log.info(f'data saved to <{options.target}> in table <{options.load}>')
+                        except Exception as e:
+                            log.error(e)
             # any sql sources supported by sqlalchemy or its extentions
             else: 
                 target_params.setdefault('max_identifier_length', 128) # default params
@@ -602,10 +666,5 @@ def cli(ctx, **kwargs):
     log.debug(f"memory usage (rss): {psutil.Process().memory_info().rss / 1024**2:.2f} MB")
 
 
-
-
-
-
 if __name__ == "__main__":
     cli()
-
