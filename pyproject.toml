@@ -61,3 +61,10 @@ upd = "upd:main"
 
 [tool.setuptools]
 py-modules = ["etl", "upd"]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "1.1.5"
+version_files = [
+    "pyproject.toml:version"
+]
