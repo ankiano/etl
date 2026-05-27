@@ -241,6 +241,15 @@ def cli(ctx, **kwargs):
     logging.basicConfig(level=log_level, format='%(asctime)s | %(levelname)-5s | %(process)d | %(message)s', datefmt='%Y-%m-%d %H:%M:%S', stream=sys.stderr)
     log = logging.getLogger()
 
+    class StripCarriageReturnFilter(logging.Filter):
+        def filter(self, record):
+            if isinstance(record.msg, str):
+                record.msg = record.msg.lstrip('\r')
+            return True
+
+    for handler in logging.getLogger().handlers:
+        handler.addFilter(StripCarriageReturnFilter())
+
 # read cli options and extra args
     try:
         options = type('OptionValuesClass', (), ctx.params)
