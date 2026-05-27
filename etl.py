@@ -394,7 +394,7 @@ def cli(ctx, **kwargs):
                         try:
                             pandas_gbq = __import__('pandas_gbq')
                             dataset = pandas_gbq.read_gbq(
-                                query=str(source_query),
+                                str(source_query),
                                 project_id=project_id,
                                 dialect='standard',
                                 **gbq_params,
