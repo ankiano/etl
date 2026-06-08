@@ -8,7 +8,7 @@ import pandas as pd
 import sqlalchemy
 import yaml
 from urllib.parse import urlparse
-from urllib.parse import parse_qs
+from urllib.parse import parse_qsl
 import random
 import numpy as np
 import urllib
@@ -20,10 +20,27 @@ special_sources = ['http://','https://','ftp://','google+sheets', 'microsoft+gra
 
 def parse_url_params(url):
     result = dict()
-    x = url.split("&")
-    for i in x:
-        a,b=i.split("=")
-        result[a]=b
+
+    for key, value in parse_qsl(url, keep_blank_values=True):
+        value_lower = value.lower()
+
+        if value_lower == 'true':
+            result[key] = True
+        elif value_lower == 'false':
+            result[key] = False
+        elif value_lower in ('none', 'null'):
+            result[key] = None
+        elif value == '':
+            result[key] = False
+        else:
+            try:
+                result[key] = int(value)
+            except ValueError:
+                try:
+                    result[key] = float(value)
+                except ValueError:
+                    result[key] = value
+
     return result
 
 def colnum_string(n):
@@ -289,7 +306,7 @@ def cli(ctx, **kwargs):
     if options.source:
         source_params = {}
         if '??' in options.source: # take parameters for engine/source-specific config
-            source, source_params = options.source.split('??')
+            source, source_params = options.source.split('??', 1)
             source_params = parse_url_params(source_params)
         else: # parameters after ? will be forwarded directry to source/target
             source = options.source
@@ -320,7 +337,7 @@ def cli(ctx, **kwargs):
         else:
             source = get_source(options.source)
             if '??' in source: # take parameters for sqlalchemy engine
-                source, source_params = source.split('??')
+                source, source_params = source.split('??', 1)
                 source_params = parse_url_params(source_params)
                 log.debug(f'source params: {source_params}')
 
@@ -341,7 +358,7 @@ def cli(ctx, **kwargs):
                     workbook_url = options.extract
                     sheet_name = 'data'
                     if '??' in options.extract:
-                        workbook_url, sheet_name = options.extract.split('??')
+                        workbook_url, sheet_name = options.extract.split('??', 1)
                         sheet_name = parse_url_params(sheet_name)
                         sheet_name = sheet_name.pop('sheet_name', 'data')
                     requests = __import__('requests')
@@ -453,7 +470,7 @@ def cli(ctx, **kwargs):
     if options.target:
         target_params = {}
         if '??' in options.target: # take parameters for sqlalchemy engine
-            target, target_params = options.target.split('??')
+            target, target_params = options.target.split('??', 1)
         else: # parameters after ? will be forwarded directry to source/target
             target = options.target
         if target_params:
@@ -531,7 +548,7 @@ def cli(ctx, **kwargs):
         else:
             target = get_source(target) #target can be set like alias
             if '??' in target: # take parameters for sqlalchemy engine
-                target, target_params = target.split('??')
+                target, target_params = target.split('??', 1)
             if target_params:
                 target_params = parse_url_params(target_params)
             if any(s in target for s in special_sources): # any custom sources and apies
@@ -572,7 +589,7 @@ def cli(ctx, **kwargs):
                         workbook_url = options.load
                         sheet_name = 'data'
                         if '??' in options.load:
-                            workbook_url, sheet_name = options.load.split('??')
+                            workbook_url, sheet_name = options.load.split('??', 1)
                             sheet_name = parse_url_params(sheet_name)
                             sheet_name = sheet_name.pop('sheet_name', 'data')
                         url = workbook_url + f"/workbook/worksheets"
@@ -617,7 +634,7 @@ def cli(ctx, **kwargs):
                         load_params = {}
                         load = options.load
                         if '??' in load:
-                            load, load_params = load.split('??')
+                            load, load_params = load.split('??', 1)
                         if load_params:
                             load_params = parse_url_params(load_params)
                         load_params.setdefault('if_exists', 'append')
@@ -664,16 +681,11 @@ def cli(ctx, **kwargs):
                     load_params = {}
                     load = options.load
                     if '??' in load: # take parameters for loading data
-                        load, load_params = load.split('??')
+                        load, load_params = load.split('??', 1)
                     if load_params:
                         load_params = parse_url_params(load_params)
                     load_params.setdefault('if_exists','append')
-                    if load_params.get('index'):
-                        load_params['index'] = bool(load_params['index'].lower() == 'true')
-                    else:
-                        load_params.setdefault('index',False)
-                    if load_params.get('chunksize'):
-                        load_params['chunksize'] = int(load_params['chunksize'])     
+                    load_params.setdefault('index',False)
                     log.debug(f'load params: {load_params}')
                     if '.' in load:
                         schema, table  = load.split('.')
