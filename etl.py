@@ -240,6 +240,7 @@ def create_dir(path):
         log.info(f'folder created <{dir}>')
 
 @cli.command(context_settings=dict(ignore_unknown_options=True, allow_extra_args=True))
+@cli.version_option(package_name="etl")
 @cli.pass_context
 @cli.option('--source', required=False, type=str, help="Source for extracting data. Database name, csv or xls filename. Defaults to stdin if not provided.")
 @cli.option('--extract', default='', help="Sql file name for extracting data from database")
