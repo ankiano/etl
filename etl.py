@@ -94,7 +94,10 @@ def spreadsheet_open(workbook_ref, credentials_path):
         else:
             try:
                 workbook = gclient.open_by_key(workbook_ref)
-            except pygsheets.exceptions.SpreadsheetNotFound:
+            except Exception as e:
+                http_status = getattr(getattr(e, 'resp', None), 'status', None)
+                if not isinstance(e, pygsheets.exceptions.SpreadsheetNotFound) and str(http_status) not in ('400', '404'):
+                    raise
                 workbook = gclient.open(workbook_ref)
     except pygsheets.exceptions.SpreadsheetNotFound:
         log.error(f'SpreadsheetNotFound: share spreadsheet <{workbook_ref}> with service email')
