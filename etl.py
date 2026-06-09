@@ -65,9 +65,9 @@ def api_call(method, url, body=None, **kwargs):
     return method(endpoint, headers=http_headers, json=body)
 
 
-def spreadsheet_open(workbook_name, credentials_path):
+def spreadsheet_open(workbook_ref, credentials_path):
     """
-    Authorize google client and open spreadsheet
+    Authorize google client and open spreadsheet by title, id, or url
 
     """
     pygsheets = __import__('pygsheets')
@@ -89,9 +89,15 @@ def spreadsheet_open(workbook_name, credentials_path):
     # Switch to normal
     sys.stdout = sys.__stdout__
     try:
-        workbook = gclient.open(workbook_name)
+        if workbook_ref.startswith(('http://', 'https://')):
+            workbook = gclient.open_by_url(workbook_ref)
+        else:
+            try:
+                workbook = gclient.open_by_key(workbook_ref)
+            except pygsheets.exceptions.SpreadsheetNotFound:
+                workbook = gclient.open(workbook_ref)
     except pygsheets.exceptions.SpreadsheetNotFound:
-        log.error(f'SpreadsheetNotFound: share spreadsheet <{workbook_name}> with service email')
+        log.error(f'SpreadsheetNotFound: share spreadsheet <{workbook_ref}> with service email')
         sys.exit(1)
     except Exception as e:
         log.error(e)
@@ -346,8 +352,9 @@ def cli(ctx, **kwargs):
                 # extract from google sheets
                 if 'google+sheets' in source:
                     log.info(f'extracting data from google speadsheet <{options.extract}>')
-                    workbook = spreadsheet_open(options.extract.split('!')[0], source_params.get('credentials'))
-                    sheet = workbook.worksheet_by_title(options.extract.split('!')[1])
+                    workbook_ref, sheet_name = options.extract.split('!', 1)
+                    workbook = spreadsheet_open(workbook_ref, source_params.get('credentials'))
+                    sheet = workbook.worksheet_by_title(sheet_name)
                     dataset = sheet.get_as_df(start='A1')
                     dataset.columns = [
                         colnum_string(i + 1) if col_name == '' else col_name 
@@ -557,11 +564,11 @@ def cli(ctx, **kwargs):
                 # load to google sheets
                 if 'google+sheets' in target:
                     if dataset.size <= 10000000:
-                        workbook_name, sheet_name = options.load.split('!')
-                        workbook = spreadsheet_open(workbook_name, target_params.get('credentials'))
+                        workbook_ref, sheet_name = options.load.split('!', 1)
+                        workbook = spreadsheet_open(workbook_ref, target_params.get('credentials'))
                         google_err = __import__('pygsheets.exceptions')
                         try:
-                            log.info(f'loading data to google speadsheet <{workbook_name}>')
+                            log.info(f'loading data to google speadsheet <{workbook_ref}>')
                             sheet = workbook.worksheet_by_title(sheet_name)
                             sheet.clear(start='A1')
                         except google_err.WorksheetNotFound:
@@ -575,7 +582,7 @@ def cli(ctx, **kwargs):
                             else:
                                 dataset[col] = dataset[col].fillna('')
                         sheet.set_dataframe(dataset, start="A1", fit=True, nan='', include_tailing_empty=False)
-                        log.info(f'data saved to spreadsheet <{workbook_name}!{sheet_name}>')
+                        log.info(f'data saved to spreadsheet <{workbook_ref}!{sheet_name}>')
                     else:
                         log.error('saving to gsheet is ommited due to limit 10M of cells')
                         sys.exit(1)
