@@ -6,6 +6,7 @@ import logging
 import click as cli # command line interface
 import pandas as pd
 import sqlalchemy
+from sqlalchemy.pool import NullPool
 import yaml
 from urllib.parse import urlparse
 from urllib.parse import parse_qsl
@@ -437,7 +438,7 @@ def cli(ctx, **kwargs):
             else:
                 try:
                     source_params.setdefault('max_identifier_length',128) # default params
-                    source_engine = sqlalchemy.create_engine(source, **source_params)
+                    source_engine = sqlalchemy.create_engine(source, poolclass=NullPool, **source_params)
                     if options.execute:
                         log.info(f'executing <{options.execute}> on <{options.source}>')
                         source_query = get_query(options.execute, extra_args)
@@ -682,7 +683,7 @@ def cli(ctx, **kwargs):
             # any sql sources supported by sqlalchemy or its extentions
             else: 
                 target_params.setdefault('max_identifier_length', 128) # default params
-                engine = sqlalchemy.create_engine(target, **target_params)
+                engine = sqlalchemy.create_engine(target, poolclass=NullPool, **target_params)
  
                 @sqlalchemy.event.listens_for(engine, "do_setinputsizes")
                 # The CLOB datatype in cx_Oracle incurs a significant performance overhead
