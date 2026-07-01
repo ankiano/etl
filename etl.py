@@ -227,7 +227,7 @@ def get_config(alias):
 
 def get_query(query, extra_args):
     try:
-        if query.endswith('.sql'):
+        if query.endswith(('.sql', '.ddl')):
             if os.path.isfile(query):
                 sql_file_path = query.replace("\r", "")
                 sql = open(sql_file_path, 'r', encoding='utf-8')
