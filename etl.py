@@ -148,7 +148,7 @@ def get_source(source):
         result = source
         log.debug(f'source defined like a connection string <{source}>')
     else:
-        cfg = get_config(source)
+        cfg = get_config()
         if cfg.get(source):
             s = cfg.get(source)
             if isinstance(s, list):
@@ -189,7 +189,7 @@ def dataframe_size_info(df):
     volume = natural_size(memory_usage)
     return f'{volume} of data received in amount of {df.shape[0]} rows, {df.shape[1]} columns, {df.size} cells'
 
-def get_config(alias):
+def get_config():
     """
     Detect and get etl config
 
@@ -207,7 +207,7 @@ def get_config(alias):
     ]
     result = next(((p, s) for p, s in config_candidates if os.path.exists(p)), None)
     if not result:
-        log.error(f'config file not found, alias not possible to recognize <{alias}>')
+        log.error('config file not found')
         sys.exit(1)
     config_path, config_source = result
     log.debug(f'config file found via {config_source} <{config_path}>')
@@ -262,6 +262,7 @@ def create_dir(path):
 @cli.option('--target', required=False, type=str, help="Target for inserting data. Database name, csv or xls filename. Defaults to stdout if not provided.")
 @cli.option('--load', default='', help="Database schema and table name, if target is database")
 @cli.option('--config-path', default='', help="Custom path to etl.yml config")
+@cli.option('--list', default=False, is_flag=True, help="List named connections from etl.yml and exit.")
 @cli.option('--debug', default=False, is_flag=True, help="Extended level of logging with more info")
 def cli(ctx, **kwargs):
     global log
@@ -309,6 +310,11 @@ def cli(ctx, **kwargs):
     else:
         import urllib3
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+    if options.list:
+        for alias in get_config():
+            print(alias)
+        return
 
 # check options
     if options.extract and options.execute:

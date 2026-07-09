@@ -109,6 +109,8 @@ Options list
   Used for loading data to a database to identify which table to load the data into.
 ``--config-path``
   A custom path to the etl.yml config.
+``--list``
+  List named connections from etl.yml and exit.
 ``--debug``
   Enables an extended level of logging with more information.
 ``--help``
@@ -124,6 +126,7 @@ Open terminal and try to type commands.
   :linenos:
 
   etl --help
+  etl --list
   etl --source input.csv --target output.xlsx
   etl --source input.csv --target 'sqlite:///local.db' --load main.my_table
   etl --source db_alias --extract my-query.sql --target result.xlsx

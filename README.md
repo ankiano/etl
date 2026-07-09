@@ -18,6 +18,7 @@ For documentation and full examples, please see the [documentation](https://etlt
 ### Quick examples of usage:
 
     etl --help
+    etl --list
 
     etl --source 'https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv??sep=,' --target input/titanic.xlsx
     etl --source 'sqlite:////home/user/my-local.db' --extract my-query.sql --target result.csv
