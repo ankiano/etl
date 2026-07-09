@@ -444,11 +444,11 @@ def cli(ctx, **kwargs):
                         source_query = get_query(options.execute, extra_args)
                         if sqlalchemy.__version__.startswith("2"):  # SQLAlchemy 2.0+
                             with source_engine.begin() as connection:
-                                connection.execute(source_query)
+                                execution_result = connection.execute(source_query)
                         else: # SQLAlchemy < 2.0
-                            source_engine.execute(source_query)
-                        if extra_args: #TODO remove for consistency
-                            log.info(f'executed <{options.execute}> with user_variables {extra_args}')
+                            execution_result = source_engine.execute(source_query)
+                        if execution_result.rowcount >= 0:
+                            log.info(f'executed <{options.execute}>, rowcount={execution_result.rowcount}')
                         else:
                             log.info(f'executed <{options.execute}>')
                     if options.extract:
