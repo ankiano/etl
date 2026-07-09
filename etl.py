@@ -238,7 +238,11 @@ def get_query(query, extra_args):
         else:
             result = query
         if extra_args:
-            result = str(result).format(**extra_args) 
+            query_args = {
+                key: str(value).format(**extra_args)
+                for key, value in extra_args.items()
+            }
+            result = str(result).format(**query_args)
         result = sqlalchemy.text(result)
         log.debug(f'sql:\n{result}')
         return result

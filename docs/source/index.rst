@@ -216,7 +216,7 @@ This will help understand how to integrate your project into their own projects.
   In sql you should place parameter in python format ``select * from table where param = {user_sql_parameter}``
   And add option key with name of this custom parameter to update query with value.
 
-  .. code-block:: concole
+  .. code-block:: console
     :caption: update.sh
     :linenos:
     
@@ -225,6 +225,38 @@ This will help understand how to integrate your project into their own projects.
     etl --source some_db --extract sql/query-template.sql \
         --user_sql_parameter 123 \
         --target output/result.xlsx
+
+  Parameter values are rendered before the main query, so a query fragment
+  passed as a parameter may also contain parameters.
+
+  .. code-block:: sql
+    :caption: sql/query-template.sql
+    :linenos:
+
+    with dataset as (
+        {dataset_query}
+    )
+    select * from dataset
+
+  .. code-block:: console
+    :caption: update.sh
+    :linenos:
+
+    #! /bin/bash
+
+    dataset_query="select * from table where date = '{date_arg}'"
+
+    etl --source some_db --extract sql/query-template.sql \
+        --date_arg 2026-06-01 \
+        --dataset_query "$dataset_query" \
+        --target output/result.xlsx
+
+  Parameters use Python format syntax. If the SQL contains literal curly braces,
+  for example in a JSON string, escape them with double braces.
+
+  .. code-block:: sql
+
+    select '{{"a": 1}}' as payload, '{date_arg}' as d
 
 6) Avoiding limit with google api
 
