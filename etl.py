@@ -443,8 +443,8 @@ def cli(ctx, **kwargs):
                         log.info(f'executing <{options.execute}> on <{options.source}>')
                         source_query = get_query(options.execute, extra_args)
                         if sqlalchemy.__version__.startswith("2"):  # SQLAlchemy 2.0+
-                            with source_engine.connect() as connection:
-                                 connection.execute(source_query)
+                            with source_engine.begin() as connection:
+                                connection.execute(source_query)
                         else: # SQLAlchemy < 2.0
                             source_engine.execute(source_query)
                         if extra_args: #TODO remove for consistency
