@@ -421,7 +421,7 @@ def cli(ctx, **kwargs):
                             log.error(e)
                             sys.exit(1)
                     if options.extract:
-                        log.info(f'extracting data from <{source}> using query <{options.extract}>')
+                        log.info(f'extracting data from <{options.source}> using query <{options.extract}>')
                         source_query = get_query(options.extract, extra_args)
                         try:
                             pandas_gbq = __import__('pandas_gbq')
