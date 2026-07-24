@@ -597,7 +597,10 @@ def cli(ctx, **kwargs):
                             if pd.api.types.is_numeric_dtype(dataset[col]):
                                 dataset[col] = dataset[col].fillna(0)
                             else:
-                                dataset[col] = dataset[col].fillna('')
+                                try:
+                                    dataset[col] = dataset[col].fillna('')
+                                except ValueError:
+                                    dataset[col] = dataset[col].astype(object).fillna('')
                         sheet.set_dataframe(dataset, start="A1", fit=True, nan='', include_tailing_empty=False)
                         log.info(f'data saved to spreadsheet <{workbook_ref}!{sheet_name}>')
                     else:
