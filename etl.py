@@ -65,6 +65,18 @@ def api_call(method, url, body=None, **kwargs):
     logging.debug(f'endpoint: {endpoint}')
     return method(endpoint, headers=http_headers, json=body)
 
+def connect_with_retry(engine, name):
+    import time
+    for attempt in range(3):
+        try:
+            return engine.connect()
+        except (sqlalchemy.exc.OperationalError, sqlalchemy.exc.InterfaceError):
+            if attempt == 2:
+                raise
+            delay = 2 * (attempt + 1)
+            log.warning(f'connection error to <{name}>, retrying {attempt + 1}/2 in {delay}s')
+            time.sleep(delay)
+
 
 def spreadsheet_open(workbook_ref, credentials_path):
     """
@@ -449,22 +461,21 @@ def cli(ctx, **kwargs):
                 try:
                     source_params.setdefault('max_identifier_length',128) # default params
                     source_engine = sqlalchemy.create_engine(source, poolclass=NullPool, **source_params)
-                    if options.execute:
-                        log.info(f'executing <{options.execute}> on <{options.source}>')
-                        source_query = get_query(options.execute, extra_args)
-                        if sqlalchemy.__version__.startswith("2"):  # SQLAlchemy 2.0+
-                            with source_engine.begin() as connection:
-                                execution_result = connection.execute(source_query)
-                        else: # SQLAlchemy < 2.0
-                            execution_result = source_engine.execute(source_query)
-                        if execution_result.rowcount >= 0:
-                            log.info(f'executed <{options.execute}>, rowcount={execution_result.rowcount}')
-                        else:
-                            log.info(f'executed <{options.execute}>')
-                    if options.extract:
-                        log.info(f'extracting data from <{options.source}> using query <{options.extract}>')
-                        source_query = get_query(options.extract, extra_args)
-                        dataset = pd.read_sql(sql=source_query, con=source_engine)
+                    if options.execute or options.extract:
+                        with connect_with_retry(source_engine, options.source) as conn:
+                            if options.execute:
+                                log.info(f'executing <{options.execute}> on <{options.source}>')
+                                source_query = get_query(options.execute, extra_args)
+                                with conn.begin():
+                                    execution_result = conn.execute(source_query)
+                                if execution_result.rowcount >= 0:
+                                    log.info(f'executed <{options.execute}>, rowcount={execution_result.rowcount}')
+                                else:
+                                    log.info(f'executed <{options.execute}>')
+                            if options.extract:
+                                log.info(f'extracting data from <{options.source}> using query <{options.extract}>')
+                                source_query = get_query(options.extract, extra_args)
+                                dataset = pd.read_sql(sql=source_query, con=conn)
                 except Exception as e:
                         log.error(e)
                         sys.exit(1)
@@ -721,7 +732,9 @@ def cli(ctx, **kwargs):
                         table = load
                         schema = None
                     try:
-                        dataset.to_sql(name=table, schema=schema, con=engine, **load_params)
+                        with connect_with_retry(engine, options.target) as conn:
+                            with conn.begin():
+                                dataset.to_sql(name=table, schema=schema, con=conn, **load_params)
                         log.info(f'data saved to <{options.target}> in table <{options.load}>')
                     except Exception as e:
                         log.error(e)
