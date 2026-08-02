@@ -67,14 +67,10 @@ def api_call(method, url, body=None, **kwargs):
 
 def connect_with_retry(engine, name):
     import time
-    retry_errors = (sqlalchemy.exc.DBAPIError,)
-    dbapi_error = getattr(engine.dialect.dbapi, 'Error', None)
-    if dbapi_error:
-        retry_errors = retry_errors + (dbapi_error,)
     for attempt in range(3):
         try:
             return engine.connect()
-        except retry_errors:
+        except sqlalchemy.exc.DBAPIError:
             if attempt == 2:
                 raise
             delay = 2 * (attempt + 1)
