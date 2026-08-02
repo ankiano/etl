@@ -467,11 +467,12 @@ def cli(ctx, **kwargs):
                                 with source_engine.connect() as conn:
                                     dataset = pd.read_sql(sql=source_query, con=conn)
                                 break
-                            except (sqlalchemy.exc.OperationalError, sqlalchemy.exc.InterfaceError):
+                            except (sqlalchemy.exc.OperationalError, sqlalchemy.exc.InterfaceError) as e:
                                 if attempt == 2:
                                     raise
-                                delay = 2 * (attempt + 1)
-                                log.warning(f'extract error from <{options.source}>, retrying {attempt + 1}/2 in {delay}s')
+                                delay = (10, 30)[attempt]
+                                error = str(getattr(e, 'orig', e)).replace('\n', '\\n')
+                                log.warning(f'extract retry {attempt + 1}/2 in {delay}s from <{options.source}> using query <{options.extract}>: {error}')
                                 time.sleep(delay)
                 except Exception as e:
                         log.error(e)
